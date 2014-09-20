@@ -40,7 +40,7 @@ class Application {
         $trait_name = strtolower($name).'.php';
         $file   = ROOT_PATH.DS.'trait'.DS.$trait_name;
         if(!file_exists($file)) {
-            throw new Exception("could not require {$name}");
+            return false;
         }
         require_once $file;
     }

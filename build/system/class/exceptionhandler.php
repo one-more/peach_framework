@@ -13,6 +13,8 @@ class ExceptionHandler {
 
 function peach_exception_handler($exception) {
     error::log($exception->getMessage());
+
+    restore_exception_handler();
 }
 
 function peach_error_handler($errno, $errstr, $errfile, $errline) {
@@ -20,6 +22,8 @@ function peach_error_handler($errno, $errstr, $errfile, $errline) {
     $msg = "$errno : $errstr in $errline of $errfile";
 
     error::log($msg);
+
+    restore_error_handler();
 }
 
 function peach_fatal_error_handler()
