@@ -1,0 +1,11 @@
+{
+    "error_block_class"  : "peach-framework-error",
+    "show_errors"    : true,
+    "use_db"    : true,
+    "db_params" : {
+        "name"  : "peach_framework",
+        "login" : "peach_framework",
+        "password"  : 1234
+    },
+    "template"  : "StubTpl"
+}

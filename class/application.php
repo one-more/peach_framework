@@ -2,6 +2,8 @@
 
 class Application {
 
+    static $instances    = [];
+
     public static function load_extension($name) {
         $name   = strtolower($name);
         $extension_dir  = ROOT_PATH.DS.'extensions'.DS.$name;
@@ -43,5 +45,24 @@ class Application {
             return false;
         }
         require_once $file;
+    }
+
+    public static function load_template($name) {
+        $name   = strtolower($name);
+        $template   = "{$name}.php";
+        $file   = ROOT_PATH.DS.'templates'.DS.$name.DS.$template;
+        if(file_exists($file)) {
+            require_once $file;
+        } else {
+            return false;
+        }
+    }
+
+    public static function get_class($name, $params = array()) {
+        if(empty(static::$instances[$name])) {
+            $reflection = new ReflectionClass($name);
+            static::$instances[$name]   = $reflection->newInstanceArgs($params);
+        }
+        return static::$instances[$name];
     }
 }
