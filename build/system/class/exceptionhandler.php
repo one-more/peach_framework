@@ -13,13 +13,14 @@ class ExceptionHandler {
     public static function show_error($message) {
         $system   = Application::get_class('System');
         if($system->get_configuration()['show_errors']) {
-            $templator  = new Templator($system->path);
+            $templator  = new Templator($system->path.DS.'templates'.DS.'error.html');
             $error_class    = $system->get_configuration()['error_block_class'];
             $params = [
                 'class' => $error_class,
                 'message'   => $message
             ];
-            echo $templator->get_template('error', $params);
+            $templator->replace_vars($params);
+            echo $templator->get_template();
         }
     }
 }

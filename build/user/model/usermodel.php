@@ -2,7 +2,7 @@
 
 class UserModel extends SuperModel {
 
-    public function login($login, $password) {
+    public function login($login, $password, $remember) {
         $sql    = "
             SELECT * FROM `users` WHERE `login` = ? AND `password` = ?
         ";
@@ -12,7 +12,22 @@ class UserModel extends SuperModel {
         $sth->bindParam(1, $login, PDO::PARAM_STR);
         $sth->bindParam(2, $password, PDO::PARAM_STR);
         $sth->execute();
-        return $sth->fetch();
+        $result = $sth->fetch();
+        if(!empty($result)) {
+            if(empty($result['remember_hash'])) {
+                $remember_hash  = password_hash($result['id'].$result['login'], PASSWORD_DEFAULT);
+                $result['remember_hash']    = $remember_hash;
+                $this->update_fields(['remember_hash'   => $remember_hash], $result['id']);
+            }
+            $session    = Application::get_class('Session');
+            if($remember) {
+                setcookie('user', $result['remember_hash'], time()+3600*24*365*200);
+            } else {
+                $session->set_var('user', $result['remember_hash']);
+            }
+            $session->set_uid($result['id']);
+        }
+        return $result;
     }
 
     public function get_fields($uid = null) {
@@ -46,5 +61,29 @@ class UserModel extends SuperModel {
 
     public function get_users() {
         return $this->select('users');
+    }
+
+    public function get_id() {
+        if(!empty($_COOKIE['user'])) {
+            $remember_hash  = $_COOKIE['user'];
+        } else {
+            $session    = Application::get_class('Session');
+            $remember_hash  = $session->get_var('user');
+        }
+        $params = [
+            'fields'    => [
+                'remember_hash' => $remember_hash
+            ]
+        ];
+        return $this->select('users', $params);
+    }
+
+    public function log_out() {
+        if(!empty($_COOKIE['user'])) {
+            setcookie('user', '', -1);
+        } else {
+            $session    = Application::get_class('Session');
+            $session->unset_var('user');
+        }
     }
 }

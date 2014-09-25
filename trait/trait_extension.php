@@ -6,7 +6,7 @@ trait trait_extension {
         switch($name) {
             case 'path':
                 if(empty($this->path)) {
-                    $extension  = strtolower(__CLASS__).'.phar.gz';
+                    $extension  = strtolower(__CLASS__).'.tar.gz';
                     $this->path = 'phar://'.ROOT_PATH.DS.'extensions'.DS.$extension;
                 }
                 break;
@@ -16,7 +16,7 @@ trait trait_extension {
 
     public static function load_extension_class($name) {
         $class_name = strtolower($name).'.php';
-        $extension  = strtolower(__CLASS__).'.phar.gz';
+        $extension  = strtolower(__CLASS__).'.tar.gz';
         $file   = 'phar://'.ROOT_PATH.DS.'extensions'.DS.$extension.DS.'class'.DS.$class_name;
         if(file_exists($file)) {
             require_once $file;
@@ -27,7 +27,7 @@ trait trait_extension {
 
     public static function load_model($name) {
         $model  = strtolower($name).'.php';
-        $extension  = strtolower(__CLASS__).'.phar.gz';
+        $extension  = strtolower(__CLASS__).'.tar.gz';
         $file   = 'phar://'.ROOT_PATH.DS.'extensions'.DS.$extension.DS.'model'.DS.$model;
         if(file_exists($file)) {
             require_once $file;
@@ -39,7 +39,7 @@ trait trait_extension {
 
     public static function load_controller($name) {
         $controller = strtolower($name);
-        $extension  = strtolower(__CLASS__).'.phar.gz';
+        $extension  = strtolower(__CLASS__).'.tar.gz';
         $file   = 'phar://'.ROOT_PATH.DS.'extensions'.DS.$extension.DS.'class'.DS.$controller;
         if(file_exists($file)) {
             require_once $file;
@@ -62,5 +62,12 @@ trait trait_extension {
         $new_params = array_merge($old_params, $params);
         $params_str = json_encode($new_params);
         file_put_contents(ROOT_PATH.DS.'resource'.DS."{$name}.json", $params_str);
+    }
+
+    protected function get_model($name) {
+        $system = Application::get_class('System');
+        $params = $system->get_configuration()['db_params'];
+        $model  = Application::get_class($name, $params);
+        return $model;
     }
 }

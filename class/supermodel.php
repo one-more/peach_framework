@@ -6,9 +6,8 @@ class SuperModel {
 
     public function __construct($dbname, $user, $pass, $dbtype = 'mysql', $host = 'localhost') {
         $system = Application::get_class('System');
-        $params = $system->get_configuration();
-        if(!$params['use_db']) {
-            throw new Exception('could not create model: use db param is false');
+        if(!$system->use_db()) {
+            throw new Exception("could not create model: use db param is false");
         }
 
         $this->db = new PDO("{$dbtype}:{host}=localhost;dbname={$dbname}",$user, $pass);
@@ -18,9 +17,7 @@ class SuperModel {
 
     public function execute($sql) {
         $sth    = $this->db->query($sql);
-        if($sth->columnCount()) {
-            return $sth->fetchAll();
-        }
+        return $this->return_from_statement($sth);
     }
 
     public function select($table, $params = []) {
@@ -39,18 +36,7 @@ class SuperModel {
             $sql    .= "LIMIT {$limit}";
         }
         $sth    = $this->db->query($sql);
-        $sth    = $sth->fetchAll();
-        if(count($sth) > 1) {
-            return $sth;
-        } else {
-            $result = $sth[0];
-            if(count($result) == 1) {
-                $key   = array_keys($result)[0];
-                return $result[$key];
-            } else {
-                return $result;
-            }
-        }
+        return $this->return_from_statement($sth);
     }
 
     public function insert($table, $params = []) {
@@ -99,6 +85,21 @@ class SuperModel {
             $sth->execute();
         } else {
             throw new Exception('fields are empty');
+        }
+    }
+
+    protected function return_from_statement($sth) {
+        $sth    = $sth->fetchAll();
+        if(count($sth) > 1) {
+            return $sth;
+        } else {
+            $result = $sth[0];
+            if(count($result) == 1) {
+                $key   = array_keys($result)[0];
+                return $result[$key];
+            } else {
+                return $result;
+            }
         }
     }
 }

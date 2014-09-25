@@ -10,28 +10,35 @@ class User {
     }
 
     public function is_logined() {
-        return !empty($_COOKIE['user_id']);
+        if(!empty($_COOKIE['user'])) {
+            return true;
+        } else {
+            $session    = Application::get_class('Session');
+            if($session->get_var('user')) {
+                return true;
+            } else {
+                return false;
+            }
+        }
     }
 
     public function get_id() {
         if($this->is_logined()) {
-            return intval($_COOKIE['user_id']);
+            $model  = $this->get_model('UserModel');
+            return $model->get_id();
         } else {
             return 0;
         }
     }
 
-    public function login($login, $password) {
-        $system = Application::get_class('System');
-        $params = $system->get_configuration()['db_params'];
-        $model  = Application::get_class('UserModel', $params);
-        return $model->login($login, $password);
+    public function login($login, $password, $remember = false) {
+        $model  = $this->get_model('UserModel');
+        $result = $model->login($login, $password, $remember);
+        return $result;
     }
 
     public function get_fields($uid = null) {
-        $system = Application::get_class('System');
-        $params = $system->get_configuration()['db_params'];
-        $model  = Application::get_class('UserModel', $params);
+        $model  = $this->get_model('UserModel');
         return $model->get_fields($uid);
     }
 
@@ -40,23 +47,22 @@ class User {
     }
 
     public function register($fields) {
-        $system = Application::get_class('System');
-        $params = $system->get_configuration();
-        $model  = Application::get_class('UserModel', $params['db_params']);
+        $model  = $this->get_model('UserModel');
         return $model->register($fields);
     }
 
     public function update_fields($fields, $uid = null) {
-        $system = Application::get_class('System');
-        $params = $system->get_configuration();
-        $model  = Application::get_class('UserModel', $params['db_params']);
+        $model  = $this->get_model('UserModel');
         $model->update_fields($fields, $uid);
     }
 
     public function get_users() {
-        $system = Application::get_class('System');
-        $params = $system->get_configuration();
-        $model  = Application::get_class('UserModel', $params['db_params']);
+        $model  = $this->get_model('UserModel');
         return $model->get_users();
+    }
+
+    public function log_out() {
+        $model  = $this->get_model('UserModel');
+        $model->log_out();
     }
 }

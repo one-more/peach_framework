@@ -53,7 +53,8 @@ trait trait_template {
         ];
         $params = array_merge($default, $_REQUEST);
         $controller = Application::get_class($params['controller']);
-        $result = $controller->execute($default['task'], $params);
+        $task_params    = is_array($params['params']) ? $params['params'] : [$params['params']];
+        $result = $controller->execute($params['task'], $task_params);
         if(!empty($_REQUEST['ajax']) && is_array($result)) {
             echo json_encode($result);
         }

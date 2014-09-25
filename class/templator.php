@@ -1,50 +1,81 @@
 <?php
 
 class Templator {
-    public $path;
-
+    protected $path;
+    protected $html;
     public function __construct($path) {
+        if(!file_exists($path)) {
+            throw new Exception("could not load template {$path}");
+        }
         $this->path = $path;
+        $this->load_template();
     }
 
-    protected  function prepare($buffer,$params) {
-		$tmp = '';
-        $buffer = preg_replace('/\s+/', ' ', $buffer);
-
-        foreach($params as $key=>$value)
-		{
-			if(is_array($value)) {
-                foreach($value as $k1=>$v1) {
-                    $tmp .= $v1;
-                }
-
-                $buffer = preg_replace("/:$key/", $tmp, $buffer, 1);
-                $buffer = preg_replace("/&:$key/", $tmp, $buffer);
-            }
-            else {
-                if(preg_match("/%$key(.*)$key%/m", $buffer)) {
-                    if(empty($value)) {
-                        $buffer = preg_replace(["/%$key/", "/$key%/"], ['', ''], $buffer);
-                    }
-                    else {
-                        $buffer = preg_replace("/%$key(.*)$key%/m", $value, $buffer);
-                    }
-                }
-                else {
-                    $buffer = preg_replace("/:$key/", $value, $buffer, 1);
-                    $buffer = preg_replace("/&:$key/", $value, $buffer);
-                }
-            }
-		}
-
-		return $buffer;
-	}
-
-    public function get_template($name, $params) {
+    protected function load_template() {
         ob_start();
-        include($this->path.DS.'templates'.DS."{$name}.html");
-        $result = $this->prepare(ob_get_contents(), $params);
-        ob_end_clean();
-        return $result;
+        include $this->path;
+        $this->html = ob_get_clean();
+        $this->html = preg_replace('/\s+/', ' ', $this->html);
+    }
+
+    public function replace_vars($params, $html = null) {
+        if($html) {
+            foreach($params as $k=>$el) {
+                if(is_array($el)) {
+                    $el = $this->replace_foreach($el['data'], $el['include']);
+                }
+                $html = preg_replace("/:{$k}:/", $el, $html);
+            }
+            return $html;
+        } else {
+            foreach($params as $k=>$el) {
+                if(is_array($el)) {
+                    $el = $this->replace_foreach($el['data'], $el['include']);
+                }
+                $this->html = preg_replace("/:{$k}:/", $el, $this->html);
+            }
+        }
+    }
+
+    public function replace_if($params, $condition_field) {
+        if($params[$condition_field]) {
+            $this->replace_vars($params['true']);
+        } else {
+            $this->replace_vars($params['false']);
+        }
+    }
+
+    public function replace_switch($params, $case) {
+        foreach($params as $k=>$el) {
+            if($k == $case) {
+                $this->replace_vars($el);
+            }
+        }
+    }
+
+    public function get_template() {
+        return $this->html;
+    }
+
+    public function __toString() {
+        return $this->html;
+    }
+
+    protected function replace_foreach($params, $include) {
+        $html   = '';
+        foreach($params as $el) {
+            if(is_array($el)) {
+                ob_start();
+                include($include);
+                $tmp    = ob_get_clean();
+                $html .= $this->replace_vars($el, $tmp);
+            } else {
+                ob_start();
+                include($include);
+                $tmp    = ob_get_clean();
+                return $this->replace_vars($params, $tmp);
+            }
+        }
+        return $html;
     }
 }

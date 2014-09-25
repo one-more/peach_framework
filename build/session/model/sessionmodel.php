@@ -43,6 +43,21 @@ class SessionModel extends SuperModel {
         $this->update('session', $params);
     }
 
+    public function unset_var($name) {
+        $session    = Application::get_class('Session');
+        $vars   = $this->get_vars();
+        if(isset($vars[$name])) {
+            unset($vars[$name]);
+            $params = [
+                'fields'    => [
+                    'vars'  => json_encode($vars)
+                ],
+                'where' => '`id` = '.$session->get_id()
+            ];
+            $this->update('session', $params);
+        }
+    }
+
     public function set_uid($uid) {
         $session    = Application::get_class('Session');
         $params = [

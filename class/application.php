@@ -8,8 +8,8 @@ class Application {
         $name   = strtolower($name);
         $extension_dir  = ROOT_PATH.DS.'extensions'.DS.$name;
         $extension_build_dir  = ROOT_PATH.DS.'build'.DS.$name;
-        $extension_path = "{$extension_dir}.phar";
-        $extension_path_gz = "{$extension_dir}.phar.gz";
+        $extension_path = "{$extension_dir}.tar";
+        $extension_path_gz = "{$extension_dir}.tar.gz";
 
         if(file_exists($extension_build_dir)) {
             if(file_exists($extension_path)) {
@@ -18,8 +18,7 @@ class Application {
             if(file_exists($extension_path_gz)) {
                 unlink($extension_path_gz);
             }
-            ini_set('phar.readonly', 0);
-            $phar   = new Phar($extension_path);
+            $phar   = new PharData($extension_path);
             $phar->buildFromDirectory($extension_build_dir);
             $phar->compress(Phar::GZ);
             unlink($extension_path);
@@ -64,5 +63,17 @@ class Application {
             static::$instances[$name]   = $reflection->newInstanceArgs($params);
         }
         return static::$instances[$name];
+    }
+
+    public static function init_system() {
+        $system_dirs    = [
+            ROOT_PATH.DS.'extensions'
+        ];
+        foreach($system_dirs as $el) {
+            if(!file_exists($el)) {
+                mkdir($el);
+                chmod($el, 0777);
+            }
+        }
     }
 }

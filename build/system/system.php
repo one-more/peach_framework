@@ -27,9 +27,26 @@ class System {
         return $this->get_params('configuration');
     }
 
+    public function get_template() {
+        return $this->get_configuration()['template'];
+    }
+
+    public function use_db() {
+        return $this->get_configuration()['use_db'];
+    }
+
+    public function dump_db() {
+        if($this->use_db()) {
+            if($this->get_configuration()['dump_db']) {
+                $model  = $this->get_model('SystemModel');
+                $model->dump_db();
+            }
+        }
+    }
+
     protected function init_db() {
         $params = $this->get_configuration();
-        if($params['use_db']) {
+        if($this->use_db()) {
             if(empty($this->get_params('system')['db_initialized'])) {
                 $db_params  = $params['db_params'];
                 $model  = Application::get_class('SystemInitModel', $db_params);
@@ -37,9 +54,5 @@ class System {
                 $this->set_params('system', ['db_initialized'=>true]);
             }
         }
-    }
-
-    public function get_template() {
-        return $this->get_configuration()['template'];
     }
 }

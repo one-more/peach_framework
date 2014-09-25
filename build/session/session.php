@@ -9,10 +9,9 @@ class Session {
         spl_autoload_register(['Session', 'load_controller']);
 
         $system = Application::get_class('System');
-        $params = $system->get_configuration();
-        if($params['use_db']) {
+        if($system->use_db()) {
             if(empty($_COOKIE['pfm_session_id'])) {
-                $model  = Application::get_class('SessionModel', $params['db_params']);
+                $model  = $this->get_model('SessionModel');
                 $session_id = $model->start_session();
                 setcookie('pfm_session_id', $session_id);
             }
@@ -27,32 +26,39 @@ class Session {
 
     public function get_var($name, $default = false) {
         $system = Application::get_class('System');
-        $params = $system->get_configuration();
-        if($params['use_db']) {
-            $db_params  = $params['db_params'];
-            $model  = Application::get_class('SessionModel', $db_params);
+        if($system->use_db()) {
+            $model  = $this->get_model('SessionModel');
             return $model->get_var($name, $default);
         } else {
             return (empty($_SESSION[$name])) ? $default : $_SESSION[$name];
         }
+
     }
 
     public function set_var($name, $value) {
         $system = Application::get_class('System');
-        $params = $system->get_configuration();
-        if($params['use_db']) {
-            $model  = Application::get_class('SessionModel', $params['db_params']);
+        if($system->use_db()) {
+            $model  = $this->get_model('SessionModel');
             $model->set_var($name, $value);
         } else {
             $_SESSION[$name]    = $value;
         }
     }
 
+    public function unset_var($name) {
+        $system = Application::get_class('System');
+        if($system->use_db()) {
+            $model  = $this->get_model('SessionModel');
+            $model->unset_var($name);
+        } else {
+            unset($_SESSION[$name]);
+        }
+    }
+
     public function set_uid($uid) {
         $system = Application::get_class('System');
-        $params = $system->get_configuration();
-        if($params['use_db']) {
-            $model  = Application::get_class('SessionModel', $params['db_params']);
+        if($system->use_db()) {
+            $model  = $this->get_model('SessionModel');
             $model->set_uid($uid);
         }
     }
