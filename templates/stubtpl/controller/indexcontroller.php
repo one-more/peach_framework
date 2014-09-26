@@ -39,6 +39,7 @@ class IndexController {
             ]
         ];
         $templator->replace_if($params, 'use_db');
+        $lang   = Application::get_class('Language');
         return $templator->get_template();
     }
 }

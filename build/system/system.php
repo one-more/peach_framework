@@ -18,6 +18,7 @@ class System {
         ExceptionHandler::initialize();
 
         $this->init_db();
+        $this->update_db_from_dump();
 
         $session    = Application::get_class('Session');
         $session->start();
@@ -38,8 +39,11 @@ class System {
     public function dump_db() {
         if($this->use_db()) {
             if($this->get_configuration()['dump_db']) {
-                $model  = $this->get_model('SystemModel');
-                $model->dump_db();
+                if($this->is_db_dump_actual()) {
+                    $model  = $this->get_model('SystemModel');
+                    $dump_hash  = $model->dump_db();
+                    $this->set_params('system', ['db_dump_hash' => $dump_hash]);
+                }
             }
         }
     }
@@ -54,5 +58,38 @@ class System {
                 $this->set_params('system', ['db_initialized'=>true]);
             }
         }
+    }
+
+    protected function update_db_from_dump() {
+        if($this->use_db()) {
+            if($this->get_configuration()['dump_db']) {
+                if(!$this->is_db_dump_actual()) {
+                    $params = $this->get_params('system');
+                    $auto_update    = !empty($params['auto_update_db_dump']) ? $params['auto_update_db_dump'] : false;
+                    if($auto_update) {
+                        $model  = $this->get_model('SystemModel');
+                        $dump_hash  = $model->update_db_from_dump();
+                        $this->set_params('system', ['db_dump_hash' => $dump_hash]);
+                    } else {
+                        if(empty($_SERVER['QUERY_STRING'])) {
+                            $templator    = new Templator($this->path.DS.'templates'.DS.'message.html');
+                            $params = [
+                                'message'   => 'your database is outdated. please check database dump file',
+                                'class' => $this->get_configuration()['info_block_class']
+                            ];
+                            $templator->replace_vars($params);
+                            echo $templator->get_template();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    protected function is_db_dump_actual() {
+        $params = $this->get_params('system');
+        $params_hash    = !empty($params['db_dump_hash']) ? $params['db_dump_hash'] : '';
+        $file_hash  = md5(file_get_contents(ROOT_PATH.DS.'resource'.DS.'dump_db.sql'));
+        return $params_hash == $file_hash;
     }
 }

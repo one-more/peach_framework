@@ -1,5 +1,7 @@
 {
     "error_block_class"  : "peach-framework-error",
+    "warning_block_class"  : "peach-framework-warning",
+    "info_block_class"  : "peach-framework-info",
     "show_errors"    : true,
     "use_db"    : true,
     "db_params" : {
@@ -8,5 +10,7 @@
         "password"  : 1234
     },
     "dump_db"   : true,
-    "template"  : "StubTpl"
+    "auto_update_db_dump"   : false,
+    "template"  : "StubTpl",
+    "default_language"  : "RU"
 }

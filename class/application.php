@@ -75,5 +75,12 @@ class Application {
                 chmod($el, 0777);
             }
         }
+
+        $system = static::get_class('System');
+        $dump_file  = ROOT_PATH.DS.'resource'.DS.'dump_db.sql';
+        if($system->get_configuration()['dump_db'] && !file_exists($dump_file)) {
+            file_put_contents($dump_file, '');
+            chmod($dump_file, 0777);
+        }
     }
 }
