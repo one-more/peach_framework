@@ -25,7 +25,8 @@ class User {
     public function get_id() {
         if($this->is_logined()) {
             $model  = $this->get_model('UserModel');
-            return $model->get_id();
+            $id = $model->get_id();
+            return $id;
         } else {
             return 0;
         }

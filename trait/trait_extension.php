@@ -60,7 +60,7 @@ trait trait_extension {
     protected function set_params($name, $params) {
         $old_params = $this->get_params($name);
         $new_params = array_merge($old_params, $params);
-        $params_str = json_encode($new_params);
+        $params_str = $this->array_to_json_string($new_params);
         file_put_contents(ROOT_PATH.DS.'resource'.DS."{$name}.json", $params_str);
     }
 
@@ -69,5 +69,19 @@ trait trait_extension {
         $params = $system->get_configuration()['db_params'];
         $model  = Application::get_class($name, $params);
         return $model;
+    }
+
+    protected function array_to_json_string($array, $tabs = "\t") {
+        $json_str   = "{\n";
+        foreach($array as $k=>$el) {
+            if(is_array($el)) {
+                $tabs   .= "\t";
+                $json_str   .= "{$tabs}\"{$k}\"\t: ".$this->array_to_json_string($el, $tabs)."\n";
+            } else {
+                $json_str   .= "{$tabs}\"{$k}\"\t: \"{$el}\"\n";
+            }
+        }
+        $json_str   .= "}";
+        return $json_str;
     }
 }

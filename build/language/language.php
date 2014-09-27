@@ -4,6 +4,10 @@ class Language {
     use trait_extension;
 
     public function __construct() {
+        spl_autoload_register(['Language', 'load_extension_class']);
+        spl_autoload_register(['Language', 'load_model']);
+        spl_autoload_register(['Language', 'load_controller']);
+
         if(!$this->initialized()) {
             $this->initialize();
             $system = Application::get_class('System');
@@ -17,7 +21,8 @@ class Language {
     }
 
     protected function initialized() {
-        return !empty($this->get_params('language')['initialized']);
+        $params = $this->get_params('language');
+        return empty($params['initialized']) ? false : true;
     }
 
     protected function initialize() {

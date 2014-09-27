@@ -21,7 +21,7 @@ class Session {
     }
 
     public function get_id() {
-        return $_COOKIE['pfm_session_id'];
+        return empty($_COOKIE['pfm_session_id']) ? 0 : $_COOKIE['pfm_session_id'];
     }
 
     public function get_var($name, $default = false) {

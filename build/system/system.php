@@ -64,7 +64,7 @@ class System {
         if($this->use_db()) {
             if($this->get_configuration()['dump_db']) {
                 if(!$this->is_db_dump_actual()) {
-                    $params = $this->get_params('system');
+                    $params = $this->get_configuration();
                     $auto_update    = !empty($params['auto_update_db_dump']) ? $params['auto_update_db_dump'] : false;
                     if($auto_update) {
                         $model  = $this->get_model('SystemModel');

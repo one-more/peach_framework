@@ -75,7 +75,8 @@ class UserModel extends SuperModel {
                 'remember_hash' => $remember_hash
             ]
         ];
-        return $this->select('users', $params);
+        $result = $this->select('users', $params);
+        return $result;
     }
 
     public function log_out() {

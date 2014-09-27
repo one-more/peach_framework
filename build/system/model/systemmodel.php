@@ -12,16 +12,18 @@ class SystemModel extends SuperModel {
             $table_name = $el[$key];
             $rows   = $this->select($table_name);
             $rows_str   = '';
+            $inserts    = [];
             if(!empty($rows[0]) && is_array($rows[0])) {
                 foreach($rows as $el2) {
                     $el2    = array_map($quote_str, $el2);
-                    $rows_str   .= '('.implode(',', $el2).')';
+                    $inserts[]  = '('.implode(',', $el2).')';
                 }
+                $rows_str   = implode(',', $inserts);
             } else {
                 $rows   = array_map($quote_str, $rows);
                 $rows_str   = '('.implode(',', $rows).')';
             }
-            $dump   .= "TRUNCATE `{$table_name}`\n\nINSET INTO `{$table_name}` VALUES {$rows_str}\n\n";
+            $dump   .= "TRUNCATE `{$table_name}`\n\nINSERT INTO `{$table_name}` VALUES {$rows_str}\n\n";
         }
         if($return_dump) {
             return $dump;
@@ -39,7 +41,9 @@ class SystemModel extends SuperModel {
         $sql    = file_get_contents(ROOT_PATH.DS.'resource'.DS.'dump_db.sql');
         $sql_chunks    = explode("\n\n", $sql);
         foreach($sql_chunks as $el) {
-            $this->execute($el);
+            if(!empty(trim($el))) {
+                $this->execute($el);
+            }
         }
         return md5($sql);
     }

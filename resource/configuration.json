@@ -10,7 +10,7 @@
         "password"  : 1234
     },
     "dump_db"   : true,
-    "auto_update_db_dump"   : false,
+    "auto_update_db_dump"   : true,
     "template"  : "StubTpl",
     "default_language"  : "RU"
 }

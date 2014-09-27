@@ -89,8 +89,12 @@ class SuperModel {
     }
 
     protected function return_from_statement($sth) {
-        $sth    = $sth->fetchAll();
-        if(count($sth) > 1) {
+        if($sth->columnCount()) {
+            $sth    = $sth->fetchAll();
+        } else {
+            $sth    = [];
+        }
+        if(count($sth) > 1 || count($sth) == 0) {
             return $sth;
         } else {
             $result = $sth[0];
