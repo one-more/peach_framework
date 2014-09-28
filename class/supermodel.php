@@ -4,6 +4,18 @@ class SuperModel {
 
     protected $db;
 
+    public function __get($field) {
+        switch($field) {
+            case 'current_language':
+                if(empty($this->$field)) {
+                    $lang_obj   = Application::get_class('Language');
+                    $this->$field   = $lang_obj->get_language();
+                }
+                break;
+        }
+        return $this->$field;
+    }
+
     public function __construct($dbname, $user, $pass, $dbtype = 'mysql', $host = 'localhost') {
         $system = Application::get_class('System');
         if(!$system->use_db()) {
@@ -13,6 +25,7 @@ class SuperModel {
         $this->db = new PDO("{$dbtype}:{host}=localhost;dbname={$dbname}",$user, $pass);
 		$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$this->db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+        $this->db->query('SET NAMES utf8');
     }
 
     public function execute($sql) {
@@ -22,6 +35,7 @@ class SuperModel {
 
     public function select($table, $params = []) {
         if(!empty($params['fields'])) {
+
             $fields = implode(',', $params['fields']);
         } else {
             $fields = '*';
@@ -86,6 +100,11 @@ class SuperModel {
         } else {
             throw new Exception('fields are empty');
         }
+    }
+
+    public function delete($table, $where) {
+        $sql    = "DELETE FROM `{$table}` WHERE {$where}";
+        $this->execute($sql);
     }
 
     protected function return_from_statement($sth) {

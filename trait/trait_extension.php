@@ -48,7 +48,10 @@ trait trait_extension {
         }
     }
 
-    protected function get_params($name) {
+    protected function get_params($name = null) {
+        if(!$name) {
+            $name   = strtolower(__CLASS__);
+        }
         $path   = ROOT_PATH.DS.'resource'.DS."{$name}.json";
         if(file_exists($path)) {
             return json_decode(file_get_contents($path), true);
@@ -64,6 +67,16 @@ trait trait_extension {
         file_put_contents(ROOT_PATH.DS.'resource'.DS."{$name}.json", $params_str);
     }
 
+    protected function unset_param($param, $name = null) {
+        if(!$name) {
+            $name   = strtolower(__CLASS__);
+        }
+        $params = $this->get_params($name);
+        unset($params[$param]);
+        $params_str = $this->array_to_json_string($params);
+        file_put_contents(ROOT_PATH.DS.'resource'.DS."{$name}.json", $params_str);
+    }
+
     protected function get_model($name) {
         $system = Application::get_class('System');
         $params = $system->get_configuration()['db_params'];
@@ -73,15 +86,32 @@ trait trait_extension {
 
     protected function array_to_json_string($array, $tabs = "\t") {
         $json_str   = "{\n";
+        $json_chunks    = [];
         foreach($array as $k=>$el) {
             if(is_array($el)) {
-                $tabs   .= "\t";
-                $json_str   .= "{$tabs}\"{$k}\"\t: ".$this->array_to_json_string($el, $tabs)."\n";
+                if(!$this->is_assoc_array($el)) {
+                    $el = array_map(function($value){
+                        return "\"{$value}\"";
+                    }, $el);
+                    $json_chunks[]  = "{$tabs}\"{$k}\"\t: [".implode(',', $el).']';
+                } else {
+                    $json_chunks[]   = "{$tabs}\"{$k}\"\t: ".$this->array_to_json_string($el, $tabs."\t");
+                }
             } else {
-                $json_str   .= "{$tabs}\"{$k}\"\t: \"{$el}\"\n";
+                $json_chunks[]   = "{$tabs}\"{$k}\"\t: \"{$el}\"";
             }
         }
-        $json_str   .= "}";
+        $json_str   .= implode(",\n", $json_chunks);
+        $json_str   .= "\n".preg_replace("/\t/",'',$tabs,1).'}';
         return $json_str;
+    }
+
+    protected function is_assoc_array($array) {
+        foreach($array as $k=>$el) {
+            if(!is_numeric($k)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

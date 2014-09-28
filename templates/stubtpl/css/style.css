@@ -6,3 +6,11 @@ td,th {
    border-right: 2px solid black;
     padding: 0 10px;
 }
+
+.display-block {
+    display: block;
+}
+
+.hide {
+    display: none;
+}
