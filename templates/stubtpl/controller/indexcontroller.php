@@ -19,7 +19,7 @@ class IndexController {
         $user   = Application::get_class('User');
         if($system->use_db()) {
             $lang   = Application::get_class('Language');
-            $lang_vars  = $lang->get_page('index');
+            $lang_vars  = $lang->get_page('StubTpl::index');
             $templator->replace_vars($lang_vars);
         } else {
             $lang   = new STDClass();

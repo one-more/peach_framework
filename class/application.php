@@ -82,5 +82,11 @@ class Application {
             file_put_contents($dump_file, '');
             chmod($dump_file, 0777);
         }
+
+        $db_dump_file   = ROOT_PATH.DS.'resource'.DS.'dump_db.sql';
+        if(!file_exists($db_dump_file)) {
+            file_put_contents($db_dump_file, '');
+            chmod($db_dump_file, 0777);
+        }
     }
 }
