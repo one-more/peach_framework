@@ -11,7 +11,7 @@ class Application {
         $extension_path = "{$extension_dir}.tar";
         $extension_path_gz = "{$extension_dir}.tar.gz";
 
-        if(file_exists($extension_build_dir)) {
+        if(file_exists($extension_build_dir) && !Request::is_ajax()) {
             if(file_exists($extension_path)) {
                 unlink($extension_path);
             }

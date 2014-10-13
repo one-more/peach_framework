@@ -19,18 +19,22 @@ class Templator {
     }
 
     public function replace_vars($params, $html = null) {
-        if($html) {
-            foreach($params as $k=>$el) {
-                if(is_array($el)) {
-                    $el = $this->replace_foreach($el['data'], $el['include']);
+        foreach($params as $k=>$el) {
+            if(is_array($el)) {
+                $el = $this->replace_foreach($el['data'], $el['include']);
+            }
+            if($html) {
+                if(preg_match('/^:.*:$/Usi', $el)) {
+                    $template_var   = $el;
+                    $el = $this->get_template_var($el, $html);
+                    $html   = $this->unset_template_var($template_var, $html);
                 }
                 $html = preg_replace("/:{$k}:/", $el, $html);
-            }
-            return $html;
-        } else {
-            foreach($params as $k=>$el) {
-                if(is_array($el)) {
-                    $el = $this->replace_foreach($el['data'], $el['include']);
+            } else {
+                if(preg_match('/^:.*:$/Usi', $el)) {
+                    $template_var   = $el;
+                    $el = $this->get_template_var($el);
+                    $this->html = $this->unset_template_var($template_var);
                 }
                 $this->html = preg_replace("/:{$k}:/", $el, $this->html);
             }
@@ -77,5 +81,22 @@ class Templator {
             }
         }
         return $html;
+    }
+
+    protected function get_template_var($name, $html = null) {
+        $name   = str_replace(':', '', $name);
+        if(!$html) {
+            $html   = $this->html;
+        }
+        preg_match("/@{$name}{(.*)}/Uim", $html, $matches);
+        return $matches[1];
+    }
+
+    protected function unset_template_var($name, $html = null) {
+        $name   = str_replace(':', '', $name);
+        if(!$html) {
+            $html   = $this->html;
+        }
+        return preg_replace("/@{$name}{.*}/Uim", '', $html);
     }
 }
