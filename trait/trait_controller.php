@@ -39,17 +39,19 @@ trait trait_controller {
         return $file;
     }
 
-    public function get_file($name) {
-        if(strpos($name, 'js') !== false) {
-            header('Content-type: application/javascript');
-        } elseif(strpos($name, 'css') !== false) {
+    public function get_file($path) {
+        $system = Application::get_class('System');
+        $template   = strtolower($system->get_template());
+        if(strpos($path, 'js') !== false) {
+            $file   = ROOT_PATH.DS.'templates'.DS.$template.DS.'js'.DS.$path;
+            if(file_exists($file)) {
+                header('Content-type: application/javascript');
+                return file_get_contents($file);
+            }
+        } elseif(strpos($path, 'css') !== false) {
+            $file   = ROOT_PATH.DS.'templates'.DS.$template.DS.'css'.DS.$path;
             header('Content-type: text/css');
-        }
-        if(in_array($name, array_keys($this->js_files))) {
-            return file_get_contents($this->js_files[$name]);
-        }
-        if(in_array($name, array_keys($this->css_files))) {
-            return file_get_contents($this->css_files[$name]);
+            return file_get_contents($file);
         }
     }
 }
