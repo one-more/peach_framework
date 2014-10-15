@@ -11,7 +11,7 @@ class Application {
         $extension_path = "{$extension_dir}.tar";
         $extension_path_gz = "{$extension_dir}.tar.gz";
 
-        if(file_exists($extension_build_dir) && !Request::is_ajax()) {
+        if(file_exists($extension_build_dir) && static::is_extension_changed($name)) {
             if(file_exists($extension_path)) {
                 unlink($extension_path);
             }
@@ -26,6 +26,36 @@ class Application {
             return false;
         }
         require_once "phar://{$extension_path_gz}/{$name}.php";
+    }
+
+    protected static function is_extension_changed($name) {
+        $name   = strtolower($name);
+        $extension_build_dir  = ROOT_PATH.DS.'build'.DS.$name;
+        $extension_path = ROOT_PATH.DS.'extensions'.DS.$name.".tar.gz";
+        if(!file_exists($extension_build_dir) || !file_exists($extension_path)) {
+            $dir_iterator   = new RecursiveDirectoryIterator($extension_build_dir);
+            $itertaor   = new RecursiveIteratorIterator($dir_iterator);
+            $itertaor->rewind();
+            while($itertaor->valid()) {
+                if(!$itertaor->isDot()) {
+                    $file   = $extension_build_dir.DS.$itertaor->getSubPathName();
+                    $phar_file  = "phar://{$extension_path}/{$file}";
+                    if(!file_exists($phar_file)) {
+                        return true;
+                    } else {
+                        $build_file_hash   = md5(file_get_contents($file));
+                        $phar_file_hash = md5(file_get_contents($phar_file));
+                        if($build_file_hash != $phar_file_hash) {
+                            return true;
+                        }
+                    }
+                }
+                $itertaor->next();
+            }
+            return false;
+        } else {
+            return false;
+        }
     }
 
     public static function load_class($name) {
@@ -58,7 +88,7 @@ class Application {
     }
 
     public static function get_class($name, $params = array()) {
-        if(empty(static::$instances[$name])) {
+        if(!isset(static::$instances[$name])) {
             $reflection = new ReflectionClass($name);
             static::$instances[$name]   = $reflection->newInstanceArgs($params);
         }

@@ -58,10 +58,12 @@ class Templator {
     }
 
     public function get_template() {
+        $this->clear_template_vars();
         return $this->html;
     }
 
     public function __toString() {
+        $this->clear_template_vars();
         return $this->html;
     }
 
@@ -98,5 +100,9 @@ class Templator {
             $html   = $this->html;
         }
         return preg_replace("/@{$name}{.*}/Uim", '', $html);
+    }
+
+    protected function clear_template_vars() {
+        $this->html = preg_replace("/@.*{.*}/Uim", '', $this->html);
     }
 }
