@@ -11,17 +11,19 @@ class Application {
         $extension_path = "{$extension_dir}.tar";
         $extension_path_gz = "{$extension_dir}.tar.gz";
 
-        if(file_exists($extension_build_dir) && static::is_extension_changed($name)) {
-            if(file_exists($extension_path)) {
+        if(file_exists($extension_build_dir)) {
+            if(static::is_extension_changed($name) || !file_exists($extension_path_gz)) {
+                if(file_exists($extension_path)) {
+                    unlink($extension_path);
+                }
+                if(file_exists($extension_path_gz)) {
+                    Phar::unlinkArchive($extension_path_gz);
+                }
+                $phar   = new PharData($extension_path);
+                $phar->buildFromDirectory($extension_build_dir);
+                $phar->compress(Phar::GZ);
                 unlink($extension_path);
             }
-            if(file_exists($extension_path_gz)) {
-                unlink($extension_path_gz);
-            }
-            $phar   = new PharData($extension_path);
-            $phar->buildFromDirectory($extension_build_dir);
-            $phar->compress(Phar::GZ);
-            unlink($extension_path);
         } else if(!file_exists($extension_path_gz)) {
             return false;
         }
@@ -32,14 +34,14 @@ class Application {
         $name   = strtolower($name);
         $extension_build_dir  = ROOT_PATH.DS.'build'.DS.$name;
         $extension_path = ROOT_PATH.DS.'extensions'.DS.$name.".tar.gz";
-        if(!file_exists($extension_build_dir) || !file_exists($extension_path)) {
+        if(file_exists($extension_build_dir) && file_exists($extension_path)) {
             $dir_iterator   = new RecursiveDirectoryIterator($extension_build_dir);
             $itertaor   = new RecursiveIteratorIterator($dir_iterator);
             $itertaor->rewind();
             while($itertaor->valid()) {
                 if(!$itertaor->isDot()) {
                     $file   = $extension_build_dir.DS.$itertaor->getSubPathName();
-                    $phar_file  = "phar://{$extension_path}/{$file}";
+                    $phar_file  = "phar://{$extension_path}/".$itertaor->getSubPathName();
                     if(!file_exists($phar_file)) {
                         return true;
                     } else {

@@ -48,14 +48,14 @@ trait trait_template {
     public function route() {
         $default    = [
             'controller'    => 'IndexController',
-            'task'  => 'display',
+            'task'  => '_display',
             'params'    => []
         ];
         $params = array_merge($default, $_REQUEST);
         $controller = Application::get_class($params['controller']);
         $task_params    = is_array($params['params']) ? $params['params'] : [$params['params']];
         $result = $controller->execute($params['task'], $task_params);
-        if(!empty($_REQUEST['ajax']) && is_array($result)) {
+        if(Request::is_ajax() && is_array($result)) {
             echo json_encode($result);
         }
         else {

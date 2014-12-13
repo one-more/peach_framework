@@ -4,9 +4,9 @@ class StubTpl {
     use trait_template;
 
     public function __construct() {
-        spl_autoload_register(['StubTpl', 'load_template_class']);
-        spl_autoload_register(['StubTpl', 'load_template_model']);
-        spl_autoload_register(['StubTpl', 'load_template_controller']);
+        spl_autoload_register([$this, 'load_template_class']);
+        spl_autoload_register([$this, 'load_template_model']);
+        spl_autoload_register([$this, 'load_template_controller']);
 
         $system = Application::get_class('System');
         if($system->use_db()) {
@@ -30,7 +30,7 @@ class StubTpl {
             ['login', 'логин', 'RU'],
             ['password', 'пароль', 'RU'],
             ['credentials', 'привилегии','RU'],
-            ['remember hash', 'хэш идентификации', 'RU']
+            ['remember_hash', 'хэш идентификации', 'RU']
         ];
         $lang_obj   = Application::get_class('Language');
         $lang_obj->set_page('StubTpl::index', $language_variables);
