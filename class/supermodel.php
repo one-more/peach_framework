@@ -107,6 +107,14 @@ class SuperModel {
         $this->execute($sql);
     }
 
+	public function get_arrays($table, $params = []) {
+		$result = $this->select($table, $params);
+		if(count($result) && empty($result[0])) {
+			return [$result];
+		}
+		return $result;
+	}
+
     protected function return_from_statement($sth) {
         if($sth->columnCount()) {
             $sth    = $sth->fetchAll();

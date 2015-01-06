@@ -2,7 +2,9 @@
 
 class Request {
     public static function is_ajax() {
-        return !empty($_SERVER['QUERY_STRING']);
+		$ajax_keys = ['controller', 'task', 'params', 'ajax'];
+        return !empty($_SERVER['HTTP_X_REQUESTED_WITH']) ||
+			array_intersect(array_keys($_REQUEST), $ajax_keys);
     }
 
     public static function get_var($name, $filter = 'raw', $default = null) {

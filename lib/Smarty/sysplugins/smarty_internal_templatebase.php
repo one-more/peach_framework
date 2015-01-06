@@ -394,6 +394,10 @@ abstract class Smarty_Internal_TemplateBase extends Smarty_Internal_Data
         $this->fetch($template, $cache_id, $compile_id, $parent, true);
     }
 
+    public function getTemplate($template = null, $cache_id = null, $compile_id = null, $parent = null) {
+        return $this->fetch($template, $cache_id, $compile_id, $parent, false);
+    }
+
     /**
      * test if cache is valid
      *

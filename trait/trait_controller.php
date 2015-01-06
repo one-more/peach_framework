@@ -24,18 +24,28 @@ trait trait_controller {
     public function get_js() {
         header('Content-type: application/javascript');
         $file   = '';
+		$files_mtime = [];
         foreach($this->js_files as $el) {
             $file   .= file_get_contents($el);
+			$files_mtime[] = filemtime($el);
         }
+		rsort($files_mtime);
+		header('Cache-Control: max-age');
+		header('Last-Modified: '.date('D, d M Y H:i:s \G\M\T', $files_mtime[0]));
         return $file;
     }
 
     public function get_css() {
         header('Content-type: text/css');
         $file   = '';
+		$files_mtime = [];
         foreach($this->css_files as $el) {
             $file   .= file_get_contents($el);
+			$files_mtime[] = filemtime($el);
         }
+		rsort($files_mtime);
+		header('Cache-Control: max-age');
+		header('Last-Modified: '.date('D, d M Y H:i:s \G\M\T', $files_mtime[0]));
         return $file;
     }
 
