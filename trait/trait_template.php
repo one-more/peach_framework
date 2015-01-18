@@ -44,22 +44,4 @@ trait trait_template {
             return false;
         }
     }
-
-    public function route() {
-        $default    = [
-            'controller'    => 'IndexController',
-            'task'  => '_display',
-            'params'    => []
-        ];
-        $params = array_merge($default, $_REQUEST);
-        $controller = Application::get_class($params['controller']);
-        $task_params    = is_array($params['params']) ? $params['params'] : [$params['params']];
-        $result = $controller->execute($params['task'], $task_params);
-        if(Request::is_ajax() && is_array($result)) {
-            echo json_encode($result);
-        }
-        else {
-            echo $result;
-        }
-    }
 }

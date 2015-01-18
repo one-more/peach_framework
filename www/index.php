@@ -19,3 +19,6 @@ $system->initialize();
 
 $template   = Application::get_class($system->get_template());
 $template->route();
+
+$dump_file = ROOT_PATH.DS.'resource'.DS.'dump_db.sql';
+exec("mysqldump -u root -proot placorama > {$dump_file}");

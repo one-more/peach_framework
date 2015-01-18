@@ -29,4 +29,24 @@ class Request {
             }
         }
     }
+
+	public static function uri() {
+		return explode('?', $_SERVER['REQUEST_URI'])[0];
+	}
+
+	public static function uri_parts() {
+		return array_values(array_filter(explode('/', static::uri())));
+	}
+
+	public static function search_params() {
+		$uri_parts = explode('?', $_SERVER['REQUEST_URI']);
+		if(!empty($uri_parts[1])) {
+			return array_map(function($el) {
+				$parts = explode('=', $el);
+				$el = [];
+				$el[$parts[0]] = empty($parts[1]) ? '' : $parts[1];
+				return $el;
+			}, explode('&', $uri_parts[1]));
+		}
+	}
 }

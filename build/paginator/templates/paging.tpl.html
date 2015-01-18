@@ -1,0 +1,24 @@
+<div id="{$id}-wrapper">
+    <ul id="{$id}" class="{$class}">
+        {if $first_link}
+        {$href = $first_link}
+        {else}
+        {$href = $link|cat:'1'}
+        {/if}
+        <li><a href="{$href}">&larr;</a></li>
+        {foreach $pages as $page}
+        {if $first_link && $page == 1}
+        {$href = $first_link}
+        {else}
+        {$href = $link|cat:$page}
+        {/if}
+        {if $page == $current}
+        {$li_class = 'active'}
+        {else}
+        {$li_class = ''}
+        {/if}
+        <li class="{$li_class}"><a href="{$href}">{$page}</a></li>
+        {/foreach}
+        <li><a href="{$link}{$pages_count}">&rarr;</a></li>
+    </ul>
+</div>

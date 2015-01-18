@@ -63,17 +63,22 @@ class UserModel extends SuperModel {
     }
 
     public function get_id() {
-        if(!empty($_COOKIE['user'])) {
-            $remember_hash  = $_COOKIE['user'];
-        } else {
-            $session    = Application::get_class('Session');
-            $remember_hash  = $session->get_var('user');
-        }
-        $params = [
-            'where'    => "remember_hash = '{$remember_hash}'"
-        ];
-        $result = $this->select('users', $params);
-        return $result['id'];
+        $user = Application::get_class('User');
+		if($user->is_logined()) {
+			if(!empty($_COOKIE['user'])) {
+				$remember_hash  = $_COOKIE['user'];
+			} else {
+				$session    = Application::get_class('Session');
+				$remember_hash  = $session->get_var('user');
+			}
+			$params = [
+				'where'    => "remember_hash = '{$remember_hash}'"
+			];
+			$result = $this->select('users', $params);
+			return $result['id'];
+		} else {
+			return -1;
+		}
     }
 
     public function get_user_by_field($field, $value) {

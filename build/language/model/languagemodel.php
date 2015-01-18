@@ -2,6 +2,8 @@
 
 class LanguageModel extends SuperModel {
 
+	protected $pages = [];
+
     public function initialize() {
         $sql_path   = 'phar://'.ROOT_PATH.DS.'extensions'.DS.'language.tar.gz'.DS.'resource'.DS.'initialize.sql';
         $sql    = file_get_contents($sql_path);
@@ -52,6 +54,9 @@ class LanguageModel extends SuperModel {
     }
 
     public function get_page($page) {
+		if(!empty($this->pages[$page])) {
+			return $this->pages[$page];
+		}
         $params = [
             'where'    => "`page` = '{$page}' AND `lang` = '{$this->current_language}'"
         ];
@@ -65,6 +70,7 @@ class LanguageModel extends SuperModel {
             } else {
                 $result = [$rows['var_key'] => $rows['var_value']];
             }
+			$this->pages[$page] = $result;
         } else {
             $result = [];
         }

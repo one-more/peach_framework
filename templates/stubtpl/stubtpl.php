@@ -35,4 +35,9 @@ class StubTpl {
         $lang_obj   = Application::get_class('Language');
         $lang_obj->set_page('StubTpl::index', $language_variables);
     }
+
+	public function route() {
+		$router = Application::get_class('Router');
+		echo $router->route_ajax();
+	}
 }

@@ -47,8 +47,12 @@ class SuperModel {
         }
         if(!empty($params['limit'])) {
             $limit  = $params['limit'];
-            $sql    .= "LIMIT {$limit}";
+            $sql    .= " LIMIT {$limit}";
         }
+		if(!empty($params['offset'])) {
+			$offset = $params['offset'];
+			$sql .= " OFFSET {$offset}";
+		}
         $sth    = $this->db->query($sql);
         return $this->return_from_statement($sth);
     }
@@ -109,8 +113,12 @@ class SuperModel {
 
 	public function get_arrays($table, $params = []) {
 		$result = $this->select($table, $params);
-		if(count($result) && empty($result[0])) {
-			return [$result];
+		if(count($result)) {
+			if(empty($result[0]) || count($result) == 1) {
+				return [$result];
+			} else {
+				return $result;
+			}
 		}
 		return $result;
 	}
@@ -121,16 +129,28 @@ class SuperModel {
         } else {
             $sth    = [];
         }
-        if(count($sth) > 1 || count($sth) == 0) {
-            return $sth;
-        } else {
-            $result = $sth[0];
-            if(count($result) == 1) {
-                $key   = array_keys($result)[0];
-                return $result[$key];
-            } else {
-                return $result;
-            }
-        }
+		$return_from_array = function($array) use(&$return_from_array) {
+			if(!is_array($array)) {
+				return $array;
+			} else {
+				if(count($array) == 0) {
+					return $array;
+				} elseif (count($array) > 1) {
+					return array_map($return_from_array, $array);
+				} else {
+					$result = array_values($array)[0];
+					if(is_array($result)) {
+						if(count($result) > 1) {
+							return array_map($return_from_array, $result);
+						} else {
+							return array_values($result)[0];
+						}
+					} else {
+						return $result;
+					}
+				}
+			}
+		};
+		return $return_from_array($sth);
     }
 }
