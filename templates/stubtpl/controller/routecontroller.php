@@ -24,6 +24,11 @@ class RouteController extends Router {
 			parent::__construct();
         	$template   = Application::get_class('StubTpl');
 			$templator = new Smarty();
+			$static_path = DS.'stubtpl';
+			$static_paths = [
+				'css_path' => $static_path.DS.'css'
+			];
+			$templator->assign($static_paths);
 			$templator->setTemplateDir($template->path.DS.'templates'.DS.'index');
 			$templator->setCompileDir($template->path.DS.'templates_c');
 			$templator->assign($this->positions);
