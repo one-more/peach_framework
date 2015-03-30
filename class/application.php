@@ -2,7 +2,7 @@
 
 class Application {
 
-    static $instances    = [];
+    private static $instances    = [];
 
     public static function load_extension($name) {
         $name   = strtolower($name);
@@ -30,7 +30,7 @@ class Application {
         require_once "phar://{$extension_path_gz}/{$name}.php";
     }
 
-    protected static function is_extension_changed($name) {
+    private static function is_extension_changed($name) {
         $name   = strtolower($name);
         $extension_build_dir  = ROOT_PATH.DS.'build'.DS.$name;
         $extension_path = ROOT_PATH.DS.'extensions'.DS.$name.".tar.gz";
@@ -60,22 +60,19 @@ class Application {
         }
     }
 
-    public static function load_class($name) {
+    public static function load_class($name, $dir = 'class') {
         $class_name = strtolower($name).'.php';
-        $file   = ROOT_PATH.DS.'class'.DS.$class_name;
+        $file   = ROOT_PATH.DS.$dir.DS.$class_name;
         if(!file_exists($file)) {
             return false;
-        }
-        require_once $file;
+        } else {
+			require_once $file;
+			return true;
+		}
     }
 
     public static function load_trait($name) {
-        $trait_name = strtolower($name).'.php';
-        $file   = ROOT_PATH.DS.'trait'.DS.$trait_name;
-        if(!file_exists($file)) {
-            return false;
-        }
-        require_once $file;
+        return static::load_class($name, $dir = 'trait');
     }
 
     public static function load_template($name) {
@@ -89,6 +86,10 @@ class Application {
         }
     }
 
+	public static function load_interface($name) {
+		return static::load_class($name, $dir = 'interface');
+	}
+
     public static function get_class($name, $params = array()) {
         if(!isset(static::$instances[$name])) {
             $reflection = new ReflectionClass($name);
@@ -97,7 +98,7 @@ class Application {
         return static::$instances[$name];
     }
 
-    public static function init_system() {
+    private static function init_dirs() {
         $system_dirs    = [
             ROOT_PATH.DS.'extensions'
         ];
@@ -107,27 +108,37 @@ class Application {
                 chmod($el, 0777);
             }
         }
-
-        $system = static::get_class('System');
-        $dump_file  = ROOT_PATH.DS.'resource'.DS.'dump_db.sql';
-        if($system->get_configuration()['dump_db'] && !file_exists($dump_file)) {
-            file_put_contents($dump_file, '');
-            chmod($dump_file, 0777);
-        }
-
-        $db_dump_file   = ROOT_PATH.DS.'resource'.DS.'dump_db.sql';
-        if(!file_exists($db_dump_file)) {
-            file_put_contents($db_dump_file, '');
-            chmod($db_dump_file, 0777);
-        }
     }
+
+	public static function initialize() {
+		spl_autoload_register(['Application','load_class']);
+		spl_autoload_register(['Application','load_extension']);
+		spl_autoload_register(['Application','load_trait']);
+		spl_autoload_register(['Application','load_template']);
+		spl_autoload_register(['Application','load_interface']);
+
+		static::init_dirs();
+
+		$system = Application::get_class('System');
+		$system->initialize();
+	}
+
+	public static function start() {
+		$system = static::get_class('System');
+		$template   = static::get_class($system->get_template());
+		static::start_template($template);
+	}
+
+	private static function start_template(Template $template) {
+		$template->route();
+	}
 
 	public static function remove_dir($path) {
 		$it = new RecursiveDirectoryIterator($path, RecursiveDirectoryIterator::SKIP_DOTS);
 		$files = new RecursiveIteratorIterator($it,
 					 RecursiveIteratorIterator::CHILD_FIRST);
 		foreach($files as $file) {
-			if ($file->isDir()){
+			if ($file->isDir()) {
 				rmdir($file->getRealPath());
 			} else {
 				unlink($file->getRealPath());

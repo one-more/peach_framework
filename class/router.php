@@ -32,19 +32,19 @@ class Router {
 							$sub_str = substr($part, $pos+1);
 							switch($sub_str) {
 								case 'number':
-									$part = str_replace([$sub_str, ':'], ['%d', ''], $part);
+									$part = str_replace([$sub_str, ':'], ['(\d+)', ''], $part);
 									break;
 								case 'string':
 								default:
-									$part = str_replace([$sub_str, ':'], ['%s', ''], $part);
+									$part = str_replace([$sub_str, ':'], ['(\S+)', ''], $part);
 									break;
 							}
 						}
 					}
-					$parts = implode('/', $parts);
-					$result = sscanf($request_uri, $parts);
+					$parts = implode('\/', $parts);
+					preg_match_all("/^$parts$/iUs", $request_uri, $result, PREG_SET_ORDER);
 					if(count($result) && !empty($result[0])) {
-						$this->route_params = $result;
+						$this->route_params = array_slice($result[0], 1);
 						return $this->routes[$key];
 					}
 				}
@@ -56,18 +56,5 @@ class Router {
 			}
 			return false;
 		}
-	}
-
-	public function route_ajax() {
-		$default    = [
-			'controller'    => 'IndexController',
-			'task'  => '_display',
-			'params'    => []
-		];
-		$params = array_merge($default, $_REQUEST);
-		$controller = Application::get_class($params['controller']);
-		$task_params    = is_array($params['params']) ? $params['params'] : [$params['params']];
-		$result = $controller->execute($params['task'], $task_params);
-		return is_array($result) ? json_encode($result) : $result;
 	}
 } 

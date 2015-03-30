@@ -1,76 +1,38 @@
 <?php
 
 trait trait_validator {
-
-    public static function check(&$data, $validator = []) {
-		$error = [];
-
-		foreach($validator as $k=>$v)
-		{
-			if(is_array($v)) {
-                $tmp_array = [];
-
-                foreach($v as $el) {
-                    $cur_validator = 'valid_'.$el;
-
-                    if($str = static::$cur_validator($data[$k])) {
-                        $tmp_array[] = $str;
-                    }
-                }
-
-                if($str = reset($tmp_array))
-                {
-                    $error[$k] = $str;
-                }
-            }
-            else{
-                $func = 'valid_'.$v;
-
-                if($str = static::$func($data[$k])) {
-                    $error[$k] =	$str;
-                }
-            }
+	protected function get_sanitized_vars($vars) {
+		$result = [];
+		foreach($vars as $var) {
+			if(empty($var['name'])) {
+				throw new Exception("filed name is empty in get_sanitized_vars method");
+			}
+			$type = isset($var['type']) ? $var['type'] : 'raw';
+			$default = isset($var['default']) ? $var['default'] : '';
+			$result[$var['name']] = Request::get_var($var['name'], $type, $default);
+			if(is_string($result[$var['name']])) {
+				$result[$var['name']] = trim($result[$var['name']]);
+			}
+			$clean_html = isset($var['clean_html']) ? $var['clean_html'] : true;
+			$allowed_tags = isset($var['allowed_tags']) ? $var['allowed_tags'] : '';
+			if($clean_html) {
+				$result[$var['name']] = VarHandler::clean_html($result[$var['name']], $allowed_tags);
+			}
+			if(isset($var['required'])) {
+				if(is_array($result[$var['name']])) {
+					$is_empty = empty($result[$var['name']]) || empty($result[$var['name']][0]);
+				} elseif(is_object($result[$var['name']])) {
+					$object_fields = (array)$result[$var['name']];
+					$is_empty = empty($object_fields) || empty($object_fields[0]);
+				} else {
+					$is_empty = empty($result[$var['name']]);
+				}
+				if($is_empty) {
+					$msg = isset($var['error']) ? $var['error'] : "{$var['name']} is empty";
+					throw new Exception($msg);
+				}
+			}
 		}
-
-		return $error;
+		return $result;
 	}
-
-    public static function valid_email($v) {
-		if (filter_var($v, FILTER_VALIDATE_EMAIL) || empty($v))
-		{
-			return false;
-		}
-		else {
-			return static::$reference['email'];
-		}
-	}
-
-    public static function valid_not_empty($v) {
-		if(empty($v)) {
-			return static::$reference['not_empty'];
-		}
-		else {
-			return false;
-		}
-	}
-
-    public static function valid_password($v)
-    {
-        if(strlen($v) < 5 || empty($v)) {
-            return static::$reference['password'];
-        }
-        else {
-            return false;
-        }
-    }
-
-    public static function valid_positive_number($v)
-    {
-        if(intval($v) > 0) {
-            return false;
-        }
-        else {
-            return static::$reference['positive_number'];
-        }
-    }
 }

@@ -57,10 +57,17 @@ class User {
         $model->update_fields($fields, $uid);
     }
 
-    public function get_users() {
+    public function get_users($ids = null) {
         $model  = $this->get_model('UserModel');
-        return $model->get_users();
+        return $model->get_users($ids);
     }
+
+	public function get_users_field($field, $ids = null) {
+		$model  = $this->get_model('UserModel');
+        return array_map(function($el) use($field) {
+			return $el[$field];
+		}, $model->get_users($ids));
+	}
 
     public function get_user_by_field($field, $value) {
         $model  = $this->get_model('UserModel');

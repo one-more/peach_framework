@@ -35,7 +35,6 @@ class SuperModel {
 
     public function select($table, $params = []) {
         if(!empty($params['fields'])) {
-
             $fields = implode(',', $params['fields']);
         } else {
             $fields = '*';
@@ -111,6 +110,18 @@ class SuperModel {
         $this->execute($sql);
     }
 
+	public function get_arrays_from_statement($sth) {
+		$result = $this->return_from_statement($sth);
+		if(count($result)) {
+			if(empty($result[0]) || count($result) == 1) {
+				return [$result];
+			} else {
+				return $result;
+			}
+		}
+		return $result;
+	}
+
 	public function get_arrays($table, $params = []) {
 		$result = $this->select($table, $params);
 		if(count($result)) {
@@ -121,6 +132,15 @@ class SuperModel {
 			}
 		}
 		return $result;
+	}
+
+	public function get_array($table, array $params = []) {
+		$result = $this->select($table, $params);
+		if(is_array($result) && count($result) > 1 && isset($result[0])) {
+			return $result[0];
+		} else {
+			return $result;
+		}
 	}
 
     protected function return_from_statement($sth) {

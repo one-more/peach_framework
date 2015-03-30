@@ -3,13 +3,12 @@
     "warning_block_class"  : "peach-framework-warning",
     "info_block_class"  : "peach-framework-info",
     "show_errors"    : true,
-    "use_db"    : false,
+    "use_db"    : true,
     "db_params" : {
-        "name"  : "",
-        "login" : "",
-        "password"  : ""
+        "name"  : "peach_framework",
+        "login" : "peach_framework",
+        "password"  : "1234"
     },
-    "dump_db"   : false,
     "auto_update_db_dump"   : false,
     "template"  : "StubTpl",
     "default_language"  : "RU"

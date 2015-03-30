@@ -13,7 +13,7 @@ class Session {
             if(empty($_COOKIE['pfm_session_id'])) {
                 $model  = $this->get_model('SessionModel');
                 $session_id = $model->start_session();
-                setcookie('pfm_session_id', $session_id);
+                setcookie('pfm_session_id', $session_id, null, '/');
             }
         } else {
             session_start();

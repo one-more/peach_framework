@@ -1,32 +1,18 @@
 <?php
 
 class Request {
-    public static function is_ajax() {
-		$ajax_keys = ['controller', 'task', 'params', 'ajax'];
-        return !empty($_SERVER['HTTP_X_REQUESTED_WITH']) ||
-			array_intersect(array_keys($_REQUEST), $ajax_keys);
+
+	public static function is_ajax() {
+        return !empty($_SERVER['HTTP_X_REQUESTED_WITH']) &&
+			strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
     }
 
     public static function get_var($name, $filter = 'raw', $default = null) {
-        if(empty($_REQUEST[$name])) {
+		$request_vars = array_merge($_REQUEST, $_COOKIE);
+		if(empty($request_vars[$name])) {
             return $default;
         } else {
-            switch($filter) {
-                case 'email':
-                    return filter_var($_REQUEST[$name], FILTER_SANITIZE_EMAIL);
-                case 'float':
-                    return filter_var($_REQUEST[$name], FILTER_SANITIZE_NUMBER_FLOAT);
-                case 'int':
-                    return filter_var($_REQUEST[$name], FILTER_SANITIZE_NUMBER_INT);
-                case 'special_chars':
-                    return filter_var($_REQUEST[$name], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-                case 'string':
-                    return filter_var($_REQUEST[$name], FILTER_SANITIZE_STRING);
-                case 'url':
-                    return filter_var($_REQUEST[$name], FILTER_SANITIZE_URL);
-                default:
-                    return filter_var($_REQUEST[$name], FILTER_UNSAFE_RAW);
-            }
+            return VarHandler::sanitize_var($request_vars[$name], $filter, $default);
         }
     }
 
@@ -41,12 +27,15 @@ class Request {
 	public static function search_params() {
 		$uri_parts = explode('?', $_SERVER['REQUEST_URI']);
 		if(!empty($uri_parts[1])) {
-			return array_map(function($el) {
-				$parts = explode('=', $el);
-				$el = [];
-				$el[$parts[0]] = empty($parts[1]) ? '' : $parts[1];
-				return $el;
-			}, explode('&', $uri_parts[1]));
+			$chinks = explode('&', $uri_parts[1]);
+			$result = [];
+			foreach($chinks as $chunk) {
+				$parts = explode('=', $chunk);
+				$result[$parts[0]] = empty($parts[1]) ? '' : $parts[1];
+			}
+			return $result;
+		} else {
+			return [];
 		}
 	}
 }

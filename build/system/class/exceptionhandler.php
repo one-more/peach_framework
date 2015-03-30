@@ -12,8 +12,10 @@ class ExceptionHandler {
 
     public static function show_error($message) {
         $system   = Application::get_class('System');
+		$template   = Application::get_class($system->get_template());
 		$smarty = new Smarty();
 		$smarty->setTemplateDir($system->path.DS.'templates');
+		$smarty->setCompileDir($template->path.DS.'templates_c');
         if($system->get_configuration()['show_errors']) {
             $error_class    = $system->get_configuration()['error_block_class'];
             $params = [
@@ -30,9 +32,9 @@ function peach_exception_handler($exception) {
     $message    = $exception->getMessage();
     error::log($message);
 
-    restore_exception_handler();
-
     ExceptionHandler::show_error('an exception occurred');
+
+	return false;
 }
 
 function peach_error_handler($errno, $errstr, $errfile, $errline) {
@@ -40,9 +42,9 @@ function peach_error_handler($errno, $errstr, $errfile, $errline) {
 
     error::log($msg);
 
-    restore_error_handler();
-
     ExceptionHandler::show_error('an error occurred');
+
+	return false;
 }
 
 function peach_fatal_error_handler() {
@@ -53,4 +55,6 @@ function peach_fatal_error_handler() {
 
         file_put_contents(ROOT_PATH.$ds.'www'.$ds.'error.log', $msg, FILE_APPEND);
     }
+
+	return false;
 }

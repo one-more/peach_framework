@@ -21,7 +21,7 @@ class UserModel extends SuperModel {
             }
             $session    = Application::get_class('Session');
             if($remember) {
-                setcookie('user', $result['remember_hash'], strtotime('2037-12-31'));
+                setcookie('user', $result['remember_hash'], strtotime('2037-12-31'), '/');
             } else {
                 $session->set_var('user', $result['remember_hash']);
             }
@@ -33,7 +33,9 @@ class UserModel extends SuperModel {
     public function get_fields($uid = null) {
         if(!$uid) {
             $uid    = $this->get_id();
-        }
+        } else {
+			$uid = (int)$uid;
+		}
         $params = [];
         $params['where']    = "`id` = {$uid}";
         return $this->select('users', $params);
@@ -58,8 +60,16 @@ class UserModel extends SuperModel {
         $this->update('users', $params);
     }
 
-    public function get_users() {
-        return $this->select('users');
+    public function get_users($ids = null) {
+		if($ids && is_array($ids)) {
+			$ids = array_map('intval', $ids);
+			$params = [
+				'where' => ' id in ('.(implode(',', $ids)).')'
+			];
+		} else {
+			$params = [];
+		}
+        return $this->get_arrays('users', $params);
     }
 
     public function get_id() {
@@ -91,7 +101,7 @@ class UserModel extends SuperModel {
 
     public function log_out() {
         if(!empty($_COOKIE['user'])) {
-            setcookie('user', '', -1);
+            setcookie('user', '', -1, '/');
         } else {
             $session    = Application::get_class('Session');
             $session->unset_var('user');

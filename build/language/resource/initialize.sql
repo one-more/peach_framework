@@ -5,5 +5,6 @@ CREATE TABLE IF NOT EXISTS `language_vars` (
   `var_value` TEXT NOT NULL,
   `lang`  VARCHAR(255) NOT NULL,
   KEY `key_lang` (`var_key`, `lang`),
-  KEY `page`  (`page`)
+  KEY `page`  (`page`),
+  UNIQUE KEY (`page`, `var_key`, `lang`)
 )

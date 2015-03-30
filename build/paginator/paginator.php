@@ -9,14 +9,14 @@ class Paginator {
 
 	public function get_paging($params) {
 		$default = [
-			'link' => '/',
-			'first_link' => null,
+			'btns_links' => range(1,5),
 			'total' => 1,
 			'per_page' => 1,
 			'current' => 1,
 			'show_links' => 5,
 			'id' => 'paging',
-			'class' => 'pagination'
+			'class' => 'pagination',
+			'link_class' => 'pagination-link'
 		];
 		$params = array_merge($default, $params);
 		extract($params);
@@ -48,12 +48,12 @@ class Paginator {
 		$smarty = new Smarty();
 		$smarty->setTemplateDir($this->path.DS.'templates');
 		$smarty->assign('pages', range($start, $end));
-		$smarty->assign('link', $link);
+		$smarty->assign('links', $btns_links);
 		$smarty->assign('id', $id);
 		$smarty->assign('class', $class);
-		$smarty->assign('first_link', $first_link);
 		$smarty->assign('current', $current);
 		$smarty->assign('pages_count', $pages);
+		$smarty->assign('link_class', $link_class);
 		return $smarty->getTemplate('paging.tpl.html');
 	}
 } 

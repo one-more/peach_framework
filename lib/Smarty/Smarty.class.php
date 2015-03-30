@@ -695,6 +695,9 @@ class Smarty extends Smarty_Internal_TemplateBase
         if (isset($_SERVER['SCRIPT_NAME'])) {
             $this->assignGlobal('SCRIPT_NAME', $_SERVER['SCRIPT_NAME']);
         }
+
+		//added by D. Nikolaev
+		$this->muteExpectedErrors();
     }
 
     /**
