@@ -26,7 +26,8 @@ class RouteController extends Router {
 			$templator = new Smarty();
 			$static_path = DS.'stubtpl';
 			$static_paths = [
-				'css_path' => $static_path.DS.'css'
+				'css_path' => $static_path.DS.'css',
+				'images_path' => $static_path.DS.'images'
 			];
 			$templator->assign($static_paths);
 			$templator->setTemplateDir($template->path.DS.'templates'.DS.'index');
