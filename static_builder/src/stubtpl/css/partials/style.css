@@ -11,6 +11,11 @@ td,th {
     display: block;
 }
 
+
+.display-inline-block {
+    display: inline-block;
+}
+
 .hide {
     display: none;
 }

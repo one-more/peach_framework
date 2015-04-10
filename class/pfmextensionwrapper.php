@@ -59,4 +59,33 @@ class PFMExtensionWrapper {
     public function stream_stat() {
 		return fstat($this->fp);
     }
+
+	public function url_stat($path, $flags) {
+		$this->parse_path($path);
+		$file_path = 'phar://'.$this->extensions_path.DS.$this->extension.DS.$this->phar_file;
+		if($flags == STREAM_URL_STAT_LINK) {
+			return lstat($file_path);
+		}
+		if($flags == STREAM_URL_STAT_QUIET) {
+			set_error_handler(function($errno, $errstr, $errfile, $errline) {
+				if(strpos($errstr, 'stat') !== false) {
+					return true;
+				}
+				return false;
+			});
+		}
+		return stat($file_path);
+	}
+
+	public function rename($old_path, $new_path) {
+		$data = file_get_contents($old_path);
+		unlink($old_path);
+		file_put_contents($new_path, $data);
+		return true;
+	}
+
+	public function unlink($path) {
+		$this->parse_path($path);
+		return unlink('phar://'.$this->extensions_path.DS.$this->extension.DS.$this->phar_file);
+	}
 }
