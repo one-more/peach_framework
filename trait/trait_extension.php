@@ -14,38 +14,24 @@ trait trait_extension {
         return $this->$name;
     }
 
-    public static function load_extension_class($name) {
+    public static function load_extension_class($name, $dir = 'class') {
         $class_name = strtolower($name).'.php';
         $extension  = strtolower(__CLASS__).'.tar.gz';
-        $file   = 'phar://'.ROOT_PATH.DS.'extensions'.DS.$extension.DS.'class'.DS.$class_name;
+        $file   = 'phar://'.ROOT_PATH.DS.'extensions'.DS.$extension.DS.$dir.DS.$class_name;
         if(file_exists($file)) {
             require_once $file;
+			return true;
         } else {
             return false;
         }
     }
 
     public static function load_model($name) {
-        $model  = strtolower($name).'.php';
-        $extension  = strtolower(__CLASS__).'.tar.gz';
-        $file   = 'phar://'.ROOT_PATH.DS.'extensions'.DS.$extension.DS.'model'.DS.$model;
-        if(file_exists($file)) {
-            require_once $file;
-        } else {
-            return false;
-        }
-
+        return static::load_extension_class($name, $dir = 'model');
     }
 
     public static function load_controller($name) {
-        $controller = strtolower($name);
-        $extension  = strtolower(__CLASS__).'.tar.gz';
-        $file   = 'phar://'.ROOT_PATH.DS.'extensions'.DS.$extension.DS.'class'.DS.$controller;
-        if(file_exists($file)) {
-            require_once $file;
-        } else {
-            return false;
-        }
+        return static::load_extension_class($name, $dir = 'controller');
     }
 
     protected function get_params($name = null) {
@@ -114,4 +100,10 @@ trait trait_extension {
         }
         return false;
     }
+
+	protected function register_autoload() {
+		spl_autoload_register([__CLASS__, 'load_extension_class']);
+        spl_autoload_register([__CLASS__, 'load_model']);
+        spl_autoload_register([__CLASS__, 'load_controller']);
+	}
 }

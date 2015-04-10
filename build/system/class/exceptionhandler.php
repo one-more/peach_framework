@@ -12,10 +12,9 @@ class ExceptionHandler {
 
     public static function show_error($message) {
         $system   = Application::get_class('System');
-		$template   = Application::get_class($system->get_template());
 		$smarty = new Smarty();
-		$smarty->setTemplateDir($system->path.DS.'templates');
-		$smarty->setCompileDir($template->path.DS.'templates_c');
+		$smarty->setTemplateDir('pfmextension://system/templates');
+		$smarty->setCompileDir('pfmextension://system/templates_c');
         if($system->get_configuration()['show_errors']) {
             $error_class    = $system->get_configuration()['error_block_class'];
             $params = [

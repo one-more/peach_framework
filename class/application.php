@@ -121,12 +121,20 @@ class Application {
 
 		$system = Application::get_class('System');
 		$system->initialize();
+
+		stream_wrapper_register("pfmextension", "PFMExtensionWrapper");
 	}
 
 	public static function start() {
 		$system = static::get_class('System');
-		$template   = static::get_class($system->get_template());
-		static::start_template($template);
+		$port = $_SERVER['SERVER_PORT'];
+		if($port == 8080) {
+			$tools = new Tools;
+			$tools->route();
+		} else {
+			$template   = static::get_class($system->get_template());
+			static::start_template($template);
+		}
 	}
 
 	private static function start_template(Template $template) {
