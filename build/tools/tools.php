@@ -10,7 +10,7 @@ class Tools {
 	}
 
 	public function route() {
-		$router = new RouteController;
+		$router = Application::get_class('ToolsRouter');
 		$router->route();
 	}
 }

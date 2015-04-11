@@ -8,3 +8,10 @@ html,body {
 body {
     background: #fff;
 }
+
+#all {
+    display: inline-block;
+    width: 100%;
+    min-width: 100%;
+    position: relative;
+}
