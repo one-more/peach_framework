@@ -4,9 +4,7 @@ class Language {
     use trait_extension;
 
     public function __construct() {
-        spl_autoload_register(['Language', 'load_extension_class']);
-        spl_autoload_register(['Language', 'load_model']);
-        spl_autoload_register(['Language', 'load_controller']);
+        $this->register_autoload();
 
         if(!$this->initialized()) {
             $this->initialize();

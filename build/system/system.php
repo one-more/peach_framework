@@ -10,9 +10,7 @@ class System {
 
         ini_set('display_errors', 'on');
 
-        spl_autoload_register(['System', 'load_extension_class']);
-        spl_autoload_register(['System', 'load_model']);
-        spl_autoload_register(['System', 'load_controller']);
+        $this->register_autoload();
 
         error::initialize();
         ExceptionHandler::initialize();

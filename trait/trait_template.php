@@ -28,11 +28,18 @@ trait trait_template {
         return static::load_template_class($name, $dir = 'controller');
     }
 
-    public function load_template_model($name) {
+    public static function load_template_model($name) {
 		return static::load_template_class($name, $dir = 'model');
     }
 
-	public function load_template_view($name) {
+	public static function load_template_view($name) {
 		return static::load_template_class($name, $dir = 'view');
+	}
+
+	protected function register_autoload() {
+		spl_autoload_register([__CLASS__, 'load_template_class']);
+		spl_autoload_register([__CLASS__, 'load_template_model']);
+		spl_autoload_register([__CLASS__, 'load_template_controller']);
+		spl_autoload_register([__CLASS__, 'load_template_view']);
 	}
 }

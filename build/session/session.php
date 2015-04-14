@@ -4,9 +4,7 @@ class Session {
     use trait_extension;
 
     public function start() {
-        spl_autoload_register(['Session', 'load_extension_class']);
-        spl_autoload_register(['Session', 'load_model']);
-        spl_autoload_register(['Session', 'load_controller']);
+        $this->register_autoload();
 
         $system = Application::get_class('System');
         if($system->use_db()) {

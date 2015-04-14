@@ -4,7 +4,7 @@ class Paginator {
 	use trait_extension;
 
 	public function __construct() {
-		spl_autoload_register(['Paginator', 'load_extension_class']);
+		$this->register_autoload();
 	}
 
 	public function get_paging($params) {

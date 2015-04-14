@@ -18,7 +18,7 @@ trait trait_extension {
         $class_name = strtolower($name).'.php';
         $extension  = strtolower(__CLASS__).'.tar.gz';
         $file   = 'phar://'.ROOT_PATH.DS.'extensions'.DS.$extension.DS.$dir.DS.$class_name;
-        if(file_exists($file)) {
+		if(file_exists($file)) {
             require_once $file;
 			return true;
         } else {
@@ -26,13 +26,17 @@ trait trait_extension {
         }
     }
 
-    public static function load_model($name) {
+    public static function load_extension_model($name) {
         return static::load_extension_class($name, $dir = 'model');
     }
 
-    public static function load_controller($name) {
+    public static function load_extension_controller($name) {
         return static::load_extension_class($name, $dir = 'controller');
     }
+
+	public static function load_extension_view($name) {
+		 return static::load_extension_class($name, $dir = 'view');
+	}
 
     protected function get_params($name = null) {
         if(!$name) {
@@ -103,7 +107,8 @@ trait trait_extension {
 
 	protected function register_autoload() {
 		spl_autoload_register([__CLASS__, 'load_extension_class']);
-        spl_autoload_register([__CLASS__, 'load_model']);
-        spl_autoload_register([__CLASS__, 'load_controller']);
+        spl_autoload_register([__CLASS__, 'load_extension_model']);
+        spl_autoload_register([__CLASS__, 'load_extension_controller']);
+        spl_autoload_register([__CLASS__, 'load_extension_view']);
 	}
 }

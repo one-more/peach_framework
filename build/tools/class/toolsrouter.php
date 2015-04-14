@@ -20,6 +20,8 @@ class ToolsRouter extends Router {
 	}
 
 	public function index() {
+		$view = Application::get_class('TemplatesTableView');
+		$this->positions['main_content'] = $view->render();
 		$this->show_result();
 	}
 
@@ -38,8 +40,8 @@ class ToolsRouter extends Router {
 			$smarty = new Smarty();
 			$smarty->assign($paths);
 			$smarty->assign($this->positions);
-			$smarty->setTemplateDir('pfmextension://tools/templates/index');
-			$smarty->setCompileDir('pfmextension://tools/templates_c');
+			$smarty->setTemplateDir('pfmextension://tools'.DS.'templates'.DS.'index');
+			$smarty->setCompileDir('pfmextension://tools'.DS.'templates_c');
 			echo $smarty->getTemplate('index.tpl.html');
 		}
 	}

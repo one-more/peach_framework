@@ -4,10 +4,7 @@ class StubTpl implements Template {
     use trait_template;
 
     public function __construct() {
-        spl_autoload_register([$this, 'load_template_class']);
-        spl_autoload_register([$this, 'load_template_model']);
-        spl_autoload_register([$this, 'load_template_controller']);
-        spl_autoload_register([$this, 'load_template_view']);
+        $this->register_autoload();
 
         $system = Application::get_class('System');
         if($system->use_db()) {

@@ -4,9 +4,7 @@ class User {
     use trait_extension;
 
     public function __construct() {
-        spl_autoload_register(['User', 'load_extension_class']);
-        spl_autoload_register(['User', 'load_model']);
-        spl_autoload_register(['User', 'load_controller']);
+        $this->register_autoload();
     }
 
     public function is_logined() {
