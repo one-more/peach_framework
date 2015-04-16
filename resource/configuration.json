@@ -9,7 +9,6 @@
         "login" : "peach_framework",
         "password"  : "1234"
     },
-    "auto_update_db_dump"   : false,
-    "template"  : "StubTpl",
+    "template"  : "Starter",
     "default_language"  : "RU"
 }

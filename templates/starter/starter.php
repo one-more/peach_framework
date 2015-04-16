@@ -1,6 +1,6 @@
 <?php
 
-class StubTpl implements Template {
+class Starter implements Template {
     use trait_template;
 
     public function __construct() {
