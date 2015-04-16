@@ -88,4 +88,28 @@ class PFMExtensionWrapper {
 		$this->parse_path($path);
 		return unlink('phar://'.$this->extensions_path.DS.$this->extension.DS.$this->phar_file);
 	}
+
+	public function stream_metadata($path, $option, $value) {
+		$this->parse_path($path);
+		$file = 'phar://'.$this->extensions_path.DS.$this->extension.DS.$this->phar_file;
+		if(is_array($value)) {
+			$value = array_merge([$file], $value);
+		} else {
+			$value = array_merge([$file], [$value]);
+		}
+		switch($option) {
+			case STREAM_META_TOUCH:
+				return call_user_func_array('touch', $value);
+			case STREAM_META_OWNER_NAME:
+				return call_user_func_array('chown', $value);
+			case STREAM_META_OWNER:
+				return call_user_func_array('chown', $value);
+			case STREAM_META_GROUP_NAME:
+				return call_user_func_array('chgrp', $value);
+			case STREAM_META_GROUP:
+				return call_user_func_array('chgrp', $value);
+			case STREAM_META_ACCESS:
+				return call_user_func_array('chmod', $value);
+		}
+	}
 }

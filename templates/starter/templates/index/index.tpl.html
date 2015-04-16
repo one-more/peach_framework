@@ -1,12 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Peach Framework</title>
-    <link rel="stylesheet" href="{$css_path}/site.css"/>
+    <title>Starter Template</title>
+    <link rel="stylesheet" href="{$css_path}/main.css"/>
     <link rel="shortcut icon" href="{$images_path}/favicon.ico"/>
 </head>
 <body>
-    <h1>Peach Framework</h1>
-    {$main_content}
+    <nav class="navbar navbar-inverse border-radius-none">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">Starter template</a>
+            </div>
+        </div>
+    </nav>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-10 col-lg-offset-1 text-center">
+                <h1>Starter Template</h1>
+                <p class="lead">Includes Bootstrap and Backbone libraries</p>
+            </div>
+        </div>
+    </div>
+    <script src="{$js_path}/main.js"></script>
 </body>
 </html>

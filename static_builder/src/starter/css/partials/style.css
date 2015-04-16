@@ -19,3 +19,7 @@ td,th {
 .hide {
     display: none;
 }
+
+.border-radius-none {
+    border-radius: 0 !important;
+}

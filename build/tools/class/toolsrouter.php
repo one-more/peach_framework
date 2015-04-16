@@ -7,16 +7,9 @@ class ToolsRouter extends Router {
 	];
 
 	public function __construct() {
-		$routes_file = 'pfmextension://tools/resource/routes.json';
-		$this->routes = json_decode(file_get_contents($routes_file), true);
-	}
-
-	public function route() {
-		$callback = $this->get_callback();
-		if($callback !== false) {
-			$class = Application::get_class($callback[0]);
-			call_user_func_array([$class, $callback[1]], $this->route_params);
-		}
+		$this->routes = [
+			'/' => [$this, 'index']
+		];
 	}
 
 	public function index() {
