@@ -25,10 +25,14 @@ class PFMExtensionWrapper {
 		$this->extension .= '.tar.gz';
 	}
 
+	private function create_phar_data() {
+		$extension_path = $this->extensions_path.DS.$this->extension;
+		return new PharData($extension_path, 0, null, $this->phar_type);
+	}
+
 	public function stream_open($path, $mode, $options, &$opened_path) {
 		$this->parse_path($path);
-		$extension_path = $this->extensions_path.DS.$this->extension;
-		$this->stream = new PharData($extension_path, 0, null, $this->phar_type);
+		$this->stream = $this->create_phar_data();
 		if($this->phar_dir) {
 			$this->stream->addEmptyDir($this->phar_dir);
 		}
@@ -109,7 +113,14 @@ class PFMExtensionWrapper {
 			case STREAM_META_GROUP:
 				return call_user_func_array('chgrp', $value);
 			case STREAM_META_ACCESS:
-				return call_user_func_array('chmod', $value);
+				$phar_data = $this->create_phar_data();
+				return $phar_data[$this->phar_file]->chmod($value[1]);
 		}
+	}
+
+	public function mkdir($path, $mode, $options) {
+		$this->parse_path($path);
+		$phar_data = $this->create_phar_data();
+		$phar_data->addEmptyDir($this->phar_file);
 	}
 }

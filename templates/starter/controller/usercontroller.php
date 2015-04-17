@@ -10,4 +10,8 @@ class UserController {
 			.$_SERVER['HTTP_USER_AGENT'];
 		return md5($str_to_hash) == $client_token;
 	}
+
+	private function crypt_password($login, $password) {
+        return crypt(trim($password), md5($password).md5($login));
+    }
 }

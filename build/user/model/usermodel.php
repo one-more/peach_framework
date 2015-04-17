@@ -1,14 +1,16 @@
 <?php
 
 class UserModel extends SuperModel {
+	private $cached_fields = [];
+	private $cached_users = [];
 
     public function login($login, $password, $remember) {
         $sql    = "
             SELECT * FROM `users` WHERE `login` = ? AND `password` = ?
         ";
         $sth    = $this->db->prepare($sql);
-        $login  = VarHandler::clean_html($login);
-        $password   = VarHandler::clean_html($password);
+        $login  = VarHandler::sanitize_var($login, 'string');
+        $password   = VarHandler::sanitize_var($password, 'string');
         $sth->bindParam(1, $login, PDO::PARAM_STR);
         $sth->bindParam(2, $password, PDO::PARAM_STR);
         $sth->execute();
@@ -36,9 +38,15 @@ class UserModel extends SuperModel {
         } else {
 			$uid = (int)$uid;
 		}
-        $params = [];
-        $params['where']    = "`id` = {$uid}";
-        return $this->select('users', $params);
+		if(empty($this->cached_fields[$uid])) {
+			$params = [];
+			$params['where']    = "`id` = {$uid}";
+			$fields = $this->select('users', $params);
+			$this->cached_fields[$uid] = $fields;
+			return $fields;
+		} else {
+			return $this->cached_fields[$uid];
+		}
     }
 
     public function register($fields) {
@@ -50,8 +58,7 @@ class UserModel extends SuperModel {
 
     public function update_fields($fields, $uid = null) {
         if(!$uid) {
-            $user   = Application::get_class('User');
-            $uid    = $user->get_id();
+            $uid    = $this->get_id();
         }
         $params = [
             'fields'    => $fields,
@@ -63,13 +70,22 @@ class UserModel extends SuperModel {
     public function get_users($ids = null) {
 		if($ids && is_array($ids)) {
 			$ids = array_map('intval', $ids);
+			$ids_str = implode(',', $ids);
+			$key = md5($ids_str);
 			$params = [
-				'where' => ' id in ('.(implode(',', $ids)).')'
+				'where' => ' id in ('.$ids_str.')'
 			];
 		} else {
 			$params = [];
+			$key = 'all';
 		}
-        return $this->get_arrays('users', $params);
+		if(!empty($this->cached_users[$key])) {
+			return $this->cached_users[$key];
+		} else {
+			$users = $this->get_arrays('users', $params);
+			$this->cached_users[$key] = $users;
+			return $users;
+		}
     }
 
     public function get_id() {

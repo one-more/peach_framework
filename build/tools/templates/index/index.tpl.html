@@ -2,6 +2,7 @@
 <html>
     <head>
         <link rel="stylesheet" href="{$css_path}/tools.css"/>
+        <link rel="shortcut icon" href="{$images_path}/favicon.ico"/>
     </head>
     <body>
         <div id="all">
@@ -27,8 +28,11 @@
                 <div class="row">
                     <div class="col-lg-2 col-lg-offset-1">
                         <ul class="nav nav-stacked nav-pills">
-                            <li class="active">
+                            <li {if $uri == '/'} class="active"{/if}>
                                 <a href="/">Templates tool</a>
+                            </li>
+                            <li {if $uri == '/node_processes'} class="active"{/if}>
+                                <a href="/node_processes">Node processes</a>
                             </li>
                         </ul>
                     </div>

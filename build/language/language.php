@@ -20,7 +20,9 @@ class Language {
     }
 
     public function get_language() {
-        return $this->get_params()['language'];
+        return Request::get_var('language') ?
+			Request::get_var('language') :
+			$this->get_params()['language'];
     }
 
     public function set_language($lang) {

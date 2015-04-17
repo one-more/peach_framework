@@ -1,11 +1,11 @@
 <?php
 
-class TemplatesTableView extends SuperView {
+class TemplatesTable extends SuperView {
 
 	public function __construct() {
 		parent::__construct();
-		$tools = Application::get_class('Tools');
 		$this->setTemplateDir('pfmextension://tools'.DS.'templates'.DS.'templates');
+		$this->setCompileDir('pfmextension://tools'.DS.'templates_c');
 	}
 
 	public function render() {

@@ -8,9 +8,4 @@ trait trait_controller {
         $model  = Application::get_class($name, $params);
         return $model;
     }
-
-	protected function get_language_vars($page) {
-		$lang_obj = Application::get_class('Language');
-		return $lang_obj->get_page($page);
-	}
 }

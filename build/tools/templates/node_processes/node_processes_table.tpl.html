@@ -1,0 +1,22 @@
+{if $processes|@count}
+<table id="node-processes-table" class="table table-striped">
+    <thead>
+        <th>Name</th>
+        <th>Enabled</th>
+    </thead>
+    <tbody>
+        {foreach $processes as $process}
+            <tr>
+                <th>{$process['name']}</th>
+                <th>
+                    {if $process['enabled']}
+                        true
+                    {else}
+                        false
+                    {/if}
+                </th>
+            </tr>
+        {/foreach}
+    </tbody>
+</table>
+{/if}

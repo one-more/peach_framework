@@ -10,6 +10,8 @@ class System {
 
         ini_set('display_errors', 'on');
 
+		stream_wrapper_register("pfmextension", "PFMExtensionWrapper");
+
         $this->register_autoload();
 
         error::initialize();

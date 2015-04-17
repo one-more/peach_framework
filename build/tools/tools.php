@@ -13,4 +13,9 @@ class Tools {
 		$router = Application::get_class('ToolsRouter');
 		$router->route();
 	}
+
+	public function check_node_processes() {
+		$controller = Application::get_class('NodeProcessesController');
+		$controller->check_processes();
+	}
 }

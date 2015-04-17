@@ -121,14 +121,16 @@ class Application {
 
 		$system = Application::get_class('System');
 		$system->initialize();
-
-		stream_wrapper_register("pfmextension", "PFMExtensionWrapper");
 	}
 
 	public static function start() {
 		$system = static::get_class('System');
 		$port = $_SERVER['SERVER_PORT'];
-		if($port == 8080) {
+		if(static::is_dev()) {
+			$tools = Application::get_class('Tools');
+			$tools->check_node_processes();
+		}
+		if($port == 8080 && static::is_dev()) {
 			$tools = new Tools;
 			$tools->route();
 		} else {
@@ -173,5 +175,10 @@ class Application {
 
 	public static function is_assoc_array($array) {
 	  return (bool)count(array_filter(array_keys($array), 'is_string'));
+	}
+
+	public static function is_dev() {
+		return $_SERVER['REMOTE_ADDR'] == '127.0.0.1' ||
+			strpos($_SERVER['HTTP_HOST'], 'dev') !== -1;
 	}
 }
