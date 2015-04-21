@@ -3,9 +3,28 @@
 class StaticBuilderProcess {
 
 	private $cwd;
+	private $build_dir;
 
 	public function __construct() {
 		$this->cwd = ROOT_PATH.DS.'static_builder';
+		$this->build_dir = ROOT_PATH.DS.'www';
+		if(!$this->initialized()) {
+			$this->build();
+		}
+	}
+
+	private function initialized() {
+		$dirs = glob($this->cwd.DS.'src'.DS.'*');
+		foreach($dirs as $dir) {
+			if(!is_dir($this->build_dir.DS.basename($dir))) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public function build() {
+		$this->run_cmd('build');
 	}
 
 	public function check() {
@@ -32,16 +51,33 @@ class StaticBuilderProcess {
 	}
 
 	public function run() {
+		$this->run_cmd();
+	}
+
+	private function run_cmd($command = 'watch') {
+		$error_path = ROOT_PATH.DS.'www'.DS.'error.log';
+		switch($command) {
+			case 'watch':
+				$cmd = "gulp > $error_path 2>&1 &";
+				break;
+			case 'build':
+				$cmd = 'gulp build';
+				break;
+			case 'kill':
+				$pid = $this->get_pid();
+				if($pid) {
+					`kill $pid`;
+				}
+				return;
+				break;
+		}
 		$cwd = getcwd();
 		chdir($this->cwd);
-		`gulp > /dev/null 2>&1 &`;
+		`$cmd`;
 		chdir($cwd);
 	}
 
-	public function shutdown() {
-		$pid = $this->get_pid();
-		if($pid) {
-			`kill $pid`;
-		}
+	public function kill() {
+		$this->run_cmd('kill');
 	}
 }

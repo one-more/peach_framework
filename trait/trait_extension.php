@@ -1,6 +1,7 @@
 <?php
 
 trait trait_extension {
+	use trait_json;
 
     public function __get($name) {
         switch($name) {
@@ -72,37 +73,6 @@ trait trait_extension {
         $params = $system->get_configuration()['db_params'];
         $model  = Application::get_class($name, $params);
         return $model;
-    }
-
-    protected function array_to_json_string($array, $tabs = "\t") {
-        $json_str   = "{\n";
-        $json_chunks    = [];
-        foreach($array as $k=>$el) {
-            if(is_array($el)) {
-                if(!$this->is_assoc_array($el)) {
-                    $el = array_map(function($value){
-                        return "\"{$value}\"";
-                    }, $el);
-                    $json_chunks[]  = "{$tabs}\"{$k}\"\t: [".implode(',', $el).']';
-                } else {
-                    $json_chunks[]   = "{$tabs}\"{$k}\"\t: ".$this->array_to_json_string($el, $tabs."\t");
-                }
-            } else {
-                $json_chunks[]   = "{$tabs}\"{$k}\"\t: \"{$el}\"";
-            }
-        }
-        $json_str   .= implode(",\n", $json_chunks);
-        $json_str   .= "\n".preg_replace("/\t/",'',$tabs,1).'}';
-        return $json_str;
-    }
-
-    protected function is_assoc_array($array) {
-        foreach($array as $k=>$el) {
-            if(!is_numeric($k)) {
-                return true;
-            }
-        }
-        return false;
     }
 
 	protected function register_autoload() {

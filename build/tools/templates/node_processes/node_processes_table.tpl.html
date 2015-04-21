@@ -3,18 +3,26 @@
     <thead>
         <th>Name</th>
         <th>Enabled</th>
+        <th></th>
     </thead>
     <tbody>
         {foreach $processes as $process}
             <tr>
-                <th>{$process['name']}</th>
-                <th>
+                <td>{$process['name']}</td>
+                <td>
                     {if $process['enabled']}
-                        true
+                        <span class="glyphicon glyphicon-ok"></span>
                     {else}
-                        false
+                        <span class="glyphicon glyphicon-remove"></span>
                     {/if}
-                </th>
+                </td>
+                <td width="30" class="toggle-process">
+                    {if $process['enabled']}
+                        <button data-process="static-builder" data-action="disable" class="btn btn-danger btn-xs">disable</button>
+                    {else}
+                        <button data-process="static-builder" data-action="enable" class="btn btn-success btn-xs">enable</button>
+                    {/if}
+                </td>
             </tr>
         {/foreach}
     </tbody>

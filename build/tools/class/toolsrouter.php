@@ -9,7 +9,9 @@ class ToolsRouter extends Router {
 	public function __construct() {
 		$this->routes = [
 			'/' => [$this, 'index'],
-			'/node_processes' => [$this, 'node_processes']
+			'/node_processes' => [$this, 'node_processes'],
+			'/node_processes/enable' => ['NodeProcessesController', 'enable_process'],
+			'/node_processes/disable' => ['NodeProcessesController', 'disable_process']
 		];
 	}
 

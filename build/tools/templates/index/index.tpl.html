@@ -3,6 +3,7 @@
     <head>
         <link rel="stylesheet" href="{$css_path}/tools.css"/>
         <link rel="shortcut icon" href="{$images_path}/favicon.ico"/>
+        <title>Peach Framework Tools</title>
     </head>
     <body>
         <div id="all">
@@ -26,8 +27,8 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-lg-2 col-lg-offset-1">
-                        <ul class="nav nav-stacked nav-pills">
+                    <div id="left-menu" class="col-lg-2 col-lg-offset-1">
+                        <ul id="tools-menu" class="nav nav-stacked nav-pills">
                             <li {if $uri == '/'} class="active"{/if}>
                                 <a href="/">Templates tool</a>
                             </li>
@@ -37,11 +38,14 @@
                         </ul>
                     </div>
                     <div class="col-lg-8">
-                        {$main_content}
+                        <div id="main_content">
+                            {$main_content}
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         <script src="{$js_path}/tools.js"></script>
+        <script src="{$js_path}/views.js"></script>
     </body>
 </html>

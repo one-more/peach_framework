@@ -1,7 +1,0 @@
-{
-    "0" : {
-        "name" : "static builder",
-        "enabled" : true,
-        "class" : "StaticBuilderProcess"
-    }
-}
