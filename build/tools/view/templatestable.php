@@ -14,4 +14,8 @@ class TemplatesTable extends SuperView {
 		$this->assign('templates_list', $templates_list);
 		return $this->getTemplate('templates_table.tpl.html');
 	}
+
+	public function get_lang_file() {
+		return 'pfmextension://tools'.DS.'lang'.DS.CURRENT_LANG.DS.'templates_table.json';
+	}
 }

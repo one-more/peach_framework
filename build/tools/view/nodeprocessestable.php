@@ -13,4 +13,8 @@ class NodeProcessesTable extends SuperView {
 		$this->assign('processes', $processes);
 		return $this->getTemplate('node_processes_table.tpl.html');
 	}
+
+	public function get_lang_file() {
+		return 'pfmextension://tools'.DS.'lang'.DS.CURRENT_LANG.DS.'node_processes_table.json';
+	}
 }

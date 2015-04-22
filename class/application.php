@@ -121,6 +121,10 @@ class Application {
 
 		$system = Application::get_class('System');
 		$system->initialize();
+
+		$lang_obj = self::get_class('Language');
+		$current_lang = $lang_obj->get_language();
+		define('CURRENT_LANG', $current_lang);
 	}
 
 	public static function start() {

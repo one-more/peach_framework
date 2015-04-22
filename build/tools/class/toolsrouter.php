@@ -3,7 +3,9 @@
 class ToolsRouter extends Router {
 	protected $routes;
 	private $positions = [
-		'main_content' => null
+		'main_content' => null,
+		'left_block' => null,
+		'top_menu' => null
 	];
 
 	public function __construct() {
@@ -40,10 +42,13 @@ class ToolsRouter extends Router {
 				'js_path' => $static_path.DS.'js',
 				'images_path' => $static_path.DS.'images'
 			];
+			$left_menu_view = Application::get_class('LeftMenu');
+			$this->positions['left_block'] = $left_menu_view->render();
+			$top_menu_view = Application::get_class('TopMenu');
+			$this->positions['top_menu'] = $top_menu_view->render();
 			$smarty = new Smarty();
 			$smarty->assign($paths);
 			$smarty->assign($this->positions);
-			$smarty->assign('uri', Request::uri());
 			$smarty->setTemplateDir('pfmextension://tools'.DS.'templates'.DS.'index');
 			$smarty->setCompileDir('pfmextension://tools'.DS.'templates_c');
 			echo $smarty->getTemplate('index.tpl.html');

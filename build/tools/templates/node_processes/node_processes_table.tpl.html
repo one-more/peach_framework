@@ -1,8 +1,8 @@
 {if $processes|@count}
 <table id="node-processes-table" class="table table-striped">
     <thead>
-        <th>Name</th>
-        <th>Enabled</th>
+        <th>{$name}</th>
+        <th>{$enabled}</th>
         <th></th>
     </thead>
     <tbody>
@@ -18,9 +18,9 @@
                 </td>
                 <td width="30" class="toggle-process">
                     {if $process['enabled']}
-                        <button data-process="static-builder" data-action="disable" class="btn btn-danger btn-xs">disable</button>
+                        <button data-process="static-builder" data-action="disable" class="btn btn-danger btn-xs">{$disable}</button>
                     {else}
-                        <button data-process="static-builder" data-action="enable" class="btn btn-success btn-xs">enable</button>
+                        <button data-process="static-builder" data-action="enable" class="btn btn-success btn-xs">{$enable}</button>
                     {/if}
                 </td>
             </tr>

@@ -15,5 +15,5 @@ CREATE TABLE IF NOT EXISTS `session` (
 
 INSERT INTO `users` SET
 `login`       = 'root',
-`password`    = 'root',
+`password`    = '',
 `credentials` = 'super_administrator';

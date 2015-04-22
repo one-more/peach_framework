@@ -1,0 +1,10 @@
+<div id="left-menu">
+    <ul id="tools-menu" class="nav nav-stacked nav-pills">
+        <li {if $uri == '/'} class="active"{/if}>
+        <a href="/">{$templates}</a>
+        </li>
+        <li {if $uri == '/node_processes'} class="active"{/if}>
+        <a href="/node_processes">{$node_processes}</a>
+        </li>
+    </ul>
+</div>
