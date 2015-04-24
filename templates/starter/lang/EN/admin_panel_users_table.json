@@ -1,0 +1,11 @@
+{
+    "login": "Login",
+    "credentials": "Credentials",
+    "password": "Password",
+    "edit": "edit",
+    "credentials_labels": {
+        "user": "user",
+        "administrator": "administrator",
+        "super_administrator": "super administrator"
+    }
+}

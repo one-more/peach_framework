@@ -2,11 +2,6 @@ body {
     background: #ccc;
 }
 
-td,th {
-   border-right: 2px solid black;
-    padding: 0 10px;
-}
-
 .display-block {
     display: block;
 }
@@ -22,4 +17,8 @@ td,th {
 
 .border-radius-none {
     border-radius: 0 !important;
+}
+
+.cursor-pointer {
+    cursor: pointer;
 }

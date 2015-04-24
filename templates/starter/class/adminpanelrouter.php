@@ -4,6 +4,7 @@ class AdminPanelRouter extends Router {
 	use trait_starter_router;
 
 	private $positions = [
+		'navbar' => null,
 		'left_menu' => null,
 		'main_content' => null
 	];
@@ -15,9 +16,12 @@ class AdminPanelRouter extends Router {
 	}
 
 	public function index() {
-		$user = Application::get_class('User');
-		if($user->is_logined()) {
-
+		$user_controller = Application::get_class('UserController');
+		if($user_controller->is_admin()) {
+			$navbar_view = Application::get_class('AdminPanelNavbar');
+			$this->positions['navbar'] = $navbar_view->render();
+			$users_table_view = Application::get_class('AdminPanelUsersTable');
+			$this->positions['main_content'] = $users_table_view->render();
 		} else {
 			$view = Application::get_class('AdminPanelLogin');
 			$this->positions['main_content'] = $view->render();
@@ -35,6 +39,11 @@ class AdminPanelRouter extends Router {
 				'images_path' => $static_path.DS.'images',
 				'js_path' => $static_path.DS.'js'
 			];
+			$user_controller = Application::get_class('UserController');
+			if($user_controller->is_admin()) {
+				$left_menu_view = Application::get_class('AdminPanelLeftMenu');
+				$this->positions['left_menu'] = $left_menu_view->render();
+			}
 			$templator->assign($static_paths);
 			$templator->setTemplateDir($template->path.DS.'templates'.DS.'admin_panel');
 			$templator->setCompileDir($template->path.DS.'templates_c');

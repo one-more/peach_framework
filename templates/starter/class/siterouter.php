@@ -9,7 +9,8 @@ class SiteRouter extends Router {
 		$this->routes = [
 			'/' => [$this, 'index', 'no check'],
 			'/login' => [$this, 'login'],
-			'/logout' => [$this, 'logout']
+			'/logout' => [$this, 'logout'],
+			'/language_model' => [$this, 'language_model', 'no check']
 		];
 	}
 
@@ -23,6 +24,11 @@ class SiteRouter extends Router {
 		$remember = Request::get_var('remember', 'string');
 		$user_controller = Application::get_class('UserController');
 		echo json_encode($user_controller->login($login, $password, (bool)$remember));
+	}
+
+	public function language_model() {
+		$template = Application::get_class('Starter');
+		echo file_get_contents($template->path.DS.'lang'.DS.CURRENT_LANG.DS.'client.json');
 	}
 
 	public function logout() {

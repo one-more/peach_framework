@@ -23,4 +23,10 @@ class UserController {
 		$user = Application::get_class('User');
 		return $user->login($login, $password, $remember);
 	}
+
+	public function is_admin() {
+		$user = Application::get_class('User');
+		return $user->get_field('credentials') == 'administrator' ||
+			$user->get_field('credentials') == 'super_administrator';
+	}
 }

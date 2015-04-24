@@ -42,7 +42,8 @@ class User {
     }
 
     public function get_field($name, $uid = null) {
-        return $this->get_fields($uid)[$name];
+        $result = $this->get_fields($uid);
+		return count($result) ? $result[$name] : '';
     }
 
     public function register($fields) {

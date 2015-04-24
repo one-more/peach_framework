@@ -5,3 +5,8 @@
 //= partials/crypto/md5.js
 //= partials/app.js
 //= partials/router.js
+//= partials/modernizr.custom.js
+//= partials/classie.js
+//= partials/notificationFx.js
+//= partials/views/notification.js
+//= partials/models/language_model.js

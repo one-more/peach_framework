@@ -10,7 +10,9 @@
                     this.url += (this.url.indexOf('?') > -1 ? '&' : '?') + 'ajax=1';
                     this.url += '&token='+App.get_token();
                 },
-                error : function(xhr,status, error) {}
+                error : function(xhr,status, error) {
+                    NotificationView.display(LanguageModel.get('request_error'), 'error');
+                }
             });
         },
 

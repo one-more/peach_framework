@@ -11,9 +11,16 @@
             var form = event.target;
             $.post('/login', $(form).serializeArray(), function(user) {
                 if(typeof user !== 'object') {
-                    console.log('wrong data');
+                    NotificationView.display(LanguageModel.get('login_error'), 'error')
                 } else {
-                    console.log('ok');
+                    var credentials = user['credentials'];
+                    var is_admin = credentials == 'administrator' ||
+                        credentials == 'super_administrator';
+                    if(is_admin) {
+                        App.router.reload();
+                    } else {
+                        NotificationView.display(LanguageModel.get('credentials_error'), 'error');
+                    }
                 }
             }, 'json');
         }

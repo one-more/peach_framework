@@ -1,0 +1,5 @@
+{
+    "request_error": "request error",
+    "login_error": "wrong login or password",
+    "credentials_error": "you have not administrator credentials"
+}
