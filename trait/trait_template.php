@@ -36,10 +36,15 @@ trait trait_template {
 		return static::load_template_class($name, $dir = 'view');
 	}
 
+	public static function load_template_trait($name) {
+		return static::load_template_class($name, $dir = 'trait');
+	}
+
 	protected function register_autoload() {
 		spl_autoload_register([__CLASS__, 'load_template_class']);
 		spl_autoload_register([__CLASS__, 'load_template_model']);
 		spl_autoload_register([__CLASS__, 'load_template_controller']);
 		spl_autoload_register([__CLASS__, 'load_template_view']);
+		spl_autoload_register([__CLASS__, 'load_template_trait']);
 	}
 }
