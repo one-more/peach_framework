@@ -31,13 +31,24 @@ class UserController {
 	}
 
 	public function edit_user() {
+		$lang_vars = $this->get_lang_vars();
 		try {
 			$fields = $this->get_sanitized_vars([
 				[
 					'name' => 'login',
 					'required' => true,
-					'error' => 'login is empty',
+					'error' => $lang_vars['edit_user']['empty_login'],
 					'type' => 'string'
+				],
+				[
+					'name' => 'password',
+					'type' => 'string'
+				],
+				[
+					'name' => 'credentials',
+					'required' => true,
+					'type' => 'string',
+					'error' => $lang_vars['edit_user']['empty_credentials']
 				]
 			]);
 		} catch(Exception $e) {
@@ -47,5 +58,28 @@ class UserController {
 			];
 			echo json_encode($error);
 		}
+		$uid = Request::get_var('id', 'int');
+		if(!$uid) {
+			throw new Exception('empty id');
+		}
+		$user = Application::get_class('User');
+		$old_fields = $user->get_fields($uid);
+		if($old_fields['login'] != $fields['login']) {
+			if($user->get_user_by_field('login', $fields['login'])) {
+				echo json_encode([
+					'status' => 'error',
+					'message' => $lang_vars['edit_user']['login_exists']
+				]);
+			}
+		}
+		if(trim($fields['password'])) {
+			$fields['password'] =
+				$this->crypt_password($fields['login'], $fields['password']);
+		}
+		$user->update_fields($fields, $uid);
+		echo json_encode([
+			'status' => 'success',
+			'message' => $lang_vars['edit_user']['success']
+		]);
 	}
 }

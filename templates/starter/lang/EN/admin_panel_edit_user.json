@@ -8,5 +8,6 @@
         "user": "user",
         "administrator": "administrator",
         "super_administrator": "super administrator"
-    }
+    },
+    "user_not_exists": "user not exists"
 }

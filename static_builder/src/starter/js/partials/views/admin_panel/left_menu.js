@@ -3,14 +3,13 @@
     window.LeftMenuView = Backbone.View.extend({
         el: '#left-menu',
 
-        events: {
-            'click a': 'change_active'
-        },
-
-        change_active: function(event) {
-            var el = $(event.target);
-            el.parents('ul').find('li').removeClass('active');
-            el.parent().addClass('active');
+        initialize: function() {
+            App.on('Page:loaded', function() {
+                this.$el.find('li').removeClass('active');
+                this.$el.find('a[href="'+location.pathname+'"]')
+                    .parent('li')
+                    .addClass('active');
+            }.bind(this))
         }
     });
     window.LeftMenuView = new window.LeftMenuView;

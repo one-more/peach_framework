@@ -17,7 +17,7 @@
                     var is_admin = credentials == 'administrator' ||
                         credentials == 'super_administrator';
                     if(is_admin) {
-                        App.router.reload();
+                        location.reload();
                     } else {
                         NotificationView.display(LanguageModel.get('credentials_error'), 'error');
                     }

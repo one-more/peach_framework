@@ -7,5 +7,6 @@
         "user": "пользователь",
         "administrator": "администратор",
         "super_administrator": "супер администратор"
-    }
+    },
+    "add_user": "добавить"
 }

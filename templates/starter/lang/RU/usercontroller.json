@@ -1,0 +1,8 @@
+{
+    "edit_user": {
+        "empty_login" : "введите логин",
+        "login_exists" : "логин уже занят",
+        "empty_credentials" : "введите привилегии",
+        "success" : "данные обновлены"
+    }
+}

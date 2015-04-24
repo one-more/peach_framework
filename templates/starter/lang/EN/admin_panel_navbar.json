@@ -1,4 +1,5 @@
 {
     "site": "site",
-    "admin_panel": "Administration panel"
+    "admin_panel": "Administration panel",
+    "logout": "logout"
 }
