@@ -14,4 +14,13 @@ class UserController {
 	private function crypt_password($login, $password) {
         return crypt(trim($password), md5($password).md5($login));
     }
+
+	public function login($login, $password, $remember) {
+		$password = trim($password);
+		if($password) {
+			$password = $this->crypt_password($login, $password);
+		}
+		$user = Application::get_class('User');
+		return $user->login($login, $password, $remember);
+	}
 }

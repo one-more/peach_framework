@@ -7,12 +7,27 @@ class SiteRouter extends Router {
 
 	public function __construct() {
 		$this->routes = [
-			'/' => [$this, 'index', 'no check']
+			'/' => [$this, 'index', 'no check'],
+			'/login' => [$this, 'login'],
+			'/logout' => [$this, 'logout']
 		];
 	}
 
 	public function index() {
 		$this->show_result();
+	}
+
+	public function login() {
+		$login = Request::get_var('login', 'string');
+		$password = Request::get_var('password', 'string');
+		$remember = Request::get_var('remember', 'string');
+		$user_controller = Application::get_class('UserController');
+		echo json_encode($user_controller->login($login, $password, (bool)$remember));
+	}
+
+	public function logout() {
+		$user = Application::get_class('User');
+		$user->log_out();
 	}
 
 	private function show_result() {
