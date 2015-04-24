@@ -11,21 +11,26 @@ class AdminPanelRouter extends Router {
 
 	public function __construct() {
 		$this->routes = [
-			'/admin_panel' => [$this, 'index', 'no check']
+			'/admin_panel' => [$this, 'index', 'no check'],
+			'/admin_panel/edit_user/:number' => [$this, 'edit_user', 'no check']
 		];
 	}
 
 	public function index() {
 		$user_controller = Application::get_class('UserController');
 		if($user_controller->is_admin()) {
-			$navbar_view = Application::get_class('AdminPanelNavbar');
-			$this->positions['navbar'] = $navbar_view->render();
 			$users_table_view = Application::get_class('AdminPanelUsersTable');
 			$this->positions['main_content'] = $users_table_view->render();
 		} else {
 			$view = Application::get_class('AdminPanelLogin');
 			$this->positions['main_content'] = $view->render();
 		}
+		$this->show_result();
+	}
+
+	public function edit_user($id) {
+		$view = Application::get_class('AdminPanelEditUser', [$id]);
+		$this->positions['main_content'] = $view->render();
 		$this->show_result();
 	}
 
@@ -43,6 +48,8 @@ class AdminPanelRouter extends Router {
 			if($user_controller->is_admin()) {
 				$left_menu_view = Application::get_class('AdminPanelLeftMenu');
 				$this->positions['left_menu'] = $left_menu_view->render();
+				$navbar_view = Application::get_class('AdminPanelNavbar');
+				$this->positions['navbar'] = $navbar_view->render();
 			}
 			$templator->assign($static_paths);
 			$templator->setTemplateDir($template->path.DS.'templates'.DS.'admin_panel');

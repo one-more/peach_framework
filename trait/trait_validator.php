@@ -5,7 +5,7 @@ trait trait_validator {
 		$result = [];
 		foreach($vars as $var) {
 			if(empty($var['name'])) {
-				throw new Exception("filed name is empty in get_sanitized_vars method");
+				throw new Exception("field name is empty in get_sanitized_vars method");
 			}
 			$type = isset($var['type']) ? $var['type'] : 'raw';
 			$default = isset($var['default']) ? $var['default'] : '';

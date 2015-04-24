@@ -40,7 +40,7 @@ class UserModel extends SuperModel {
 		}
 		if(empty($this->cached_fields[$uid])) {
 			$params = [];
-			$params['where']    = "`id` = {$uid}";
+			$params['where']    = "`id` = {$uid} and deleted = 0";
 			$fields = $this->select('users', $params);
 			$this->cached_fields[$uid] = $fields;
 			return $fields;
@@ -73,10 +73,12 @@ class UserModel extends SuperModel {
 			$ids_str = implode(',', $ids);
 			$key = md5($ids_str);
 			$params = [
-				'where' => ' id in ('.$ids_str.')'
+				'where' => ' id in ('.$ids_str.') and deleted = 0'
 			];
 		} else {
-			$params = [];
+			$params = [
+				'where' => ' deleted = 0'
+			];
 			$key = 'all';
 		}
 		if(!empty($this->cached_users[$key])) {
@@ -108,7 +110,7 @@ class UserModel extends SuperModel {
     }
 
     public function get_user_by_field($field, $value) {
-        $sql    = "SELECT * FROM `users` WHERE `{$field}` = ?";
+        $sql    = "SELECT * FROM `users` WHERE `{$field}` = ? and deleted = 0";
         $sth    = $this->db->prepare($sql);
         $sth->bindParam(1, $value);
         $sth->execute();
@@ -122,48 +124,5 @@ class UserModel extends SuperModel {
             $session    = Application::get_class('Session');
             $session->unset_var('user');
         }
-    }
-
-    public function add_unconfirmed_user($fields) {
-        return  $this->insert('unconfirmed_users', ['fields'    => $fields]);
-    }
-
-    public function get_unconfirmed_user_by_field($field, $value) {
-        $sql    = "SELECT * FROM `unconfirmed_users` WHERE `{$field}` = ?";
-        $sth    = $this->db->prepare($sql);
-        $sth->bindParam(1, $value);
-        $sth->execute();
-        return $sth->fetch();
-    }
-
-    public function purge_unconfirmed_users() {
-        $records    = $this->select('unconfirmed_users');
-        $purge_ids  = [];
-        if(count($records)) {
-            if(!empty($records[0])) {
-                foreach($records as $el) {
-                    $register_date  = $el['register_date'];
-                    if((strtotime($register_date)+(60*60*24*5)) < time()) {
-                        $purge_ids[]    = $el['id'];
-                    }
-                }
-            } else {
-                $register_date  = $records['register_date'];
-                if((strtotime($register_date)+(60*60*24*5)) < time()) {
-                    $purge_ids[]    = $records['id'];
-                }
-            }
-        }
-        if(count($purge_ids)) {
-            $sql    = 'DELETE FROM `unconfirmed_users` WHERE id IN('.implode(',',$purge_ids).')';
-            $this->execute($sql);
-        }
-    }
-
-    public function delete_unconfirmed_user($id) {
-        $sql    = 'DELETE FROM `unconfirmed_users` WHERE `id` = ?';
-        $sth    = $this->db->prepare($sql);
-        $sth->bindParam(1, $id, PDO::PARAM_INT);
-        $sth->execute();
     }
 }

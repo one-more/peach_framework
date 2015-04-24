@@ -1,7 +1,7 @@
 <?php
 
 class UserController {
-	use trait_controller;
+	use trait_controller, trait_validator;
 
 	public function is_token_valid() {
 		$client_token = Request::get_var('token');
@@ -28,5 +28,24 @@ class UserController {
 		$user = Application::get_class('User');
 		return $user->get_field('credentials') == 'administrator' ||
 			$user->get_field('credentials') == 'super_administrator';
+	}
+
+	public function edit_user() {
+		try {
+			$fields = $this->get_sanitized_vars([
+				[
+					'name' => 'login',
+					'required' => true,
+					'error' => 'login is empty',
+					'type' => 'string'
+				]
+			]);
+		} catch(Exception $e) {
+			$error = [
+				'status' => 'error',
+				'message' => $e->getMessage()
+			];
+			echo json_encode($error);
+		}
 	}
 }

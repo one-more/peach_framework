@@ -1,7 +1,10 @@
 (function() {
     'use strict';
     App.router = Backbone.Router.extend({
-        routes: {},
+        routes: {
+            'admin_panel/edit_user/:id': 'load_positions',
+            'admin_panel': 'load_positions'
+        },
 
         load_positions: function() {
             $.post(location.pathname, {}, function(data) {

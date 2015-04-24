@@ -1,5 +1,5 @@
-<ul class="nav nav-pills nav-stacked">
-    <li class="active">
+<ul id="left-menu" class="nav nav-pills nav-stacked">
+    <li {if $url == '/admin_panel'}class="active"{/if}>
         <a href="/admin_panel">{$users}</a>
     </li>
 </ul>

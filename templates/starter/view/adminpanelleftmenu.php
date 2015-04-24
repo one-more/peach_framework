@@ -7,6 +7,7 @@ class AdminPanelLeftMenu extends TemplateView {
 	}
 
 	public function render() {
+		$this->assign('url', Request::uri());
 		return $this->getTemplate('left_menu.tpl.html');
 	}
 
