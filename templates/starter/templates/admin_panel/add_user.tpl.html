@@ -1,0 +1,39 @@
+
+<form id="add-user-form">
+    <div class="row">
+        <div class="col-lg-5">
+            <div class="form-group">
+                <label for="login">{$login}</label>
+                <input id="login" name="login" class="form-control" type="text"/>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-5">
+            <div class="form-group">
+                <label for="password">{$password}</label>
+                <input class="form-control" id="password" name="password" type="text"/>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-5">
+            <div class="form-group">
+                <label for="credentials">{$credentials}</label>
+                <select name="credentials" id="credentials" class="form-control">
+                    {foreach $credentials_labels as $k=>$el}
+                        <option value="{$k}">{$el}</option>
+                    {/foreach}
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-5">
+            <div class="form-group">
+                <input class="btn btn-success" type="submit" value="{$add}"/>
+                <button class="btn btn-info">{$cancel}</button>
+            </div>
+        </div>
+    </div>
+</form>

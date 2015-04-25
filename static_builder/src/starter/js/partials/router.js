@@ -3,7 +3,8 @@
     App.router = Backbone.Router.extend({
         routes: {
             'admin_panel/edit_user/:id': 'load_positions',
-            'admin_panel': 'load_positions'
+            'admin_panel': 'load_positions',
+            'admin_panel/add_user': 'load_positions'
         },
 
         load_positions: function() {

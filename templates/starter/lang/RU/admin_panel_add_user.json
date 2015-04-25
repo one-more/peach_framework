@@ -1,0 +1,12 @@
+{
+    "login": "Логин",
+    "password": "Пароль",
+    "credentials": "Привилегии",
+    "add": "добавить",
+    "cancel": "отмена",
+    "credentials_labels": {
+        "user": "пользователь",
+        "administrator": "администратор",
+        "super_administrator": "супер администратор"
+    }
+}

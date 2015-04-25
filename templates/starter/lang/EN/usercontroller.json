@@ -4,5 +4,11 @@
         "login_exists" : "login already exists",
         "empty_credentials" : "enter credentials",
         "success" : "fields updated"
+    },
+    "add_user": {
+        "empty_login" : "enter login",
+        "login_exists" : "login already exists",
+        "empty_credentials" : "enter credentials",
+        "success" : "user created"
     }
 }

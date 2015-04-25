@@ -11,6 +11,7 @@ class SiteRouter extends Router {
 			'/login' => [$this, 'login'],
 			'/logout' => [$this, 'logout'],
 			'/edit_user' => ['UserController', 'edit_user'],
+			'/add_user' => ['UserController', 'add_user'],
 			'/language_model' => [$this, 'language_model', 'no check']
 		];
 	}

@@ -57,6 +57,7 @@ class UserController {
 				'message' => $e->getMessage()
 			];
 			echo json_encode($error);
+			return;
 		}
 		$uid = Request::get_var('id', 'int');
 		if(!$uid) {
@@ -70,6 +71,7 @@ class UserController {
 					'status' => 'error',
 					'message' => $lang_vars['edit_user']['login_exists']
 				]);
+				return;
 			}
 		}
 		if(trim($fields['password'])) {
@@ -80,6 +82,54 @@ class UserController {
 		echo json_encode([
 			'status' => 'success',
 			'message' => $lang_vars['edit_user']['success']
+		]);
+	}
+
+	public function add_user() {
+		$lang_vars = $this->get_lang_vars();
+		try {
+			$fields = $this->get_sanitized_vars([
+				[
+					'name' => 'login',
+					'required' => true,
+					'error' => $lang_vars['add_user']['empty_login'],
+					'type' => 'string'
+				],
+				[
+					'name' => 'password',
+					'type' => 'string'
+				],
+				[
+					'name' => 'credentials',
+					'required' => true,
+					'type' => 'string',
+					'error' => $lang_vars['add_user']['empty_credentials']
+				]
+			]);
+		} catch(Exception $e) {
+			$error = [
+				'status' => 'error',
+				'message' => $e->getMessage()
+			];
+			echo json_encode($error);
+			return;
+		}
+		$user = Application::get_class('User');
+		if($user->get_user_by_field('login', $fields['login'])) {
+			echo json_encode([
+				'status' => 'error',
+				'message' => $lang_vars['add_user']['login_exists']
+			]);
+			return;
+		}
+		if(trim($fields['password'])) {
+			$fields['password'] =
+				$this->crypt_password($fields['login'], $fields['password']);
+		}
+		$user->register($fields);
+		echo json_encode([
+			'status' => 'success',
+			'message' => $lang_vars['add_user']['success']
 		]);
 	}
 }

@@ -1,0 +1,12 @@
+{
+    "login": "Login",
+    "password": "Password",
+    "credentials": "Credentials",
+    "add": "add",
+    "cancel": "cancel",
+    "credentials_labels": {
+        "user": "user",
+        "administrator": "administrator",
+        "super_administrator": "super administrator"
+    }
+}
