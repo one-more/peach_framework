@@ -30,7 +30,15 @@ class UserController {
 			$user->get_field('credentials') == 'super_administrator';
 	}
 
+	public function is_super_admin() {
+		$user = Application::get_class('User');
+		return $user->get_field('credentials') == 'super_administrator';
+	}
+
 	public function edit_user() {
+		if($this->is_super_admin()) {
+			throw new Exception('you must be super admin to edit users');
+		}
 		$lang_vars = $this->get_lang_vars();
 		try {
 			$fields = $this->get_sanitized_vars([
@@ -86,6 +94,9 @@ class UserController {
 	}
 
 	public function add_user() {
+		if($this->is_super_admin()) {
+			throw new Exception('you must be super admin to add users');
+		}
 		$lang_vars = $this->get_lang_vars();
 		try {
 			$fields = $this->get_sanitized_vars([
