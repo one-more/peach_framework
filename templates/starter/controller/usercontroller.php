@@ -36,7 +36,7 @@ class UserController {
 	}
 
 	public function edit_user() {
-		if($this->is_super_admin()) {
+		if(!$this->is_super_admin()) {
 			throw new Exception('you must be super admin to edit users');
 		}
 		$lang_vars = $this->get_lang_vars();
@@ -94,7 +94,7 @@ class UserController {
 	}
 
 	public function add_user() {
-		if($this->is_super_admin()) {
+		if(!$this->is_super_admin()) {
 			throw new Exception('you must be super admin to add users');
 		}
 		$lang_vars = $this->get_lang_vars();
