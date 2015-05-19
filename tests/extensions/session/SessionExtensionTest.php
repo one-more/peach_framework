@@ -4,7 +4,7 @@ require_once '../../initialize.php';
 class SessionExtensionTest extends PHPUnit_Framework_TestCase {
 
 	private $session_obj;
-	private $session_id = 2;
+	private $session_id = 1;
 
 	public function __construct() {
 		parent::__construct();

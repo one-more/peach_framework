@@ -29,7 +29,7 @@ class ExceptionHandler {
 
 function peach_exception_handler($exception) {
     $message    = $exception->getMessage();
-    error::log($message);
+    Error::log($message);
 
     ExceptionHandler::show_error('an exception occurred');
 
@@ -39,7 +39,7 @@ function peach_exception_handler($exception) {
 function peach_error_handler($errno, $errstr, $errfile, $errline) {
     $msg = "$errno : $errstr in $errline of $errfile";
 
-    error::log($msg);
+    Error::log($msg);
 
     ExceptionHandler::show_error('an error occurred');
 

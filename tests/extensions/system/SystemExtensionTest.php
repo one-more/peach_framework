@@ -6,6 +6,7 @@ class SystemExtensionTest extends PHPUnit_Framework_TestCase {
 
 	private $system_obj;
 	private $configuration;
+	private $session_id = 1;
 
 	public function __construct() {
 		parent::__construct();
@@ -15,7 +16,7 @@ class SystemExtensionTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function test_initialize() {
-		$_COOKIE['pfm_session_id'] = 1;
+		$_COOKIE['pfm_session_id'] = $this->session_id;
 		$this->assertNull($this->system_obj->initialize());
 	}
 

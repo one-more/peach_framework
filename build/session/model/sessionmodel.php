@@ -26,7 +26,7 @@ class SessionModel extends SuperModel {
         return empty($vars) ? [] : json_decode($vars, true);
     }
 
-    public function get_var($name, $default) {
+    public function get_var($name, $default = false) {
         $vars   = $this->get_vars();
         return empty($vars[$name]) ? $default : $vars[$name];
     }

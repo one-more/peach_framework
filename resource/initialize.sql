@@ -18,3 +18,5 @@ INSERT INTO `users` SET
 `login`       = 'root',
 `password`    = '',
 `credentials` = 'super_administrator';
+
+INSERT INTO `session` SET `uid` = 1, `vars` = '[]';

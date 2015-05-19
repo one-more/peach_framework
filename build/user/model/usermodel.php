@@ -4,7 +4,7 @@ class UserModel extends SuperModel {
 	private $cached_fields = [];
 	private $cached_users = [];
 
-    public function login($login, $password, $remember) {
+    public function login($login, $password, $remember = false) {
         $sql    = "
             SELECT * FROM `users` WHERE `login` = ? AND `password` = ?
         ";
@@ -91,21 +91,20 @@ class UserModel extends SuperModel {
     }
 
     public function get_id() {
-        $user = Application::get_class('User');
-		if($user->is_logined()) {
-			if(!empty($_COOKIE['user'])) {
-				$remember_hash  = $_COOKIE['user'];
-			} else {
-				$session    = Application::get_class('Session');
-				$remember_hash  = $session->get_var('user');
-			}
+		if(!empty($_COOKIE['user'])) {
+			$remember_hash  = $_COOKIE['user'];
+		} else {
+			$session    = Application::get_class('Session');
+			$remember_hash  = $session->get_var('user');
+		}
+		if($remember_hash) {
 			$params = [
 				'where'    => "remember_hash = '{$remember_hash}'"
 			];
 			$result = $this->select('users', $params);
-			return $result['id'];
+			return !empty($result['id']) ? $result['id'] : 0;
 		} else {
-			return -1;
+			return 0;
 		}
     }
 

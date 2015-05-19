@@ -8,26 +8,12 @@ class User {
     }
 
     public function is_logined() {
-        if(!empty($_COOKIE['user'])) {
-            return true;
-        } else {
-            $session    = Application::get_class('Session');
-            if($session->get_var('user')) {
-                return true;
-            } else {
-                return false;
-            }
-        }
+        return $this->get_id() > 0;
     }
 
     public function get_id() {
-        if($this->is_logined()) {
-            $model  = $this->get_model('UserModel');
-            $id = $model->get_id();
-            return $id;
-        } else {
-            return 0;
-        }
+		$model  = $this->get_model('UserModel');
+		return $model->get_id();
     }
 
     public function login($login, $password, $remember = false) {
