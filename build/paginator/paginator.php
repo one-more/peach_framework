@@ -7,6 +7,20 @@ class Paginator {
 		$this->register_autoload();
 	}
 
+	/**
+	 * @param $params - array in format
+	 * [
+	 * 	'btns_links' => range(1,5),
+		'total' => 1,
+		'per_page' => 1,
+		'current' => 1,
+		'show_links' => 5,
+		'id' => 'paging',
+		'class' => 'pagination',
+		'link_class' => 'pagination-link'
+	 * ]
+	 * @return string
+	 */
 	public function get_paging($params) {
 		$default = [
 			'btns_links' => range(1,5),

@@ -8,8 +8,6 @@ class System {
         mb_http_output('UTF-8');
         mb_http_input('UTF-8');
 
-        ini_set('display_errors', 'on');
-
 		stream_wrapper_register("pfmextension", "PFMExtensionWrapper");
 
         $this->register_autoload();
@@ -35,7 +33,7 @@ class System {
         return $this->get_configuration()['use_db'];
     }
 
-    protected function init_db() {
+    private function init_db() {
         $params = $this->get_configuration();
         if($this->use_db()) {
             if(empty($this->get_params('system')['db_initialized'])) {

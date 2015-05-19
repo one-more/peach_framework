@@ -3,18 +3,24 @@
 class Session {
     use trait_extension;
 
-    public function start() {
-        $this->register_autoload();
+	public function __construct() {
+		$this->register_autoload();
+	}
 
+    public function start() {
         $system = Application::get_class('System');
         if($system->use_db()) {
             if(empty($_COOKIE['pfm_session_id'])) {
                 $model  = $this->get_model('SessionModel');
                 $session_id = $model->start_session();
                 setcookie('pfm_session_id', $session_id, null, '/');
-            }
+				return $session_id;
+            } else {
+				return $_COOKIE['pfm_session_id'];
+			}
         } else {
             session_start();
+			return session_id();
         }
     }
 

@@ -1,6 +1,7 @@
 <?php
 
 class SessionModel extends SuperModel {
+
     public function start_session() {
         $user   = Application::get_class('User');
         $uid    = $user->get_id();

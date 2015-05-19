@@ -1,0 +1,46 @@
+<?php
+require_once '../../initialize.php';
+
+class SessionExtensionTest extends PHPUnit_Framework_TestCase {
+
+	private $session_obj;
+	private $session_id = 2;
+
+	public function __construct() {
+		parent::__construct();
+		$this->session_obj = Application::get_class('Session');
+		$_COOKIE['pfm_session_id'] = $this->session_id;
+	}
+
+	public function test_start() {
+		$system = Application::get_class('System');
+		if($system->use_db()) {
+			$this->assertInternalType('int', $this->session_obj->start());
+		} else {
+			$session_id = $this->session_obj->start();
+			$this->assertInternalType('string', $session_id);
+			$this->assertNotEmpty($session_id);
+		}
+	}
+
+	public function test_get_id() {
+		$this->assertEquals($this->session_obj->get_id(), $this->session_id);
+	}
+
+	public function test_set_var() {
+		$this->assertNull($this->session_obj->set_var('test', 'test'));
+	}
+
+	public function test_get_var() {
+		$this->assertEquals('test', $this->session_obj->get_var('test'));
+	}
+
+	public function test_unset_var() {
+		$this->assertNull($this->session_obj->unset_var('test'));
+		$this->assertFalse($this->session_obj->get_var('test'));
+	}
+
+	public function test_set_uid() {
+		$this->assertNull($this->session_obj->set_uid(1));
+	}
+}
