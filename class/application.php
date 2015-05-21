@@ -28,6 +28,7 @@ class Application {
             return false;
         }
         require_once "phar://{$extension_path_gz}/{$name}.php";
+		return true;
     }
 
     private static function is_extension_changed($name) {
@@ -90,6 +91,10 @@ class Application {
 		return static::load_class($name, $dir = 'interface');
 	}
 
+	public static function load_exception($name) {
+		return static::load_class($name, $dir = 'exception');
+	}
+
     public static function get_class($name, $params = array()) {
         if(!isset(static::$instances[$name])) {
             $reflection = new ReflectionClass($name);
@@ -110,12 +115,17 @@ class Application {
         }
     }
 
-	public static function initialize() {
+	public static function init_autoload() {
 		spl_autoload_register(['Application','load_class']);
 		spl_autoload_register(['Application','load_extension']);
 		spl_autoload_register(['Application','load_trait']);
 		spl_autoload_register(['Application','load_template']);
 		spl_autoload_register(['Application','load_interface']);
+		spl_autoload_register(['Application','load_exception']);
+	}
+
+	public static function initialize() {
+		static::init_autoload();
 
 		static::init_dirs();
 

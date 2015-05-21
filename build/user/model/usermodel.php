@@ -50,19 +50,38 @@ class UserModel extends SuperModel {
     }
 
     public function register($fields) {
-        $params = [
+		if(!is_array($fields) && !$fields instanceof Traversable) {
+			throw new InvalidArgumentException('fields must be array or traversable object');
+		}
+		if(empty($fields['login'])) {
+			throw new InvalidArgumentException('field login is empty');
+		}
+        if($this->get_user_by_field('login', $fields['login'])) {
+			throw new LoginExistsException('such user already exists');
+		}
+		$params = [
             'fields'    => $fields
         ];
-        return $this->insert('users', $params);
+        return (int)$this->insert('users', $params);
     }
 
+	public function delete_user($uid) {
+		$this->update('users', [
+			'fields' => ['deleted' => 1],
+			'where' => 'id = '.((int)$uid)
+		]);
+	}
+
     public function update_fields($fields, $uid = null) {
+		if(!is_array($fields) && !$fields instanceof Traversable) {
+			throw new InvalidArgumentException('fields must be array or traversable object');
+		}
         if(!$uid) {
             $uid    = $this->get_id();
         }
         $params = [
             'fields'    => $fields,
-            'where' => '`id` = '.$uid
+            'where' => '`id` = '.((int)$uid)
         ];
         $this->update('users', $params);
     }
@@ -109,6 +128,9 @@ class UserModel extends SuperModel {
     }
 
     public function get_user_by_field($field, $value) {
+		if(!is_string($value) || !is_string($field)) {
+			throw new InvalidArgumentException('field name and value must be strings');
+		}
         $sql    = "SELECT * FROM `users` WHERE `{$field}` = ? and deleted = 0";
         $sth    = $this->db->prepare($sql);
         $sth->bindParam(1, $value);

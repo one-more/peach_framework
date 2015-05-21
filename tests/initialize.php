@@ -8,11 +8,7 @@ require_once ROOT_PATH.DS.'lib/Smarty/Smarty.class.php';
 
 class TestsEnv {
 	public static function initialize() {
-		spl_autoload_register(['Application','load_class']);
-		spl_autoload_register(['Application','load_extension']);
-		spl_autoload_register(['Application','load_trait']);
-		spl_autoload_register(['Application','load_template']);
-		spl_autoload_register(['Application','load_interface']);
+		Application::init_autoload();
 	}
 }
 

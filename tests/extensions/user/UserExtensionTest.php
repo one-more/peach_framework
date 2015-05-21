@@ -50,7 +50,8 @@ class UserExtensionTest extends PHPUnit_Framework_TestCase {
 
 		$login = $this->test_user_login;
 		$password = $this->test_user_password;
-		$this->assertCount(6, $this->user_obj->login($login, $password));
+		$fields = $this->user_obj->login($login, $password);
+		$this->assertGreaterThan(5, count($fields));
 	}
 
 	public function test_log_out() {
@@ -60,10 +61,12 @@ class UserExtensionTest extends PHPUnit_Framework_TestCase {
 	public function test_get_fields() {
 		$this->assertCount(0, $this->user_obj->get_fields());
 
-		$this->assertCount(6, $this->user_obj->get_fields(1));
+		$fields = $this->user_obj->get_fields(1);
+		$this->assertGreaterThan(5, $fields);
 
 		$_COOKIE['user'] = $this->remember_hash;
-		$this->assertCount(6, $this->user_obj->get_fields());
+		$fields = $this->user_obj->get_fields(1);
+		$this->assertGreaterThan(5, $fields);;
 	}
 
 	public function test_get_field() {
@@ -73,5 +76,88 @@ class UserExtensionTest extends PHPUnit_Framework_TestCase {
 
 		$_COOKIE['user'] = $this->remember_hash;
 		$this->assertEquals($this->test_user_login, $this->user_obj->get_field('login'));
+	}
+
+	/**
+	 * @expectedException LoginExistsException
+	 */
+	public function test_register_existed() {
+		$fields = [
+			'login' => 'root'
+		];
+		$this->user_obj->register($fields);
+	}
+
+	/**
+	 * @expectedException InvalidArgumentException
+	 */
+	public function test_register_no_login() {
+		$this->user_obj->register([]);
+	}
+
+	/**
+	 * @expectedException InvalidArgumentException
+	 */
+	public function test_register_no_array() {
+		$this->user_obj->register(new StdClass);
+	}
+
+	public function test_register() {
+		$fields = [
+			'login' => uniqid('test_user', true)
+		];
+		$register_id = $this->user_obj->register($fields);
+		$this->assertInternalType('int', $register_id);
+		return $register_id;
+	}
+
+	/**
+	 * @depends test_register
+	 */
+	public function test_delete_user($uid) {
+		$this->assertNull($this->user_obj->delete_user($uid));
+	}
+
+	/**
+	 * @expectedException InvalidArgumentException
+	 */
+	public function test_update_empty_fields() {
+		$this->assertNull($this->user_obj->update_fields([]));
+	}
+
+	public function test_update_fields() {
+		$this->assertNull($this->user_obj->update_fields(['deleted' => 1]));
+	}
+
+	public function test_get_users() {
+		$this->assertInternalType('array', $this->user_obj->get_users());
+
+		$this->assertInternalType('array', $this->user_obj->get_users([1,2,3]));
+	}
+
+	public function test_get_users_field() {
+		$this->assertInternalType('array', $this->user_obj->get_users_field(''));
+
+		$this->assertInternalType('array', $this->user_obj->get_users_field('login'));
+
+		$this->assertInternalType('array', $this->user_obj->get_users_field(null));
+
+		$this->assertInternalType('array', $this->user_obj->get_users_field('login', 1));
+
+		$this->assertInternalType('array', $this->user_obj->get_users_field('login', [1,2]));
+	}
+
+	public function test_get_user_by_field() {
+		$this->assertCount(0, $this->user_obj->get_user_by_field('login', ''));
+
+		$fields = $this->user_obj->get_user_by_field('login', 'root');
+		$this->assertGreaterThan(5, count($fields));
+	}
+
+	/**
+	 * @expectedException InvalidArgumentException
+	 */
+	public function test_get_user_by_field_not_string() {
+		$this->assertCount(0, $this->user_obj->get_user_by_field('login', []));
 	}
 }

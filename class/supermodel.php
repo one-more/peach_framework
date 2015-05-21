@@ -101,7 +101,7 @@ class SuperModel {
             }
             $sth->execute();
         } else {
-            throw new Exception('fields are empty');
+            throw new InvalidArgumentException('fields are empty');
         }
     }
 
