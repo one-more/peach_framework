@@ -29,7 +29,7 @@ class UserModel extends SuperModel {
             }
             $session->set_uid($result['id']);
         }
-        return $result;
+        return !empty($result) ? $result : [];
     }
 
     public function get_fields($uid = null) {

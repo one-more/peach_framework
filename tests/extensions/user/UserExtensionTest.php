@@ -8,6 +8,8 @@ class UserExtensionTest extends PHPUnit_Framework_TestCase {
 	private $session_obj;
 	private $user_obj;
 	private $remember_hash = '$2y$10$1hjRr3BYJduVdn/9..aMgeRSMon.D5NSw3SNb5gB5i2USiJFRS2rK';
+	private $test_user_login = 'root';
+	private $test_user_password = '';
 
 	public function __construct() {
 		parent::__construct();
@@ -41,5 +43,35 @@ class UserExtensionTest extends PHPUnit_Framework_TestCase {
 
 		$_COOKIE['user'] = $this->remember_hash;
 		$this->assertEquals(1, $this->user_obj->get_id());
+	}
+
+	public function test_login() {
+		$this->assertCount(0, $this->user_obj->login(null,null,null));
+
+		$login = $this->test_user_login;
+		$password = $this->test_user_password;
+		$this->assertCount(6, $this->user_obj->login($login, $password));
+	}
+
+	public function test_log_out() {
+		$this->assertNull($this->user_obj->log_out());
+	}
+
+	public function test_get_fields() {
+		$this->assertCount(0, $this->user_obj->get_fields());
+
+		$this->assertCount(6, $this->user_obj->get_fields(1));
+
+		$_COOKIE['user'] = $this->remember_hash;
+		$this->assertCount(6, $this->user_obj->get_fields());
+	}
+
+	public function test_get_field() {
+		$this->assertEquals('', $this->user_obj->get_field('login'));
+
+		$this->assertEquals($this->test_user_login, $this->user_obj->get_field('login', 1));
+
+		$_COOKIE['user'] = $this->remember_hash;
+		$this->assertEquals($this->test_user_login, $this->user_obj->get_field('login'));
 	}
 }

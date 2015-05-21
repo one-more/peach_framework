@@ -63,24 +63,4 @@ class User {
         $model  = $this->get_model('UserModel');
         $model->log_out();
     }
-
-    public function add_unconfirmed_user($fields) {
-        $model  = $this->get_model('UserModel');
-        return  $model->add_unconfirmed_user($fields);
-    }
-
-    public function get_unconfirmed_user_by_field($field, $value) {
-        $model  = $this->get_model('UserModel');
-        return  $model->get_unconfirmed_user_by_field($field, $value);
-    }
-
-    public function purge_unconfirmed_users() {
-        $model  = $this->get_model('UserModel');
-        $model->purge_unconfirmed_users();
-    }
-
-    public function delete_unconfirmed_user($id) {
-        $model  = $this->get_model('UserModel');
-        $model->delete_unconfirmed_user($id);
-    }
 }
