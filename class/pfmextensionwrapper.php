@@ -36,8 +36,12 @@ class PFMExtensionWrapper {
 		if($this->phar_dir) {
 			$this->stream->addEmptyDir($this->phar_dir);
 		}
+		//todo - change to work not only with rb mode
 		if($mode == 'rb') {
-			$this->fp = fopen('phar://'.$this->extensions_path.DS.$this->extension.DS.$this->phar_file, $mode);
+			$file = 'phar://'.$this->extensions_path.DS.$this->extension.DS.$this->phar_file;
+			if(file_exists($file)) {
+				$this->fp = fopen($file, $mode);
+			}
 		}
 		return true;
 	}
@@ -101,20 +105,28 @@ class PFMExtensionWrapper {
 		} else {
 			$value = array_merge([$file], [$value]);
 		}
+		$phar_data = $this->create_phar_data();
 		switch($option) {
 			case STREAM_META_TOUCH:
+				if(!file_exists($file)) {
+					$phar_data->addFromString($this->phar_file, '');
+				}
 				return call_user_func_array('touch', $value);
 			case STREAM_META_OWNER_NAME:
-				return call_user_func_array('chown', $value);
+				return false;
+				//return call_user_func_array('chown', $value);
 			case STREAM_META_OWNER:
-				return call_user_func_array('chown', $value);
+				return false;
+				//return call_user_func_array('chown', $value);
 			case STREAM_META_GROUP_NAME:
-				return call_user_func_array('chgrp', $value);
+				return false;
+				//return call_user_func_array('chgrp', $value);
 			case STREAM_META_GROUP:
-				return call_user_func_array('chgrp', $value);
+				return false;
+				//return call_user_func_array('chgrp', $value);
 			case STREAM_META_ACCESS:
-				$phar_data = $this->create_phar_data();
-				return $phar_data[$this->phar_file]->chmod($value[1]);
+				$phar_data[$this->phar_file]->chmod($value[1]);
+				return $value[1] === (fileperms($file) & 0777);
 		}
 	}
 
@@ -122,5 +134,13 @@ class PFMExtensionWrapper {
 		$this->parse_path($path);
 		$phar_data = $this->create_phar_data();
 		$phar_data->addEmptyDir($this->phar_file);
+		return true;
+	}
+
+	public function rmdir($path, $options) {
+		$this->parse_path($path);
+		$phar_data = $this->create_phar_data();
+		$phar_data->delete($this->phar_file);
+		return true;
 	}
 }
