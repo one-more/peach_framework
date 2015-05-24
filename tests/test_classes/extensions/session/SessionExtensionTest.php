@@ -1,5 +1,4 @@
 <?php
-require_once '../../initialize.php';
 
 class SessionExtensionTest extends PHPUnit_Framework_TestCase {
 
@@ -12,6 +11,9 @@ class SessionExtensionTest extends PHPUnit_Framework_TestCase {
 		$_COOKIE['pfm_session_id'] = $this->session_id;
 	}
 
+	/**
+	 * @covers Session::start
+	 */
 	public function test_start() {
 		$system = Application::get_class('System');
 		if($system->use_db()) {
@@ -23,23 +25,38 @@ class SessionExtensionTest extends PHPUnit_Framework_TestCase {
 		}
 	}
 
+	/**
+	 * @covers Session::get_id
+	 */
 	public function test_get_id() {
 		$this->assertEquals($this->session_obj->get_id(), $this->session_id);
 	}
 
+	/**
+	 * @covers Session::set_var
+	 */
 	public function test_set_var() {
 		$this->assertNull($this->session_obj->set_var('test', 'test'));
 	}
 
+	/**
+	 * @covers Session::get_var
+	 */
 	public function test_get_var() {
 		$this->assertEquals('test', $this->session_obj->get_var('test'));
 	}
 
+	/**
+	 * @covers Session::unset_var
+	 */
 	public function test_unset_var() {
 		$this->assertNull($this->session_obj->unset_var('test'));
 		$this->assertFalse($this->session_obj->get_var('test'));
 	}
 
+	/**
+	 * @covers Session::set_uid
+	 */
 	public function test_set_uid() {
 		$this->assertNull($this->session_obj->set_uid(1));
 	}

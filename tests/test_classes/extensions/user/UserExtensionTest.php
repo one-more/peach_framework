@@ -1,7 +1,5 @@
 <?php
 
-require_once '../../initialize.php';
-
 class UserExtensionTest extends PHPUnit_Framework_TestCase {
 
 	private $session_id = 1;
@@ -18,6 +16,9 @@ class UserExtensionTest extends PHPUnit_Framework_TestCase {
 		$this->session_obj = Application::get_class('Session');
 	}
 
+	/**
+	 * @covers User::is_logined
+	 */
 	public function test_is_logined() {
 		$this->assertFalse($this->user_obj->is_logined());
 
@@ -38,6 +39,9 @@ class UserExtensionTest extends PHPUnit_Framework_TestCase {
 		$this->session_obj->unset_var('user', $this->remember_hash);
 	}
 
+	/**
+	 * @covers User::get_id
+	 */
 	public function test_get_id() {
 		$this->assertEquals(0, $this->user_obj->get_id());
 
@@ -45,6 +49,9 @@ class UserExtensionTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(1, $this->user_obj->get_id());
 	}
 
+	/**
+	 * @covers User::login
+	 */
 	public function test_login() {
 		$this->assertCount(0, $this->user_obj->login(null,null,null));
 
@@ -54,10 +61,16 @@ class UserExtensionTest extends PHPUnit_Framework_TestCase {
 		$this->assertGreaterThan(5, count($fields));
 	}
 
+	/**
+	 * @covers User::log_out
+	 */
 	public function test_log_out() {
 		$this->assertNull($this->user_obj->log_out());
 	}
 
+	/**
+	 * @covers User::get_fields
+	 */
 	public function test_get_fields() {
 		$this->assertCount(0, $this->user_obj->get_fields());
 
@@ -69,6 +82,9 @@ class UserExtensionTest extends PHPUnit_Framework_TestCase {
 		$this->assertGreaterThan(5, $fields);;
 	}
 
+	/**
+	 * @covers User::get_field
+	 */
 	public function test_get_field() {
 		$this->assertEquals('', $this->user_obj->get_field('login'));
 
@@ -80,6 +96,7 @@ class UserExtensionTest extends PHPUnit_Framework_TestCase {
 
 	/**
 	 * @expectedException LoginExistsException
+	 * @covers User::register
 	 */
 	public function test_register_existed() {
 		$fields = [
@@ -97,6 +114,7 @@ class UserExtensionTest extends PHPUnit_Framework_TestCase {
 
 	/**
 	 * @expectedException InvalidArgumentException
+	 * @covers User::register
 	 */
 	public function test_register_no_array() {
 		$this->user_obj->register(new StdClass);
@@ -113,6 +131,7 @@ class UserExtensionTest extends PHPUnit_Framework_TestCase {
 
 	/**
 	 * @depends test_register
+	 * @covers User::delete_user
 	 */
 	public function test_delete_user($uid) {
 		$this->assertNull($this->user_obj->delete_user($uid));
@@ -120,21 +139,31 @@ class UserExtensionTest extends PHPUnit_Framework_TestCase {
 
 	/**
 	 * @expectedException InvalidArgumentException
+	 * @covers User::update_fields
 	 */
 	public function test_update_empty_fields() {
 		$this->assertNull($this->user_obj->update_fields([]));
 	}
 
+	/**
+	 * @covers User::update_fields
+	 */
 	public function test_update_fields() {
 		$this->assertNull($this->user_obj->update_fields(['deleted' => 1]));
 	}
 
+	/**
+	 * @covers User::get_users
+	 */
 	public function test_get_users() {
 		$this->assertInternalType('array', $this->user_obj->get_users());
 
 		$this->assertInternalType('array', $this->user_obj->get_users([1,2,3]));
 	}
 
+	/**
+	 * @covers User::get_users_field
+	 */
 	public function test_get_users_field() {
 		$this->assertInternalType('array', $this->user_obj->get_users_field(''));
 
@@ -147,6 +176,9 @@ class UserExtensionTest extends PHPUnit_Framework_TestCase {
 		$this->assertInternalType('array', $this->user_obj->get_users_field('login', [1,2]));
 	}
 
+	/**
+	 * @covers User::get_user_by_field
+	 */
 	public function test_get_user_by_field() {
 		$this->assertCount(0, $this->user_obj->get_user_by_field('login', ''));
 
@@ -156,6 +188,7 @@ class UserExtensionTest extends PHPUnit_Framework_TestCase {
 
 	/**
 	 * @expectedException InvalidArgumentException
+	 * @covers User::get_user_by_field
 	 */
 	public function test_get_user_by_field_not_string() {
 		$this->assertCount(0, $this->user_obj->get_user_by_field('login', []));

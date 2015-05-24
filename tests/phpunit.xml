@@ -1,0 +1,21 @@
+<phpunit bootstrap="initialize.php">
+    <testsuites>
+        <testsuite name="all">
+            <directory>test_classes</directory>
+        </testsuite>
+        <testsuite name="classes">
+            <directory>test_classes/class</directory>
+        </testsuite>
+        <testsuite name="extensions">
+            <directory>test_classes/extensions</directory>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">../</directory>
+            <exclude>
+                <directory suffix=".php">../tests</directory>
+            </exclude>
+        </whitelist>
+    </filter>
+</phpunit>

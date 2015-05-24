@@ -82,6 +82,7 @@ class Application {
         $file   = ROOT_PATH.DS.'templates'.DS.$name.DS.$template;
         if(file_exists($file)) {
             require_once $file;
+			return true;
         } else {
             return false;
         }
@@ -96,11 +97,15 @@ class Application {
 	}
 
     public static function get_class($name, $params = array()) {
-        if(!isset(static::$instances[$name])) {
-            $reflection = new ReflectionClass($name);
-            static::$instances[$name]   = $reflection->newInstanceArgs($params);
-        }
-        return static::$instances[$name];
+        if(class_exists($name)) {
+			if(!isset(static::$instances[$name])) {
+				$reflection = new ReflectionClass($name);
+				static::$instances[$name]   = $reflection->newInstanceArgs($params);
+			}
+			return static::$instances[$name];
+		} else {
+			throw new InvalidArgumentException('class does not exists');
+		}
     }
 
     private static function init_dirs() {
@@ -171,24 +176,38 @@ class Application {
 		rmdir($path);
 	}
 
-	public static function return_bytes($val) {
-		$val = trim($val);
-		$last = strtolower($val[strlen($val)-1]);
-		switch($last) {
-			// The 'G' modifier is available since PHP 5.1.0
-			case 'g':
-				$val *= 1024;
-			case 'm':
-				$val *= 1024;
-			case 'k':
-				$val *= 1024;
+	public static function return_bytes($p_sFormatted) {
+		$p_sFormatted = (string)$p_sFormatted;
+		$aUnits = [
+			'B'=>0,
+			'KB'=>1,
+			'MB'=>2,
+			'GB'=>3,
+			'TB'=>4,
+			'PB'=>5,
+			'EB'=>6,
+			'ZB'=>7,
+			'YB'=>8
+		];
+		$sUnit = strtoupper(trim(substr($p_sFormatted, -2)));
+		if(intval($sUnit) !== 0) {
+			$sUnit = 'B';
 		}
-
-		return $val;
+		if(!in_array($sUnit, array_keys($aUnits))) {
+			return false;
+		}
+		$iUnits = trim(substr($p_sFormatted, 0, strlen($p_sFormatted) - 2));
+		if(!intval($iUnits) == $iUnits) {
+			return false;
+		}
+		return $iUnits * pow(1024, $aUnits[$sUnit]);
 	}
 
 	public static function is_assoc_array($array) {
-	  return (bool)count(array_filter(array_keys($array), 'is_string'));
+		if(!is_array($array)) {
+			throw new InvalidArgumentException('argument is not array');
+		}
+	  	return (bool)count(array_filter(array_keys($array), 'is_string'));
 	}
 
 	public static function is_dev() {
