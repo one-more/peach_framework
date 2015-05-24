@@ -3,18 +3,7 @@
 class SuperModel {
 
     protected $db;
-
-    public function __get($field) {
-        switch($field) {
-            case 'current_language':
-                if(empty($this->$field)) {
-                    $lang_obj   = Application::get_class('Language');
-                    $this->$field   = $lang_obj->get_language();
-                }
-                break;
-        }
-        return $this->$field;
-    }
+	protected $current_language;
 
     public function __construct($dbname, $user, $pass, $dbtype = 'mysql', $host = 'localhost') {
         $system = Application::get_class('System');
@@ -26,6 +15,9 @@ class SuperModel {
 		$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$this->db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
         $this->db->query('SET NAMES utf8');
+
+		$language = Application::get_class('Language');
+		$this->current_language = $language->get_language();
     }
 
     public function execute($sql) {
@@ -147,7 +139,7 @@ class SuperModel {
         if($sth->columnCount()) {
             $sth    = $sth->fetchAll();
         } else {
-            $sth    = [];
+            return null;
         }
 		$return_from_array = function($array) use(&$return_from_array) {
 			if(!is_array($array)) {

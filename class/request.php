@@ -12,12 +12,18 @@ class Request {
 		if(empty($request_vars[$name])) {
             return $default;
         } else {
-            return VarHandler::sanitize_var($request_vars[$name], $filter, $default);
+			$var = $request_vars[$name];
+			if(VarHandler::validate_var($var, $filter)) {
+				return VarHandler::sanitize_var($var, $filter, $default);
+			} else {
+				return $default;
+			}
         }
     }
 
 	public static function uri() {
-		return explode('?', $_SERVER['REQUEST_URI'])[0];
+		$uri = empty($_SERVER['REQUEST_URI']) ? '' : $_SERVER['REQUEST_URI'];
+		return explode('?', $uri)[0];
 	}
 
 	public static function uri_parts() {

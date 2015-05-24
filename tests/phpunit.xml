@@ -11,10 +11,11 @@
         </testsuite>
     </testsuites>
     <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
+        <whitelist processUncoveredFilesFromWhitelist="false">
             <directory suffix=".php">../</directory>
             <exclude>
                 <directory suffix=".php">../tests</directory>
+                <directory suffix=".php">../lib</directory>
             </exclude>
         </whitelist>
     </filter>

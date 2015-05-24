@@ -8,7 +8,9 @@ class System {
         mb_http_output('UTF-8');
         mb_http_input('UTF-8');
 
-		stream_wrapper_register("pfmextension", "PFMExtensionWrapper");
+		if(!in_array('pfmextension', stream_get_wrappers())) {
+			stream_wrapper_register("pfmextension", "PFMExtensionWrapper");
+		}
 
         $this->register_autoload();
 

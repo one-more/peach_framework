@@ -21,7 +21,7 @@ class Router {
 					$callback[0] = Application::get_class($class);
 				}
 			}
-			call_user_func_array($callback, $this->route_params);
+			return call_user_func_array($callback, $this->route_params);
 		}
 	}
 

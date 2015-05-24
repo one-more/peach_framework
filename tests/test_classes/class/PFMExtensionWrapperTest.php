@@ -6,7 +6,9 @@ class PFMExtensionWrapperTest extends PHPUnit_Framework_TestCase {
 	private $test_text = 'test text';
 
 	public static function setUpBeforeClass() {
-		stream_wrapper_register("pfmextension", "PFMExtensionWrapper");
+		if(!in_array('pfmextension', stream_get_wrappers())) {
+			stream_wrapper_register("pfmextension", "PFMExtensionWrapper");
+		}
 	}
 
 	public function setUp() {
@@ -43,7 +45,7 @@ class PFMExtensionWrapperTest extends PHPUnit_Framework_TestCase {
 	/**
 	 * @param $fp
 	 * @depends test_fopen
-	 * @covers PFMExtensionWrapper::tell
+	 * @covers PFMExtensionWrapper::stream_tell
 	 */
 	public function test_ftell($fp) {
 		$this->assertInternalType('resource', $fp);
@@ -54,7 +56,7 @@ class PFMExtensionWrapperTest extends PHPUnit_Framework_TestCase {
 	/**
 	 * @param $fp
 	 * @depends test_ftell
-	 * @covers PFMExtensionWrapper::eof
+	 * @covers PFMExtensionWrapper::stream_eof
 	 */
 	public function test_eof($fp) {
 		$this->assertInternalType('resource', $fp);
@@ -65,7 +67,7 @@ class PFMExtensionWrapperTest extends PHPUnit_Framework_TestCase {
 	/**
 	 * @param $fp
 	 * @depends test_eof
-	 * @covers PFMExtensionWrapper::stat
+	 * @covers PFMExtensionWrapper::stream_stat
 	 */
 	public function test_fstat($fp) {
 		$this->assertInternalType('resource', $fp);

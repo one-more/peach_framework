@@ -9,8 +9,8 @@ class UserModel extends SuperModel {
             SELECT * FROM `users` WHERE `login` = ? AND `password` = ?
         ";
         $sth    = $this->db->prepare($sql);
-        $login  = VarHandler::sanitize_var($login, 'string');
-        $password   = VarHandler::sanitize_var($password, 'string');
+        $login  = VarHandler::sanitize_var($login, 'string', '');
+        $password   = VarHandler::sanitize_var($password, 'string', '');
         $sth->bindParam(1, $login, PDO::PARAM_STR);
         $sth->bindParam(2, $password, PDO::PARAM_STR);
         $sth->execute();
