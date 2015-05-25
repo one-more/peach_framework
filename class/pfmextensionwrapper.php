@@ -75,12 +75,7 @@ class PFMExtensionWrapper {
 			return lstat($file_path);
 		}
 		if($flags == STREAM_URL_STAT_QUIET) {
-			set_error_handler(function($errno, $errstr, $errfile, $errline) {
-				if(strpos($errstr, 'stat') !== false) {
-					return true;
-				}
-				return false;
-			});
+			return @stat($file_path);
 		}
 		return stat($file_path);
 	}

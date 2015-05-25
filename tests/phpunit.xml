@@ -16,6 +16,9 @@
             <exclude>
                 <directory suffix=".php">../tests</directory>
                 <directory suffix=".php">../lib</directory>
+                <directory suffix=".php">../extensions</directory>
+                <directory suffix=".php">../resource</directory>
+                <directory suffix=".php">../www</directory>
             </exclude>
         </whitelist>
     </filter>

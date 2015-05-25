@@ -59,12 +59,14 @@ class RequestTest extends PHPUnit_Framework_TestCase {
 			['test_full_url', 'email', null, null],
 			['test_short_url', 'url', null, $short_url],
 			['test_short_url', 'special_chars', null, htmlspecialchars($short_url, ENT_QUOTES)],
-			['test_search_params_url', 'url', null, $search_params_url]
+			['test_search_params_url', 'url', null, $search_params_url],
+
+			['test_not_existed_var', null, null, null]
 		];
 	}
 
 	/**
-	 * Request::get_var
+	 * @covers Request::get_var
 	 * @dataProvider get_var_provider
 	 */
 	public function test_get_var($name, $filter, $default, $expected) {

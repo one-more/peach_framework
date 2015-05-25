@@ -9,11 +9,14 @@ class UserExtensionTest extends PHPUnit_Framework_TestCase {
 	private $test_user_login = 'root';
 	private $test_user_password = '';
 
-	public function __construct() {
-		parent::__construct();
-		$_COOKIE['pfm_session_id'] = $this->session_id;
-		$this->user_obj = Application::get_class('User');
-		$this->session_obj = Application::get_class('Session');
+	public function setUp() {
+		if(empty($_COOKIE['pfm_session_id'])) {
+			$_COOKIE['pfm_session_id'] = $this->session_id;
+		}
+		if(is_null($this->user_obj)) {
+			$this->user_obj = Application::get_class('User');
+			$this->session_obj = Application::get_class('Session');
+		}
 	}
 
 	/**

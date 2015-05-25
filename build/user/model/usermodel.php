@@ -41,7 +41,7 @@ class UserModel extends SuperModel {
 		if(empty($this->cached_fields[$uid])) {
 			$params = [];
 			$params['where']    = "`id` = {$uid} and deleted = 0";
-			$fields = $this->select('users', $params);
+			$fields = $this->get_array('users', $params);
 			$this->cached_fields[$uid] = $fields;
 			return $fields;
 		} else {
@@ -135,7 +135,7 @@ class UserModel extends SuperModel {
         $sth    = $this->db->prepare($sql);
         $sth->bindParam(1, $value);
         $sth->execute();
-        return $this->return_from_statement($sth);
+        return $this->get_array_from_statement($sth);
     }
 
     public function log_out() {

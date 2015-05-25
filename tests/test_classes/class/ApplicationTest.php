@@ -2,6 +2,12 @@
 
 class ApplicationTest extends PHPUnit_Framework_TestCase {
 
+	public function setUp() {
+		if(!in_array('pfmextension', stream_get_wrappers())) {
+			stream_wrapper_register("pfmextension", "PFMExtensionWrapper");
+		}
+	}
+
 	/**
 	 * @covers Application::load_extension
 	 */
@@ -11,6 +17,62 @@ class ApplicationTest extends PHPUnit_Framework_TestCase {
 			$name = ucwords(explode('.', basename($extension))[0]);
 			$this->assertTrue(Application::load_extension($name));
 		}
+		$this->assertFalse(Application::load_extension('NotExistedClass'));
+	}
+
+	/**
+	 * @covers Application::load_extension
+	 */
+	public function test_build_extension() {
+		$extension_file = ROOT_PATH.DS.'extensions'.DS.'paginator.tar.gz';
+		Phar::unlinkArchive($extension_file);
+		$this->assertFalse(file_exists($extension_file));
+		$this->assertTrue(Application::load_extension('Paginator'));
+		$this->assertTrue(file_exists($extension_file));
+	}
+
+	/**
+	 * @covers Application::load_extension
+	 */
+	public function test_changed_extension() {
+		$test_file = ROOT_PATH.DS.'build'.DS.'paginator'.DS.'test.php';
+		file_put_contents($test_file, '');
+		$this->assertTrue(Application::load_extension('Paginator'));
+		unlink($test_file);
+	}
+
+	/**
+	 * @covers Application::is_extension_changed
+	 */
+	public function test_is_extension_changed() {
+		$method = new ReflectionMethod('Application', 'is_extension_changed');
+		$method->setAccessible(true);
+
+		$this->assertFalse($method->invoke(null, 'paginator'));
+
+		$test_file = ROOT_PATH.DS.'build'.DS.'paginator'.DS.'test.php';
+		if(file_exists('pfmextension://paginator'.DS.'test.php')) {
+			unlink('pfmextension://paginator'.DS.'test.php');
+		}
+		file_put_contents($test_file, '');
+		$this->assertTrue($method->invoke(null, 'paginator'));
+		unlink($test_file);
+
+		$this->assertFalse($method->invoke(null, 'paginator'));
+
+		$paginator_file = ROOT_PATH.DS.'build'.DS.'paginator'.DS.'paginator.php';
+		$old_data = file_get_contents($paginator_file);
+		file_put_contents($paginator_file, '/*test comment*/', FILE_APPEND);
+		$this->assertTrue($method->invoke(null, 'paginator'));
+
+		file_put_contents($paginator_file, $old_data);
+
+		$this->assertFalse($method->invoke(null, 'paginator'));
+
+		$extension_file = ROOT_PATH.DS.'extensions'.DS.'paginator.tar.gz';
+		Phar::unlinkArchive($extension_file);
+		$this->assertFalse($method->invoke(null, 'paginator'));
+		$this->assertTrue(Application::load_extension('Paginator'));
 	}
 
 	/**
@@ -22,6 +84,7 @@ class ApplicationTest extends PHPUnit_Framework_TestCase {
 			$name = ucwords(explode('.', basename($class))[0]);
 			$this->assertTrue(Application::load_class($name));
 		}
+		$this->assertFalse(Application::load_class('NotExistedClass'));
 	}
 
 	/**
@@ -33,6 +96,7 @@ class ApplicationTest extends PHPUnit_Framework_TestCase {
 			$name = explode('.', basename($trait))[0];
 			$this->assertTrue(Application::load_trait($name));
 		}
+		$this->assertFalse(Application::load_trait('NotExistedTrait'));
 	}
 
 	/**
@@ -44,6 +108,7 @@ class ApplicationTest extends PHPUnit_Framework_TestCase {
 			$name = basename($template);
 			$this->assertTrue(Application::load_template($name));
 		}
+		$this->assertFalse(Application::load_template('NotExistedClass'));
 	}
 
 	/**
@@ -55,6 +120,7 @@ class ApplicationTest extends PHPUnit_Framework_TestCase {
 			$name = ucwords(explode('.', basename($interface))[0]);
 			$this->assertTrue(Application::load_interface($name));
 		}
+		$this->assertFalse(Application::load_interface('NotExistedInterface'));
 	}
 
 	/**
@@ -66,13 +132,32 @@ class ApplicationTest extends PHPUnit_Framework_TestCase {
 			$name = ucwords(explode('.', basename($exception))[0]);
 			$this->assertTrue(Application::load_exception($name));
 		}
+		$this->assertFalse(Application::load_exception('NotExistedException'));
 	}
 
 	/**
 	 * @covers Application::get_class
 	 */
 	public function test_get_class() {
-		$this->assertInternalType('object', Application::get_class('System'));
+		$this->assertInternalType('object', Application::get_class('User'));
+
+		$property = new ReflectionProperty('Application', 'instances');
+		$property->setAccessible(true);
+		$property->setValue(null, []);
+		$this->assertInternalType('object', Application::get_class('User'));
+	}
+
+	/**
+	 * @covers Application::remove_dir
+	 */
+	public function test_remove_dir() {
+		$test_dir = ROOT_PATH.DS.'tests'.DS.'dir_to_remove';
+		mkdir($test_dir);
+		mkdir($test_dir.DS.'dir1');
+		file_put_contents($test_dir.DS.'dir1'.DS.'file.txt', '');
+		$this->assertTrue(is_dir($test_dir));
+		Application::remove_dir($test_dir);
+		$this->assertFalse(is_dir($test_dir));
 	}
 
 	/**
@@ -91,6 +176,10 @@ class ApplicationTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(Application::return_bytes('10.5kb'), 10752);
 		$this->assertEquals(Application::return_bytes('10mb'), 1024*1024*10);
 		$this->assertEquals(Application::return_bytes('10gb'), 1024*1024*1024*10);
+		$this->assertEquals(Application::return_bytes('10'), 10);
+		$this->assertEquals(Application::return_bytes('10b'), 10);
+		$this->assertEquals(Application::return_bytes('10pv'), null);
+		$this->assertEquals(Application::return_bytes('fdspv'), null);
 	}
 
 	/**
@@ -108,5 +197,23 @@ class ApplicationTest extends PHPUnit_Framework_TestCase {
 	 */
 	public function test_is_assoc_array_with_no_array() {
 		Application::is_assoc_array(1);
+	}
+
+	/**
+	 * @covers Application::is_dev
+	 */
+	public function test_is_dev() {
+		$this->assertTrue(Application::is_dev());
+
+		$_SERVER['REMOTE_ADDR'] = '';
+		$_SERVER['HTTP_HOST'] = '';
+		$this->assertFalse(Application::is_dev());
+
+		$_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+		$this->assertTrue(Application::is_dev());
+
+		$_SERVER['REMOTE_ADDR'] = '';
+		$_SERVER['HTTP_HOST'] = 'dev.pfm.my';
+		$this->assertTrue(Application::is_dev());
 	}
 }

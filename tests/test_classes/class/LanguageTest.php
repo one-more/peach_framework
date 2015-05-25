@@ -22,10 +22,14 @@ class languageTest extends PHPUnit_Framework_TestCase {
 
 	/**
 	 * @covers Language::set_language
+	 * @expectedException PHPUnit_Framework_Error
 	 */
 	public function test_set_language() {
 		$this->assertNull($this->lang_obj->set_language('EN'));
 		$this->assertEquals('EN', $this->lang_obj->get_language());
 		$this->assertNull($this->lang_obj->set_language($this->default_language));
+		$_COOKIE['language'] = 'EN';
+		$this->assertNull($this->lang_obj->set_language($this->default_language));
+		$this->assertEquals($this->default_language, $this->lang_obj->get_language());
 	}
 }

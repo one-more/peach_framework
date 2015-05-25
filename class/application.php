@@ -13,16 +13,15 @@ class Application {
 
         if(file_exists($extension_build_dir)) {
             if(static::is_extension_changed($name) || !file_exists($extension_path_gz)) {
-                if(file_exists($extension_path)) {
-                    unlink($extension_path);
-                }
                 if(file_exists($extension_path_gz)) {
                     Phar::unlinkArchive($extension_path_gz);
                 }
                 $phar   = new PharData($extension_path);
                 $phar->buildFromDirectory($extension_build_dir);
                 $phar->compress(Phar::GZ);
-                unlink($extension_path);
+				if(file_exists($extension_path)) {
+					unlink($extension_path);
+				}
             }
         } else if(!file_exists($extension_path_gz)) {
             return false;
@@ -189,16 +188,18 @@ class Application {
 			'ZB'=>7,
 			'YB'=>8
 		];
-		$sUnit = strtoupper(trim(substr($p_sFormatted, -2)));
-		if(intval($sUnit) !== 0) {
-			$sUnit = 'B';
+		foreach(str_split($p_sFormatted) as $index=>$letter) {
+			if(ctype_alpha($letter)) {
+				$sUnit = strtoupper(trim(substr($p_sFormatted, $index)));
+				$iUnits = trim(substr($p_sFormatted, 0, $index));
+				break;
+			}
+		}
+		if(empty($sUnit)) {
+			return (int)$p_sFormatted;
 		}
 		if(!in_array($sUnit, array_keys($aUnits))) {
-			return false;
-		}
-		$iUnits = trim(substr($p_sFormatted, 0, strlen($p_sFormatted) - 2));
-		if(!intval($iUnits) == $iUnits) {
-			return false;
+			return null;
 		}
 		return $iUnits * pow(1024, $aUnits[$sUnit]);
 	}
@@ -211,7 +212,11 @@ class Application {
 	}
 
 	public static function is_dev() {
-		return $_SERVER['REMOTE_ADDR'] == '127.0.0.1' ||
-			strpos($_SERVER['HTTP_HOST'], 'dev') !== -1;
+		if(!isset($_SERVER['REMOTE_ADDR']) || !isset($_SERVER['HTTP_HOST'])) {
+			return true;
+		} else {
+			return $_SERVER['REMOTE_ADDR'] == '127.0.0.1' ||
+			strpos($_SERVER['HTTP_HOST'], 'dev') !== false;
+		}
 	}
 }

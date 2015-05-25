@@ -33,7 +33,8 @@ class Paginator {
 			'link_class' => 'pagination-link'
 		];
 		$params = array_merge($default, $params);
-		extract($params);
+		list($btns_links, $total, $per_page, $current, $show_links, $id, $class, $link_class)
+			= $params;
 		$pages = ceil($total / $per_page);
 		$links = $show_links > $pages ? $pages : $show_links;
 		if($pages == 1) {

@@ -11,9 +11,17 @@ class PFMExtensionWrapperTest extends PHPUnit_Framework_TestCase {
 		}
 	}
 
+	public static function tearDownAfterClass() {
+		$tests_dir = 'pfmextension://system'.DS.'test_files';
+		if(is_dir($tests_dir)) {
+			rmdir($tests_dir);
+		}
+	}
+
 	public function setUp() {
-		$this->test_file = 'pfmextension://system'.DS.'wrapper_test_file.txt';
-		$this->test_rename_file = 'pfmextension://system'.DS.'wrapper_test_file_renamed.txt';
+		$extension_path = 'pfmextension://system'.DS.'test_files';
+		$this->test_file = $extension_path.DS.'wrapper_test_file.txt';
+		$this->test_rename_file = $extension_path.DS.'wrapper_test_file_renamed.txt';
 	}
 
 	/**
@@ -51,6 +59,16 @@ class PFMExtensionWrapperTest extends PHPUnit_Framework_TestCase {
 		$this->assertInternalType('resource', $fp);
 		$this->assertEquals(0, ftell($fp));
 		return $fp;
+	}
+
+	/**
+	 * @covers PFMExtensionWrapper::url_stat
+	 * @expectedException PHPUnit_Framework_Error
+	 */
+	public function test_stat() {
+		$this->assertInternalType('array', lstat('pfmextension://system/system.php'));
+		$this->assertInternalType('array', stat('pfmextension://system/system.php'));
+		$this->assertInternalType('array', stat('pfmextension://system/undefined.php'));
 	}
 
 	/**
