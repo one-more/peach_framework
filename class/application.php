@@ -5,7 +5,8 @@ class Application {
     private static $instances    = [];
 
     public static function load_extension($name) {
-        $name   = strtolower($name);
+        $extension_class = $name;
+		$name   = strtolower($name);
         $extension_dir  = ROOT_PATH.DS.'extensions'.DS.$name;
         $extension_build_dir  = ROOT_PATH.DS.'build'.DS.$name;
         $extension_path = "{$extension_dir}.tar";
@@ -26,7 +27,9 @@ class Application {
         } else if(!file_exists($extension_path_gz)) {
             return false;
         }
-        require_once "phar://{$extension_path_gz}/{$name}.php";
+        if(!class_exists($extension_class)) {
+			require_once "phar://{$extension_path_gz}/{$name}.php";
+		}
 		return true;
     }
 

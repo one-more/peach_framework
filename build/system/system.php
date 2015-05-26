@@ -32,7 +32,7 @@ class System {
     }
 
     public function use_db() {
-        return $this->get_configuration()['use_db'];
+        return (bool)$this->get_configuration()['use_db'];
     }
 
     private function init_db() {

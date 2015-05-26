@@ -1,6 +1,8 @@
 <?php
+require_once ROOT_PATH.DS."build".DS.'system'.DS.'system.php';
 
-class SystemExtensionTest extends PHPUnit_Framework_TestCase {
+class SystemTest extends PHPUnit_Framework_TestCase {
+	use trait_configuration;
 
 	private $system_obj;
 	private $configuration;
@@ -39,6 +41,15 @@ class SystemExtensionTest extends PHPUnit_Framework_TestCase {
 	 * @covers System::use_db
 	 */
 	public function test_use_db() {
+		$use_db_param = $this->system_obj->use_db();
+
+		$this->set_params('configuration', ['use_db' => true]);
+		$this->assertTrue($this->system_obj->use_db());
+
+		$this->set_params('configuration', ['use_db' => false]);
+		$this->assertFalse($this->system_obj->use_db());
+
+		$this->set_params('configuration', ['use_db' => $use_db_param]);
 		$this->assertEquals($this->configuration['use_db'], $this->system_obj->use_db());
 	}
 

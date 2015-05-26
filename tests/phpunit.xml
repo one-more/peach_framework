@@ -7,7 +7,7 @@
             <directory>test_classes/class</directory>
         </testsuite>
         <testsuite name="extensions">
-            <directory>test_classes/extensions</directory>
+            <directory>test_classes/build</directory>
         </testsuite>
     </testsuites>
     <filter>
@@ -18,8 +18,13 @@
                 <directory suffix=".php">../lib</directory>
                 <directory suffix=".php">../extensions</directory>
                 <directory suffix=".php">../resource</directory>
+                <directory suffix=".php">../interface</directory>
+                <directory suffix=".php">../exception</directory>
                 <directory suffix=".php">../www</directory>
             </exclude>
         </whitelist>
     </filter>
+    <logging>
+        <log type="junit" target="logs/logfile.xml" logIncompleteSkipped="false" />
+    </logging>
 </phpunit>

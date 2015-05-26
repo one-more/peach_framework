@@ -9,23 +9,32 @@ class VarHandler {
 		return $result;
     }
 
+	/**
+	 * @param $var
+	 * @param string $filter
+	 * @return bool
+	 */
 	public static function validate_var($var, $filter = 'raw') {
 		if(!$filter) {
 			$filter = 'raw';
 		}
 		switch($filter) {
 			case 'email':
-				return filter_var($var, FILTER_VALIDATE_EMAIL);
+				return (bool)filter_var($var, FILTER_VALIDATE_EMAIL);
 			case 'float':
-				return filter_var($var, FILTER_VALIDATE_FLOAT);
+				return (bool)filter_var($var, FILTER_VALIDATE_FLOAT);
 			case 'boolean':
-				return filter_var($var, FILTER_VALIDATE_BOOLEAN);
+				return (bool)$var;
 			case 'int':
-				return filter_var((int)$var, FILTER_VALIDATE_INT);
+				if(is_array($var) || is_object($var) || is_resource($var)) {
+					return false;
+				} else {
+					return (bool)filter_var((int)$var, FILTER_VALIDATE_INT);
+				}
 			case 'special_chars':
 				return true;
 			case 'string':
-				return (string)$var;
+				return is_string($var);
 			case 'url':
 				if(!is_string($var)) {
 					return false;
@@ -51,7 +60,13 @@ class VarHandler {
 				return false;
 		}
 	}
-	
+
+	/**
+	 * @param $var
+	 * @param string $filter
+	 * @param null $default
+	 * @return array|int|mixed|null|string
+	 */
 	public static function sanitize_var($var, $filter = 'raw', $default = null) {
 		switch($filter) {
                 case 'email':
@@ -61,10 +76,18 @@ class VarHandler {
                     $result = filter_var($var, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
 					break;
                 case 'int':
-                    $result = (int)$var;
+					if(is_array($var) || is_object($var) || is_resource($var)) {
+						$result = $default;
+					} else {
+						$result = (int)$var;
+					}
 					break;
                 case 'special_chars':
-                    $result = htmlspecialchars($var, ENT_QUOTES);
+                    if(is_array($var) || is_object($var) || is_resource($var)) {
+						$result = $default;
+					} else {
+						$result = htmlspecialchars($var, ENT_QUOTES);
+					}
 					break;
                 case 'string':
                     $result = filter_var($var, FILTER_SANITIZE_STRING);

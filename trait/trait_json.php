@@ -8,7 +8,13 @@ trait trait_json {
 			if(is_array($el)) {
 				if(!Application::is_assoc_array($el)) {
 					$el = array_map(function($value){
-						return "\"{$value}\"";
+						if($value === true) {
+							return '"1"';
+						} elseif($value === false) {
+							return '""';
+						} else {
+							return "\"{$value}\"";
+						}
 					}, $el);
 					$json_chunks[]  = "{$tabs}\"{$k}\"\t: [".implode(',', $el).']';
 				} else {

@@ -1,6 +1,8 @@
 <?php
+require_once ROOT_PATH.DS."build".DS.'user'.DS.'user.php';
+require_once ROOT_PATH.DS."build".DS.'user'.DS.'model'.DS.'usermodel.php';
 
-class UserExtensionTest extends PHPUnit_Framework_TestCase {
+class UserTest extends PHPUnit_Framework_TestCase {
 
 	private $session_id = 1;
 	private $session_obj;

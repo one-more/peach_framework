@@ -24,7 +24,7 @@ class RequestTest extends PHPUnit_Framework_TestCase {
 		return [
 			['test_int', 'int', null, 1],
 			['test_int', null, null, 1],
-			['test_int', 'string', null, 1],
+			['test_int', 'string', null, null],
 			['test_int', 'special_chars', null, 1],
 			['test_int', 'url', null, null],
 			['test_int', 'not_existed_filter', null, null],
@@ -39,7 +39,7 @@ class RequestTest extends PHPUnit_Framework_TestCase {
 
 			['test_float', 'int', null, 1],
 			['test_float', 'float', null, 1.3],
-			['test_float', 'string', null, 1.3],
+			['test_float', 'string', null, null],
 			['test_float', 'special_chars', null, 1.3],
 			['test_float', 'url', null, null],
 			['test_float', 'email', null, null],

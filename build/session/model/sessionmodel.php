@@ -2,6 +2,15 @@
 
 class SessionModel extends SuperModel {
 
+	public function __construct($dbname, $user, $pass, $dbtype = 'mysql', $host = 'localhost') {
+		parent::__construct($dbname, $user, $pass, $dbtype, $host);
+
+		$system = Application::get_class('System');
+		if(!$system->use_db()) {
+			throw new InvalidDBParamException("use db param must be true");
+		}
+	}
+
     public function start_session() {
         $user   = Application::get_class('User');
         $uid    = $user->get_id();
