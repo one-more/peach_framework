@@ -72,10 +72,19 @@ class SessionModel extends SuperModel {
         $session    = Application::get_class('Session');
         $params = [
             'fields'    => [
-                'uid'   => $uid
+                'uid'   => (int)$uid
             ],
             'where' => '`id` = '.$session->get_id()
         ];
         $this->update('session', $params);
     }
+
+	public function get_uid() {
+		$session    = Application::get_class('Session');
+		$params = [
+			'fields' => ['uid'],
+			'where' => '`id` = '.$session->get_id()
+		];
+		return $this->select('session', $params);
+	}
 }
