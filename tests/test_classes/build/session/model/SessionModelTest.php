@@ -6,9 +6,11 @@ class SessionModelTest extends \PHPUnit_Framework_TestCase {
 	static $session_id;
 
 	public function setUp() {
-		$system = Application::get_class('System');
-		$params = $system->get_configuration()['db_params'];
-		$this->model = Application::get_class('SessionModel', $params);
+		if(empty($this->model)) {
+			$system = Application::get_class('System');
+			$params = $system->get_configuration()['db_params'];
+			$this->model = Application::get_class('SessionModel', $params);
+		}
 		if(!empty(static::$session_id)) {
 			$_COOKIE['pfm_session_id'] = static::$session_id;
 		}

@@ -11,7 +11,7 @@ class SuperModel {
             throw new Exception("could not create model: use db param is false");
         }
 
-        $this->db = new PDO("{$dbtype}:{host}=localhost;dbname={$dbname}",$user, $pass);
+        $this->db = new PDO("{$dbtype}:host={$host};dbname={$dbname}",$user, $pass);
 		$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$this->db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
         $this->db->query('SET NAMES utf8');
@@ -102,7 +102,7 @@ class SuperModel {
         $this->execute($sql);
     }
 
-	protected function get_arrays_from_statement($sth) {
+	protected function get_arrays_from_statement(PDOStatement $sth) {
 		$result = $this->return_from_statement($sth);
 		return $this->data_to_arrays($result);
 	}
@@ -124,7 +124,7 @@ class SuperModel {
 		}
 	}
 
-	protected function get_array_from_statement($sth) {
+	protected function get_array_from_statement(PDOStatement $sth) {
 		$result = $this->return_from_statement($sth);
 		return $this->data_to_array($result);
 	}
@@ -146,7 +146,7 @@ class SuperModel {
 		return $this->data_to_array($result);
 	}
 
-    protected function return_from_statement($sth) {
+    protected function return_from_statement(PDOStatement $sth) {
         if($sth->columnCount()) {
 			if($data = $sth->fetch()) {
 				$rows[] = $data;
