@@ -5,9 +5,10 @@ class UserController {
 
 	public function is_token_valid() {
 		$client_token = Request::get_var('token');
+		unset($_GET['token']);
 		$str_to_hash = Request::get_var('user', null, '')
 			.Request::get_var('pfm_session_id', null, '')
-			.$_SERVER['HTTP_USER_AGENT'];
+			.json_encode(array_merge($_GET, $_POST), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 		return md5($str_to_hash) == $client_token;
 	}
 
