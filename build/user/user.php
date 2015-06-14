@@ -61,4 +61,22 @@ class User {
     public function log_out() {
 		$this->model->log_out();
     }
+
+	public function is_admin() {
+		if($this->is_logined()) {
+			$fields = $this->get_fields();
+			return in_array($fields['credentials'], ['administrator', 'super_administrator']);
+		} else {
+			return false;
+		}
+	}
+
+	public function is_super_admin() {
+		if($this->is_logined()) {
+			$fields = $this->get_fields();
+			return $fields['credentials'] == 'super_administrator';
+		} else {
+			return false;
+		}
+	}
 }

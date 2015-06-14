@@ -3,7 +3,12 @@
 trait trait_starter_router {
 
 	public function route() {
-		$callback = $this->get_callback();
+		$user = Application::get_class('User');
+		if(strtolower(__CLASS__) == 'adminpanelrouter' && !$user->is_admin()) {
+			$callback = [$this, 'index', 'no_check'];
+		} else {
+			$callback = $this->get_callback();
+		}
 		if($callback !== false) {
 			$check = true;
 			if(count($callback) == 3) {
