@@ -6,3 +6,4 @@
     (избавиться от конструкции setElement)
 6. поправить роутер на сервере (\S -> \w)
 7. поправить configuration_trait(set_params)
+8. добавить Less
