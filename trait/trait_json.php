@@ -1,17 +1,22 @@
 <?php
 
 trait trait_json {
+
 	protected function array_to_json_string($array, $tabs = "\t") {
 		$json_str   = "{\n";
 		$json_chunks    = [];
 		foreach($array as $k=>$el) {
 			if(is_array($el)) {
 				if(!Application::is_assoc_array($el)) {
-					$el = array_map(function($value){
+					$el = array_map(function($value) use($tabs) {
 						if($value === true) {
 							return '"1"';
 						} elseif($value === false) {
 							return '""';
+						} elseif(is_array($value)) {
+							return $this->array_to_json_string($value, $tabs."\t");
+						} elseif(is_object($value)) {
+							return $this->array_to_json_string((array)$value, $tabs."\t");
 						} else {
 							return "\"{$value}\"";
 						}
