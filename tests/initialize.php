@@ -10,6 +10,34 @@ class TestsEnv {
 	public static function initialize() {
 		Application::init_autoload();
 		$_SESSION = [];
+		static::init_test_tables();
+	}
+
+	private static function init_test_tables() {
+		$configuration_file = ROOT_PATH.DS.'resource'.DS.'configuration.json';
+		$params = json_decode(file_get_contents($configuration_file), true)['db_params'];
+		$user = $params['login'];
+		$pass = $params['password'];
+		$model = new PDO("mysql:host=localhost;dbname={$params['name']}",$user, $pass);
+		$model->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$model->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+		$model->query('SET NAMES utf8');
+
+		$sql = 'create table if not exists tests_table (';
+		$sql .= ' `id` serial primary key';
+		$sql .= ', `field1` varchar(255) not null default ""';
+		$sql .= ', `field2` bigint not null default 0';
+		$sql .= ', `field3` enum("val1", "val2", "val3") default "val1"';
+		$sql .= ')';
+		$model->query($sql);
+
+		$sql = 'create table if not exists tests_table2 (';
+		$sql .= ' `id` serial primary key';
+		$sql .= ', `field1` varchar(255) not null default ""';
+		$sql .= ', `field2` bigint not null default 0';
+		$sql .= ', `field3` enum("val1", "val2", "val3") default "val1"';
+		$sql .= ')';
+		$model->query($sql);
 	}
 }
 

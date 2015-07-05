@@ -1,14 +1,32 @@
 <?php
 
 class SuperModelTest extends PHPUnit_Framework_TestCase {
+	/**
+	 * @var $model SuperModel
+	 */
 	private $model;
 
 	public function setUp() {
 		if(is_null($this->model)) {
+			/**
+			 * @var $system System
+			 */
 			$system = Application::get_class('System');
 			$params = $system->get_configuration()['db_params'];
 			$this->model  = Application::get_class('SuperModel', $params);
 		}
+	}
+
+	/**
+	 * @covers SuperModel::__construct
+	 */
+	public function test_create_model() {
+		/**
+		 * @var $system System
+		 */
+		$system = Application::get_class('System');
+		$params = $system->get_configuration()['db_params'];
+		$this->assertInternalType('object', Application::get_class('SuperModel', $params));
 	}
 
 	/**

@@ -56,7 +56,7 @@ abstract class MysqlModel {
 		return $this->current_language.'_'.$table_name;
 	}
 
-	abstract function get_table();
+	abstract protected function get_table();
 
 	protected function select($fields = null) {
 		$fields = (array)$fields;
@@ -67,34 +67,42 @@ abstract class MysqlModel {
 		}
 		$this->query = 'SELECT '.$fields.' FROM';
 		$this->query .= ' '.$this->get_table();
+		return $this;
 	}
 
 	protected function update($fields) {
 		$fields = (array)$fields;
+		$parts = [];
 		if(empty($fields)) {
 			throw new InvalidArgumentException('fields are empty!');
 		}
 		$this->query = 'UPDATE '.$this->get_table().' SET';
 		foreach($fields as $column=>$val) {
-			$this->query .= ' '.$column.' = ?';
+			$parts[] = ' '.$column.' = ?';
 			$this->bind_values[] = $val;
 		}
+		$this->query .= implode(',', $parts);
+		return $this;
 	}
 
 	protected function insert($fields) {
 		$fields = (array)$fields;
+		$parts = [];
 		if(empty($fields)) {
 			throw new InvalidArgumentException('fields are empty!');
 		}
 		$this->query = 'INSERT INTO '.$this->get_table().' SET';
 		foreach($fields as $column=>$val) {
-			$this->query .= ' '.$column.' = ?';
+			$parts[] = ' '.$column.' = ?';
 			$this->bind_values[] = $val;
 		}
+		$this->query .= implode(',', $parts);
+		return $this;
 	}
 
 	protected function delete() {
 		$this->query = 'DELETE FROM '.$this->get_table();
+		return $this;
 	}
 
 	/**
@@ -114,6 +122,7 @@ abstract class MysqlModel {
 				$this->parse_conditions($conditions);
 			}
 		}
+		return $this;
 	}
 
 	protected function parse_conditions($conditions) {
@@ -134,17 +143,20 @@ abstract class MysqlModel {
 	protected function limit($num) {
 		$num = (int)$num;
 		$this->query .= " LIMIT {$num}";
+		return $this;
 	}
 	
 	protected function offset($num) {
 		$num = (int)$num;
 		$this->query .= " OFFSET {$num}";
+		return $this;
 	}
 	
 	protected function join($type, $table, $conditions) {
 		$this->query .= ' '.strtoupper($type).' JOIN '.$table;
 		$this->query .= ' ON';
 		$this->parse_conditions($conditions);
+		return $this;
 	}
 
 	protected function group_by($fields) {
@@ -153,6 +165,7 @@ abstract class MysqlModel {
 			$fields = implode(',', $fields);
 			$this->query .= " GROUP BY {$fields}";
 		}
+		return $this;
 	}
 
 	protected function order_by($fields) {
@@ -161,6 +174,7 @@ abstract class MysqlModel {
 			$fields = implode(',', $fields);
 			$this->query .= " ORDER BY {$fields}";
 		}
+		return $this;
 	}
 
 	protected function having($conditions) {
@@ -173,6 +187,7 @@ abstract class MysqlModel {
 				$this->parse_conditions($conditions);
 			}
 		}
+		return $this;
 	}
 
 	protected function execute($sql = null) {
@@ -181,11 +196,12 @@ abstract class MysqlModel {
 		} else {
 			$sth = $this->db->prepare($this->query);
 			foreach($this->bind_values as $k=>$value) {
-				$sth->bindParam($k, $value);
+				$sth->bindParam($k+1, $value);
 			}
 			$sth->execute();
 			$this->statement = $sth;
 		}
+		return $this;
 	}
 
 	protected function get_insert_id() {
