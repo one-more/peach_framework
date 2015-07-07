@@ -20,14 +20,11 @@ var gulp = require('gulp'),
     prefixer = require('gulp-autoprefixer'),
     uglify = require('gulp-uglify'),
     cssmin = require('gulp-cssmin'),
-    sass = require('gulp-sass'),
+    less = require('gulp-less'),
     sourcemaps = require('gulp-sourcemaps'),
     rigger = require('gulp-rigger'),
     imagemin = require('gulp-imagemin'),
-    pngquant = require('imagemin-pngquant'),
-    rimraf = require('rimraf'),
-    connect = require('gulp-connect'),
-    opn = require('opn');
+    pngquant = require('imagemin-pngquant');
 
 var path = {
     build: { //Тут мы укажем куда складывать готовые после сборки файлы
@@ -44,8 +41,7 @@ var path = {
         js: 'src/*/js/**/*.js',
         style: 'src/*/css/**/*.css',
         img: 'src/*/images/**/*.*'
-    },
-    clean: './build'
+    }
 };
 
 gulp.task('js:build', function () {
@@ -106,10 +102,6 @@ gulp.task('watch:image', function() {
             }))
             .pipe(gulp.dest('../www/'+dir+'/images'));
     });
-});
-
-gulp.task('clean', function (cb) {
-    rimraf(path.clean, cb);
 });
 
 gulp.task('build', ['js:build', 'style:build', 'image:build']);

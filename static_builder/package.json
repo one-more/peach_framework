@@ -10,14 +10,12 @@
         "gulp-connect": "*",
         "gulp-cssmin": "*",
         "gulp-imagemin": "*",
-        "gulp-sass": "*",
-        "gulp-sourcemaps": "*",
+        "gulp-less": "*",
         "gulp-rigger": "*",
         "gulp-uglify": "*",
         "gulp-watch": "*",
         "imagemin-pngquant": "*",
         "opn": "*",
-        "rimraf": "*",
         "try-thread-sleep": "^1.0.0"
     }
 }
