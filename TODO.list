@@ -8,3 +8,4 @@
 7. поправить configuration_trait(set_params)
 8. добавить Less
 9. привести в порядок static_builder/package.json(лишние зависимости), static_builder/gulpfile.js
+10. создать фабрику объектов на клиенте

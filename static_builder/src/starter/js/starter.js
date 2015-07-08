@@ -2,5 +2,8 @@
 //= partials/core/bootstrap/bootstrap.js
 //= partials/core/underscore.js
 //= partials/core/backbone.js
+//= partials/core/modernizr.custom.js
+//= partials/core/classie.js
+//= partials/app/crypto/md5.js
 //= partials/app/app.js
 //= partials/app/router.js

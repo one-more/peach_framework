@@ -1,0 +1,1 @@
+//= partials/models/language_model.js

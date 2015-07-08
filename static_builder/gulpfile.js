@@ -20,7 +20,8 @@ var gulp = require('gulp'),
     prefixer = require('gulp-autoprefixer'),
     uglify = require('gulp-uglify'),
     cssmin = require('gulp-cssmin'),
-    less = require('gulp-less'),
+    stylus = require('gulp-stylus'),
+    nib = require('nib'),
     sourcemaps = require('gulp-sourcemaps'),
     rigger = require('gulp-rigger'),
     imagemin = require('gulp-imagemin'),
@@ -29,17 +30,17 @@ var gulp = require('gulp'),
 var path = {
     build: { //Тут мы укажем куда складывать готовые после сборки файлы
         js: '../www/',
-        css: '../www/',
+        css: '../www/css',
         img: '../www/'
     },
     src: { //Пути откуда брать исходники
         js: 'src/*/js/*.js',
-        style: 'src/*/css/*.css',
+        style: 'src/*/style/*.styl',
         img: 'src/*/images/**/*.*' //Синтаксис img/**/*.* означает - взять все файлы всех расширений из папки и из вложенных каталогов
     },
     watch: { //Тут мы укажем, за изменением каких файлов мы хотим наблюдать
         js: 'src/*/js/**/*.js',
-        style: 'src/*/css/**/*.css',
+        style: 'src/*/style/**/*.styl',
         img: 'src/*/images/**/*.*'
     }
 };
@@ -48,6 +49,7 @@ gulp.task('js:build', function () {
     get_dirs_list('src').forEach(function(dir) {
         gulp.src('src/'+dir+'/js/*.js')
             .pipe(rigger())
+            .on('error', console.log)
             .pipe(uglify())
             .pipe(gulp.dest('../www/'+dir+'/js'));
     })
@@ -55,11 +57,14 @@ gulp.task('js:build', function () {
 
 gulp.task('style:build', function () {
     get_dirs_list('src').forEach(function(dir) {
-        gulp.src('src/'+dir+'/css/*.css')
-            .pipe(rigger())
-            .pipe(prefixer({
-                browsers: ['last 4 versions']
+        gulp.src('src/'+dir+'/style/*.styl')
+            .pipe(stylus({
+                use: nib()
             }))
+            .on('error', console.log)
+            .pipe(rigger())
+            .on('error', console.log)
+            .pipe(prefixer())
             .pipe(cssmin())
             .pipe(gulp.dest('../www/'+dir+'/css'));
     });
