@@ -5,11 +5,11 @@
 //= partials/core/modernizr.custom.js
 //= partials/core/classie.js
 
+//= partials/models/global/language_model.js
+
 //= partials/app/crypto/md5.js
 //= partials/app/app.js
 //= partials/app/router.js
 
 //= partials/views/global/notification/notificationFx.js
 //= partials/views/global/notification/notification.js
-
-//= partials/models/global/language_model.js
