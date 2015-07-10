@@ -24,7 +24,10 @@ class SiteRouter extends Router {
 		$login = Request::get_var('login', 'string');
 		$password = Request::get_var('password', 'string');
 		$remember = Request::get_var('remember', 'string');
-		$user_controller = Application::get_class('UserController');
+        /**
+         * @var $user_controller UserController
+         */
+        $user_controller = Application::get_class('UserController');
 		echo json_encode($user_controller->login($login, $password, (bool)$remember));
 	}
 
@@ -34,7 +37,10 @@ class SiteRouter extends Router {
 	}
 
 	public function logout() {
-		$user = Application::get_class('User');
+        /**
+         * @var $user User
+         */
+        $user = Application::get_class('User');
 		$user->log_out();
 	}
 

@@ -43,13 +43,13 @@ class SystemTest extends PHPUnit_Framework_TestCase {
 	public function test_use_db() {
 		$use_db_param = $this->system_obj->use_db();
 
-		$this->set_params('configuration', ['use_db' => true]);
+		$this->set_params(['use_db' => true], 'configuration');
 		$this->assertTrue($this->system_obj->use_db());
 
-		$this->set_params('configuration', ['use_db' => false]);
+		$this->set_params(['use_db' => false], 'configuration');
 		$this->assertFalse($this->system_obj->use_db());
 
-		$this->set_params('configuration', ['use_db' => $use_db_param]);
+		$this->set_params(['use_db' => $use_db_param], 'configuration');
 		$this->assertEquals($this->configuration['use_db'], $this->system_obj->use_db());
 	}
 

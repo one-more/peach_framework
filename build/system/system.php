@@ -42,7 +42,7 @@ class System {
                 $db_params  = $params['db_params'];
                 $model  = Application::get_class('SystemInitModel', $db_params);
                 $model->initialize();
-                $this->set_params('system', ['db_initialized'=>true]);
+                $this->set_params(['db_initialized'=>true]);
             }
         }
     }

@@ -12,8 +12,8 @@ class AdminPanelRouter extends Router {
 	public function __construct() {
 		$this->routes = [
 			'/admin_panel' => [$this, 'index', 'no check'],
-			'/admin_panel/edit_user/:number' => [$this, 'edit_user', 'no check'],
-			'/admin_panel/add_user' => [$this, 'add_user', 'no check']
+			'/admin_panel/edit_user/:number' => [$this, 'edit_user_page', 'no check'],
+			'/admin_panel/add_user' => [$this, 'add_user_page', 'no check']
 		];
 	}
 
@@ -29,13 +29,13 @@ class AdminPanelRouter extends Router {
 		$this->show_result();
 	}
 
-	public function edit_user($id) {
+	public function edit_user_page($id) {
 		$view = Application::get_class('AdminPanelEditUser', [$id]);
 		$this->positions['main_content'] = $view->render();
 		$this->show_result();
 	}
 
-	public function add_user() {
+	public function add_user_page() {
 		$view = Application::get_class('AdminPanelAddUser');
 		$this->positions['main_content'] = $view->render();
 		$this->show_result();

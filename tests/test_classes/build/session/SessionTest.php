@@ -22,7 +22,7 @@ class SessionTest extends PHPUnit_Framework_TestCase {
 
 	public function tearDown() {
 		if($this->system_obj->use_db() !== static::$use_db_original) {
-			$this->set_params('configuration', ['use_db' => static::$use_db_original]);
+			$this->set_params(['use_db' => static::$use_db_original], 'configuration');
 		}
 	}
 
@@ -49,7 +49,7 @@ class SessionTest extends PHPUnit_Framework_TestCase {
 	 */
 	public function test_start_no_db() {
 		if($this->system_obj->use_db()) {
-			$this->set_params('configuration', ['use_db' => false]);
+			$this->set_params(['use_db' => false], 'configuration');
 			$this->assertInternalType('string', $this->session_obj->start());
 		}
 	}
@@ -81,7 +81,7 @@ class SessionTest extends PHPUnit_Framework_TestCase {
 	 */
 	public function test_set_var_session() {
 		if($this->system_obj->use_db()) {
-			$this->set_params('configuration', ['use_db' => false]);
+			$this->set_params(['use_db' => false], 'configuration');
 			$this->assertNull($this->session_obj->set_var('test', 'test'));
 		}
 	}
@@ -92,7 +92,7 @@ class SessionTest extends PHPUnit_Framework_TestCase {
 	 */
 	public function test_get_var_session() {
 		if($this->system_obj->use_db()) {
-			$this->set_params('configuration', ['use_db' => false]);
+			$this->set_params(['use_db' => false], 'configuration');
 			$val = empty($_SESSION['test']) ? '' : $_SESSION['test'];
 			$this->assertEquals($val, $this->session_obj->get_var('test'));
 		}
@@ -111,7 +111,7 @@ class SessionTest extends PHPUnit_Framework_TestCase {
 	 */
 	public function test_unset_var_session() {
 		if($this->system_obj->use_db()) {
-			$this->set_params('configuration', ['use_db' => false]);
+			$this->set_params(['use_db' => false], 'configuration');
 			$this->assertNull($this->session_obj->unset_var('test'));
 			$this->assertFalse($this->session_obj->get_var('test'));
 		}

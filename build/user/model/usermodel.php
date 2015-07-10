@@ -21,6 +21,9 @@ class UserModel extends SuperModel {
                 $result['remember_hash']    = $remember_hash;
                 $this->update_fields(['remember_hash'   => $remember_hash], $result['id']);
             }
+            /**
+             * @var $session Session
+             */
             $session    = Application::get_class('Session');
             if($remember) {
                 setcookie('user', $result['remember_hash'], strtotime('2037-12-31'), '/');

@@ -135,6 +135,7 @@ abstract class MysqlModel {
 					$this->query .= ' '.$condition[1];
 				} else {
 					$this->query .= ' ?';
+                    $this->bind_values[] = $condition[1];
 				}
 			}
 		}
@@ -213,7 +214,7 @@ abstract class MysqlModel {
 		return $this->data_to_arrays($result);
 	}
 
-	public function get_arrays() {
+	protected function get_arrays() {
 		return $this->get_arrays_from_statement($this->statement);
 	}
 
@@ -246,7 +247,7 @@ abstract class MysqlModel {
 		}
 	}
 
-	public function get_array() {
+	protected function get_array() {
 		$this->get_array_from_statement($this->statement);
 	}
 
@@ -287,5 +288,9 @@ abstract class MysqlModel {
 			}
 		};
 		return $return_from_array($sth);
+    }
+
+    protected function get_result() {
+        return $this->return_from_statement($this->statement);
     }
 }

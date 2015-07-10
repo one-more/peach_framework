@@ -13,7 +13,7 @@ class Language {
 		if(Request::get_var('language')) {
 			setcookie('language', $lang, strtotime('2037-12-31'), '/');
 		} else {
-			$this->set_params('configuration', ['language'   => $lang]);
+			$this->set_params(['language'   => $lang], 'configuration');
 		}
 	}
 }

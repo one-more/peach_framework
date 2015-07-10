@@ -42,28 +42,6 @@ class SuperModelTest extends PHPUnit_Framework_TestCase {
 		$this->assertNull($this->model->execute($sql));
 	}
 
-	/**
-	 * @covers SuperModel::select
-	 */
-	public function test_select() {
-		$params = [
-			'where' => 'id = 1'
-		];
-		$this->assertCount(4, $this->model->select('tests_table', $params));
-
-		$params = [
-			'fields' => ['id', 'field1'],
-			'where' => 'id = 1'
-		];
-		$this->assertCount(2, $this->model->select('tests_table', $params));
-
-		$params = [
-			'limit' => 2,
-			'offset' => 1
-		];
-		$this->assertCount(2, $this->model->select('tests_table', $params));
-	}
-
 	public function values_provider() {
 		$result = [];
 		for($i=0; $i<3; $i++) {
@@ -93,6 +71,28 @@ class SuperModelTest extends PHPUnit_Framework_TestCase {
 	public function test_empty_insert() {
 		$this->assertInternalType('int', $this->model->insert('tests_table'));
 	}
+
+    /**
+     * @covers SuperModel::select
+     */
+    public function test_select() {
+        $params = [
+            'where' => 'id = 1'
+        ];
+        $this->assertCount(4, $this->model->select('tests_table', $params));
+
+        $params = [
+            'fields' => ['id', 'field1'],
+            'where' => 'id = 1'
+        ];
+        $this->assertCount(2, $this->model->select('tests_table', $params));
+
+        $params = [
+            'limit' => 2,
+            'offset' => 1
+        ];
+        $this->assertCount(2, $this->model->select('tests_table', $params));
+    }
 
 	/**
 	 * @covers SuperModel::update
@@ -135,7 +135,7 @@ class SuperModelTest extends PHPUnit_Framework_TestCase {
 
 		$this->assertCount(1, $this->model->get_arrays('tests_table', ['where' => 'id = 1']));
 
-		$this->assertCount(3, $this->model->get_arrays('tests_table', ['where' => 'id in(1,2,3)']));
+		$this->assertCount(2, $this->model->get_arrays('tests_table', ['where' => 'id in(1,2)']));
 	}
 
 	/**
@@ -161,14 +161,14 @@ class SuperModelTest extends PHPUnit_Framework_TestCase {
 	public function test_execute_results() {
 		$this->assertEquals(1, $this->model->execute('select min(id) from tests_table'));
 
-		$this->assertEquals([1,2,3], $this->model->execute('select id from tests_table where id in(1,2,3)'));
+		$this->assertEquals([1,2], $this->model->execute('select id from tests_table where id in(1,2)'));
 
 		$record = $this->model->execute('select * from tests_table where id = 1');
 		foreach(['id', 'field1', 'field2', 'field3'] as $key) {
 			$this->assertArrayHasKey($key, $record);
 		}
 
-		$this->assertCount(3, $this->model->execute('select * from tests_table where id in(1,2,3)'));
+		$this->assertCount(2, $this->model->execute('select * from tests_table where id in(1,2)'));
 	}
 }
  

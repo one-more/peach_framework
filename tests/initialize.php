@@ -11,6 +11,17 @@ class TestsEnv {
 		Application::init_autoload();
 		$_SESSION = [];
 		static::init_test_tables();
+
+        /**
+         * @var $lang_obj Language
+         */
+        $lang_obj = Application::get_class('Language');
+		$current_lang = $lang_obj->get_language();
+		define('CURRENT_LANG', $current_lang);
+
+        $starter_autoload = new ReflectionMethod('Starter', 'register_autoload');
+        $starter_autoload->setAccessible(true);
+        $starter_autoload->invoke(new Starter());
 	}
 
 	private static function init_test_tables() {

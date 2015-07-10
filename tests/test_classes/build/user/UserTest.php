@@ -2,14 +2,38 @@
 require_once ROOT_PATH.DS."build".DS.'user'.DS.'user.php';
 require_once ROOT_PATH.DS."build".DS.'user'.DS.'model'.DS.'usermodel.php';
 
+class UserTestModel extends MysqlModel {
+    public function get_table() {
+        return 'users';
+    }
+
+    public function get_hash() {
+        return $this->select(['remember_hash'])
+            ->where(['id' => ['=', 1]])
+            ->execute()
+            ->get_result();
+    }
+}
+
 class UserTest extends PHPUnit_Framework_TestCase {
 
 	private $session_id = 1;
-	private $session_obj;
-	private $user_obj;
-	private $remember_hash = '$2y$10$1hjRr3BYJduVdn/9..aMgeRSMon.D5NSw3SNb5gB5i2USiJFRS2rK';
+    /**
+     * @var $session_obj Session
+     */
+    private $session_obj;
+    /**
+     * @var $user_obj User
+     */
+    private $user_obj;
+	private $remember_hash;
 	private $test_user_login = 'root';
 	private $test_user_password = '';
+
+    public function __construct() {
+        $model = new UserTestModel();
+        $this->remember_hash = $model->get_hash();
+    }
 
 	public function setUp() {
 		if(empty($_COOKIE['pfm_session_id'])) {
