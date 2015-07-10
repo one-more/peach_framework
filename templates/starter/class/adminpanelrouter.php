@@ -23,20 +23,29 @@ class AdminPanelRouter extends Router {
 			$users_table_view = Application::get_class('AdminPanelUsersTable');
 			$this->positions['main_content'] = $users_table_view->render();
 		} else {
-			$view = Application::get_class('AdminPanelLogin');
+            /**
+             * @var $view \AdminPanel\LoginView
+             */
+            $view = Application::get_class('\AdminPanel\LoginView');
 			$this->positions['main_content'] = $view->render();
 		}
 		$this->show_result();
 	}
 
 	public function edit_user_page($id) {
-		$view = Application::get_class('AdminPanelEditUser', [$id]);
+        /**
+         * @var $view \AdminPanel\EditUserView
+         */
+		$view = Application::get_class('\AdminPanel\EditUserView', [$id]);
 		$this->positions['main_content'] = $view->render();
 		$this->show_result();
 	}
 
 	public function add_user_page() {
-		$view = Application::get_class('AdminPanelAddUser');
+        /**
+         * @var $view \AdminPanel\AddUserView
+         */
+		$view = Application::get_class('\AdminPanel\AddUserView');
 		$this->positions['main_content'] = $view->render();
 		$this->show_result();
 	}
@@ -51,12 +60,21 @@ class AdminPanelRouter extends Router {
 				'images_path' => $static_path.DS.'images',
 				'js_path' => $static_path.DS.'js'
 			];
+            /**
+             * @var $user_controller UserController
+             */
 			$user_controller = Application::get_class('UserController');
 			if($user_controller->is_admin()) {
-				$left_menu_view = Application::get_class('AdminPanelLeftMenu');
-				$this->positions['left_menu'] = $left_menu_view->render();
-				$navbar_view = Application::get_class('AdminPanelNavbar');
-				$this->positions['navbar'] = $navbar_view->render();
+                /**
+                 * @var $view \AdminPanel\LeftMenuView
+                 */
+                $view = Application::get_class('\AdminPanel\LeftMenuView');
+				$this->positions['left_menu'] = $view->render();
+                /**
+                 * @var $view \AdminPanel\NavbarView
+                 */
+                $view = Application::get_class('\AdminPanel\NavbarView');
+				$this->positions['navbar'] = $view->render();
 			}
 			$templator->assign($static_paths);
 			$templator->setTemplateDir($template->path.DS.'templates'.DS.'admin_panel');

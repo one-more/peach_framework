@@ -20,6 +20,7 @@ class AdminPanelRouterTest extends PHPUnit_Framework_TestCase {
         ob_start();
         $this->router->index();
         ob_end_clean();
+        $this->assertNull(error_get_last());
     }
 
     /**
@@ -29,6 +30,7 @@ class AdminPanelRouterTest extends PHPUnit_Framework_TestCase {
         ob_start();
         $this->router->edit_user_page($id = 1);
         ob_end_clean();
+        $this->assertNull(error_get_last());
     }
 
     /**
@@ -38,6 +40,7 @@ class AdminPanelRouterTest extends PHPUnit_Framework_TestCase {
         ob_start();
         $this->router->add_user_page();
         ob_end_clean();
+        $this->assertNull(error_get_last());
     }
 }
  

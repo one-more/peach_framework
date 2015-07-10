@@ -1,11 +1,12 @@
 <?php
+namespace AdminPanel;
 
-class AdminPanelEditUser extends TemplateView {
+class EditUserView extends \TemplateView {
 
 	public function __construct($id) {
 		parent::__construct();
 		$this->setTemplateDir($this->template->path.DS.'templates'.DS.'admin_panel');
-		$user = Application::get_class('User');
+		$user = \Application::get_class('User');
 		$this->assign('user', $user->get_fields($id));
 	}
 

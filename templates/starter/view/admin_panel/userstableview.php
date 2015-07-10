@@ -1,13 +1,17 @@
 <?php
+namespace AdminPanel;
 
-class AdminPanelUsersTable extends TemplateView {
+class UsersTable extends \TemplateView {
 	public function __construct() {
 		parent::__construct();
 		$this->setTemplateDir($this->template->path.DS.'templates'.DS.'admin_panel');
 	}
 
 	public function render() {
-		$user = Application::get_class('User');
+        /**
+         * @var $user \User
+         */
+        $user = \Application::get_class('User');
 		$users = $user->get_users();
 		$this->assign('users', $users);
 		$this->assign('my_id', $user->get_id());

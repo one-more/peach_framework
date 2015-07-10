@@ -9,6 +9,9 @@
         <testsuite name="extensions">
             <directory>test_classes/build</directory>
         </testsuite>
+        <testsuite name="templates">
+            <directory>test_classes/templates</directory>
+        </testsuite>
     </testsuites>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="false">

@@ -1,6 +1,7 @@
 <?php
+namespace AdminPanel;
 
-class AdminPanelLogin extends TemplateView {
+class LoginView extends \TemplateView {
 	public function __construct() {
 		parent::__construct();
 		$this->setTemplateDir($this->template->path.DS.'templates'.DS.'admin_panel');

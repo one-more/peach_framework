@@ -13,7 +13,17 @@ trait trait_template {
     }
 
     public static function load_template_class($name, $dir = 'class') {
-        $name   = strtolower($name);
+        if(strpos($name, '\\')) {
+            $parts = explode('\\', $name);
+            $name = array_pop($parts);
+            $parts = array_map(function($el) {
+                return strtolower(preg_replace('/([a-zA-Z])(?=[A-Z])/', '$1_', $el));
+            }, $parts);
+            $name = implode(DS, $parts).DS.strtolower($name);
+            Error::log($name);
+        } else {
+            $name   = strtolower($name);
+        }
         $class  = "{$name}.php";
         $file   = ROOT_PATH.DS.'templates'.DS.strtolower(__CLASS__).DS.$dir.DS.$class;
         if(file_exists($file)) {
