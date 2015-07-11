@@ -19,8 +19,4 @@ class UsersTable extends \TemplateView {
 		$this->assign('is_super_admin', $is_super_admin);
 		return $this->getTemplate('users_table.tpl.html');
 	}
-
-	public function get_lang_file() {
-		return $this->template->path.DS.'lang'.DS.CURRENT_LANG.DS.'admin_panel_users_table.json';
-	}
 }

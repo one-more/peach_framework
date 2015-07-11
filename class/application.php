@@ -222,4 +222,8 @@ class Application {
 			strpos($_SERVER['HTTP_HOST'], 'dev') !== false;
 		}
 	}
+
+	public static function camelcase_to_dash($string) {
+		return strtolower(preg_replace('/([a-zA-Z])(?=[A-Z])/', '$1_', $string));
+	}
 }

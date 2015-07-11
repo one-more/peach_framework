@@ -24,9 +24,9 @@ class AdminPanelRouter extends Router {
 			$this->positions['main_content'] = $users_table_view->render();
 		} else {
             /**
-             * @var $view \AdminPanel\LoginView
+             * @var $view \AdminPanel\LoginFormView
              */
-            $view = Application::get_class('\AdminPanel\LoginView');
+            $view = Application::get_class('\AdminPanel\LoginFormView');
 			$this->positions['main_content'] = $view->render();
 		}
 		$this->show_result();

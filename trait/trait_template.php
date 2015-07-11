@@ -16,11 +16,8 @@ trait trait_template {
         if(strpos($name, '\\')) {
             $parts = explode('\\', $name);
             $name = array_pop($parts);
-            $parts = array_map(function($el) {
-                return strtolower(preg_replace('/([a-zA-Z])(?=[A-Z])/', '$1_', $el));
-            }, $parts);
+            $parts = array_map(['Application','camelcase_to_dash'], $parts);
             $name = implode(DS, $parts).DS.strtolower($name);
-            Error::log($name);
         } else {
             $name   = strtolower($name);
         }
