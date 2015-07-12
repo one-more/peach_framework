@@ -31,8 +31,12 @@ class System {
         return $this->get_configuration()['template'];
     }
 
-    public function use_db() {
-        return (bool)$this->get_configuration()['use_db'];
+    public function use_db($param = null) {
+        if(!is_bool($param)) {
+            return (bool)$this->get_configuration()['use_db'];
+        } else {
+            $this->set_params(['use_db' => (bool)$param], 'configuration');
+        }
     }
 
     private function init_db() {

@@ -73,7 +73,7 @@ abstract class MysqlModel {
 	protected function update($fields) {
 		$fields = (array)$fields;
 		$parts = [];
-		if(empty($fields)) {
+		if(empty($fields) || !is_array($fields)) {
 			throw new InvalidArgumentException('fields are empty!');
 		}
 		$this->query = 'UPDATE '.$this->get_table().' SET';
@@ -88,7 +88,7 @@ abstract class MysqlModel {
 	protected function insert($fields) {
 		$fields = (array)$fields;
 		$parts = [];
-		if(empty($fields)) {
+		if(empty($fields) || !is_array($fields)) {
 			throw new InvalidArgumentException('fields are empty!');
 		}
 		$this->query = 'INSERT INTO '.$this->get_table().' SET';
@@ -201,8 +201,9 @@ abstract class MysqlModel {
 			$this->statement = $this->db->query($sql);
 		} else {
 			$sth = $this->db->prepare($this->query);
-			foreach($this->bind_values as $k=>$value) {
-				$sth->bindParam($k+1, $value);
+			$i = 1;
+			foreach($this->bind_values as $value) {
+				$sth->bindValue($i++, $value);
 			}
 			$sth->execute();
 			$this->statement = $sth;
@@ -231,7 +232,7 @@ abstract class MysqlModel {
 				return $data;
 			}
 		} else {
-			return [];
+			return [[$data]];
 		}
 	}
 
@@ -248,12 +249,12 @@ abstract class MysqlModel {
 				return $data;
 			}
 		} else {
-			return [];
+			return [$data];
 		}
 	}
 
 	protected function get_array() {
-		$this->get_array_from_statement($this->statement);
+		return $this->get_array_from_statement($this->statement);
 	}
 
     protected function return_from_statement(PDOStatement $sth) {
