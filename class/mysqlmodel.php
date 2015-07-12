@@ -128,9 +128,10 @@ abstract class MysqlModel {
 	protected function parse_conditions($conditions) {
 		foreach($conditions as $col_name=>$condition) {
 			if($col_name == 'or' || $col_name == 'and') {
+				$this->query .= ' '.$col_name;
 				$this->parse_conditions($condition);
 			} else {
-				$this->query .= $col_name.' '.$condition[0];
+				$this->query .= ' '.$col_name.' '.$condition[0];
 				if(isset($condition[2]) && !$condition[2]) {
 					$this->query .= ' '.$condition[1];
 				} else {
@@ -176,6 +177,10 @@ abstract class MysqlModel {
 			$this->query .= " ORDER BY {$fields}";
 		}
 		return $this;
+	}
+
+	protected function sub_query() {
+		return new $this;
 	}
 
 	protected function having($conditions) {
