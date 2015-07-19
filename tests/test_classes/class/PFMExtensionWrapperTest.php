@@ -24,6 +24,17 @@ class PFMExtensionWrapperTest extends PHPUnit_Framework_TestCase {
 		$this->test_rename_file = $extension_path.DS.'wrapper_test_file_renamed.txt';
 	}
 
+    /**
+     * @covers PFMExtensionWrapper::create_phar_data
+     */
+    public function test_create_phar_data() {
+        $wrapper = new PFMExtensionWrapper;
+        $method = new ReflectionMethod('PFMExtensionWrapper', 'create_phar_data');
+        $method->setAccessible(true);
+        $result = $method->invoke($wrapper);
+        $this->assertInstanceOf('PharData', $result);
+    }
+
 	/**
 	 * @covers PFMExtensionWrapper::stream_write
 	 */

@@ -1,6 +1,10 @@
 <?php
 
-class SystemInitModel extends SuperModel {
+class SystemInitModel extends MysqlModel {
+
+    protected function get_table() {
+        return '';
+    }
 
     public function initialize() {
         $sql    = file_get_contents(ROOT_PATH.DS.'resource'.DS.'initialize.sql');

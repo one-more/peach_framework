@@ -7,6 +7,10 @@ class MysqlModelTestImpl extends MysqlModel {
 		return $this->table_name;
 	}
 
+	public function get_configuration() {
+		return parent::get_configuration();
+	}
+
 	public function add_lang($table_name) {
 		return parent::add_lang($table_name);
 	}
@@ -104,23 +108,33 @@ class MysqlModelTestImpl extends MysqlModel {
 	}
 
 	public function get_arrays_from_statement(PDOStatement $sth) {
-		return parent::get_arrays_from_statement($sth);
+		$method = new ReflectionMethod('MysqlModel', 'get_arrays_from_statement');
+		$method->setAccessible(true);
+        return $method->invoke($this, $sth);
 	}
 
 	public function data_to_arrays($data) {
-		return parent::data_to_arrays($data);
+        $method = new ReflectionMethod('MysqlModel', 'data_to_arrays');
+        $method->setAccessible(true);
+        return $method->invoke($this, $data);
 	}
 
 	public function get_array_from_statement(PDOStatement $sth) {
-		return parent::get_array_from_statement($sth);
+        $method = new ReflectionMethod('MysqlModel', 'get_array_from_statement');
+        $method->setAccessible(true);
+        return $method->invoke($this, $sth);
 	}
 
 	public function data_to_array($data) {
-		return parent::data_to_array($data);
+        $method = new ReflectionMethod('MysqlModel', 'data_to_array');
+        $method->setAccessible(true);
+        return $method->invoke($this, $data);
 	}
 
 	public function return_from_statement(PDOStatement $sth) {
-		return parent::return_from_statement($sth);
+        $method = new ReflectionMethod('MysqlModel', 'return_from_statement');
+        $method->setAccessible(true);
+        return $method->invoke($this, $sth);
 	}
 }
 
@@ -175,6 +189,13 @@ class MysqlModelTest extends PHPUnit_Framework_TestCase {
 			$this->model->add_lang($this->model->table_name),
 			$language->get_language().'_'.$this->model->table_name
 		);
+	}
+
+	/**
+	 * @covers MysqlModel::get_configuration
+	 */
+	public function test_get_configuration() {
+		$this->assertTrue(Application::is_assoc_array($this->model->get_configuration()));
 	}
 
 	public function values_provider() {
@@ -369,6 +390,8 @@ class MysqlModelTest extends PHPUnit_Framework_TestCase {
 			->execute()
 			->get_array();
 		$this->assertCount(4, $result);
+
+
 	}
 
 	/**
@@ -441,6 +464,12 @@ class MysqlModelTest extends PHPUnit_Framework_TestCase {
 			->execute()
 			->get_result();
 		$this->assertCount(1, $this->model->data_to_arrays($data));
+
+        $data = $this->model->select()
+			->where(['id' => ['=', 0]])
+			->execute()
+			->get_result();
+		$this->assertCount(1, $this->model->data_to_arrays($data));
 	}
 
 	/**
@@ -463,6 +492,18 @@ class MysqlModelTest extends PHPUnit_Framework_TestCase {
 			->execute()
 			->get_result();
 		$this->assertCount(4, $this->model->data_to_array($data));
+
+		$data = $this->model->select()
+			->limit(3)
+			->execute()
+			->get_result();
+		$this->assertCount(4, $this->model->data_to_array($data));
+
+		$data = $this->model->select(['id'])
+			->limit(1)
+			->execute()
+			->get_result();
+		$this->assertCount(1, $this->model->data_to_array($data));
 	}
 
 	/**
@@ -509,6 +550,23 @@ class MysqlModelTest extends PHPUnit_Framework_TestCase {
 			->execute()
 			->get_statement();
 		$this->assertCount(2, $this->model->return_from_statement($sth));
+
+		$sth = $this->model->insert($this->values_provider()[0][0])
+			->execute()
+			->get_statement();
+		$this->assertNull($this->model->return_from_statement($sth));
+
+		$sth = $this->model->select(['id'])
+			->where(['id' => ['=', 0]])
+			->execute()
+			->get_statement();
+		$this->assertNull($this->model->return_from_statement($sth));
+
+		$sth = $this->model->select(['id'])
+			->limit(4)
+			->execute()
+			->get_statement();
+		$this->assertInternalType('array', $this->model->return_from_statement($sth));
 	}
 
 	/**

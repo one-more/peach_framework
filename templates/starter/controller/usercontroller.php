@@ -21,18 +21,27 @@ class UserController {
 		if($password) {
 			$password = $this->crypt_password($login, $password);
 		}
+        /**
+         * @var $user User
+         */
 		$user = Application::get_class('User');
 		return $user->login($login, $password, $remember);
 	}
 
 	public function is_admin() {
-		$user = Application::get_class('User');
+		/**
+         * @var $user User
+         */
+        $user = Application::get_class('User');
 		return $user->get_field('credentials') == 'administrator' ||
 			$user->get_field('credentials') == 'super_administrator';
 	}
 
 	public function is_super_admin() {
-		$user = Application::get_class('User');
+		/**
+         * @var $user User
+         */
+        $user = Application::get_class('User');
 		return $user->get_field('credentials') == 'super_administrator';
 	}
 
@@ -72,6 +81,9 @@ class UserController {
 		if(!$uid) {
 			throw new Exception('empty id');
 		}
+        /**
+         * @var $user User
+         */
 		$user = Application::get_class('User');
 		$old_fields = $user->get_fields($uid);
 		if($old_fields['login'] != $fields['login']) {
@@ -126,6 +138,9 @@ class UserController {
 			echo json_encode($error);
 			return;
 		}
+        /**
+         * @var $user User
+         */
 		$user = Application::get_class('User');
 		if($user->get_user_by_field('login', $fields['login'])) {
 			echo json_encode([

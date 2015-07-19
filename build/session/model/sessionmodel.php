@@ -1,37 +1,35 @@
 <?php
 
-class SessionModel extends SuperModel {
+class SessionModel extends MysqlModel {
 
-	public function __construct($dbname, $user, $pass, $dbtype = 'mysql', $host = 'localhost') {
-		parent::__construct($dbname, $user, $pass, $dbtype, $host);
-
-		$system = Application::get_class('System');
-		if(!$system->use_db()) {
-			throw new InvalidDBParamException("use db param must be true");
-		}
-	}
+    protected function get_table() {
+        return 'session';
+    }
 
     public function start_session() {
+        /**
+         * @var $user User
+         */
         $user   = Application::get_class('User');
         $uid    = $user->get_id();
         $fields = [
-            'fields'    => [
-                'datetime'  => date('Y-m-d H:i:s'),
-                'uid'   => $uid
-            ]
+            'datetime'  => date('Y-m-d H:i:s'),
+            'uid'   => $uid
         ];
-        return $this->insert('session', $fields);
+        return $this->insert($fields)
+            ->execute()
+            ->get_insert_id();
     }
 
     protected function get_vars() {
+        /**
+         * @var $session Session
+         */
         $session    = Application::get_class('Session');
-        $params = [
-            'fields'    => [
-                'vars'
-            ],
-            'where' => '`id` = '.$session->get_id()
-        ];
-        $vars   = $this->select('session', $params);
+        $vars   = $this->select(['vars'])
+            ->where(['id' => ['=', $session->get_id()]])
+            ->execute()
+            ->get_result();
         return empty($vars) ? [] : json_decode($vars, true);
     }
 
@@ -41,50 +39,49 @@ class SessionModel extends SuperModel {
     }
 
     public function set_var($name, $value) {
+        /**
+         * @var $session Session
+         */
         $session    = Application::get_class('Session');
         $vars   = $this->get_vars();
         $vars[$name]    = $value;
-        $params = [
-            'fields'    => [
-                'vars'  => json_encode($vars)
-            ],
-            'where' => '`id` = '.$session->get_id()
-        ];
-        $this->update('session', $params);
+        $this->update(['vars' => json_encode($vars)])
+            ->where(['id' => ['=', $session->get_id()]])
+            ->execute();
     }
 
     public function unset_var($name) {
+        /**
+         * @var $session Session
+         */
         $session    = Application::get_class('Session');
         $vars   = $this->get_vars();
         if(isset($vars[$name])) {
             unset($vars[$name]);
-            $params = [
-                'fields'    => [
-                    'vars'  => json_encode($vars)
-                ],
-                'where' => '`id` = '.$session->get_id()
-            ];
-            $this->update('session', $params);
+            $this->update(['vars' => json_encode($vars)])
+                ->where(['id' => ['=', $session->get_id()]])
+                ->execute();
         }
     }
 
     public function set_uid($uid) {
+        /**
+         * @var $session Session
+         */
         $session    = Application::get_class('Session');
-        $params = [
-            'fields'    => [
-                'uid'   => (int)$uid
-            ],
-            'where' => '`id` = '.$session->get_id()
-        ];
-        $this->update('session', $params);
+        $this->update(['uid' => (int)$uid])
+            ->where(['id' => ['=', $session->get_id()]])
+            ->execute();
     }
 
 	public function get_uid() {
+        /**
+         * @var $session Session
+         */
 		$session    = Application::get_class('Session');
-		$params = [
-			'fields' => ['uid'],
-			'where' => '`id` = '.$session->get_id()
-		];
-		return $this->select('session', $params);
+		return $this->select(['uid'])
+            ->where(['id' => ['=', $session->get_id()]])
+            ->execute()
+            ->get_result();
 	}
 }

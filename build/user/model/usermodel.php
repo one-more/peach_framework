@@ -1,20 +1,25 @@
 <?php
 
-class UserModel extends SuperModel {
+class UserModel extends MysqlModel {
 	private $cached_fields = [];
 	private $cached_users = [];
 
+	protected function get_table() {
+        return 'users';
+    }
+
     public function login($login, $password, $remember = false) {
-        $sql    = "
-            SELECT * FROM `users` WHERE `login` = ? AND `password` = ?
-        ";
-        $sth    = $this->db->prepare($sql);
         $login  = VarHandler::sanitize_var($login, 'string', '');
         $password   = VarHandler::sanitize_var($password, 'string', '');
-        $sth->bindParam(1, $login, PDO::PARAM_STR);
-        $sth->bindParam(2, $password, PDO::PARAM_STR);
-        $sth->execute();
-        $result = $sth->fetch();
+        $result = $this->select()
+            ->where([
+                'login' => ['=', $login],
+                'and' => [
+                    'password' => ['=', $password]
+                ]
+            ])
+            ->execute()
+            ->get_array();
         if(!empty($result)) {
             if(empty($result['remember_hash'])) {
                 $remember_hash  = password_hash($result['id'].$result['login'], PASSWORD_DEFAULT);
@@ -42,9 +47,15 @@ class UserModel extends SuperModel {
 			$uid = (int)$uid;
 		}
 		if(empty($this->cached_fields[$uid])) {
-			$params = [];
-			$params['where']    = "`id` = {$uid} and deleted = 0";
-			$fields = $this->get_array('users', $params);
+			$fields = $this->select()
+                ->where([
+                    'id' => ['=', $uid],
+                    'and' => [
+                        'deleted' => ['=', 0]
+                    ]
+                ])
+                ->execute()
+                ->get_array();
 			$this->cached_fields[$uid] = $fields;
 			return $fields;
 		} else {
@@ -62,17 +73,15 @@ class UserModel extends SuperModel {
         if($this->get_user_by_field('login', $fields['login'])) {
 			throw new LoginExistsException('such user already exists');
 		}
-		$params = [
-            'fields'    => $fields
-        ];
-        return (int)$this->insert('users', $params);
+        return $this->insert($fields)
+            ->execute()
+            ->get_insert_id();
     }
 
 	public function delete_user($uid) {
-		$this->update('users', [
-			'fields' => ['deleted' => 1],
-			'where' => 'id = '.((int)$uid)
-		]);
+        $this->update(['deleted' => 1])
+            ->where(['id' => ['=', (int)$uid]])
+            ->execute();
 	}
 
     public function update_fields($fields, $uid = null) {
@@ -82,11 +91,9 @@ class UserModel extends SuperModel {
         if(!$uid) {
             $uid    = $this->get_id();
         }
-        $params = [
-            'fields'    => $fields,
-            'where' => '`id` = '.((int)$uid)
-        ];
-        $this->update('users', $params);
+        $this->update($fields)
+            ->where(['id' => ['=', (int)$uid]])
+            ->execute();
     }
 
     public function get_users($ids = null) {
@@ -94,19 +101,25 @@ class UserModel extends SuperModel {
 			$ids = array_map('intval', $ids);
 			$ids_str = implode(',', $ids);
 			$key = md5($ids_str);
-			$params = [
-				'where' => ' id in ('.$ids_str.') and deleted = 0'
-			];
+            $where = [
+                'id' => ['in', "({$ids_str})", false],
+                'and' => [
+                    'deleted' => ['=', 0]
+                ]
+            ];
 		} else {
-			$params = [
-				'where' => ' deleted = 0'
+			$where = [
+				'deleted' => ['=', 0]
 			];
 			$key = 'all';
 		}
 		if(!empty($this->cached_users[$key])) {
 			return $this->cached_users[$key];
 		} else {
-			$users = $this->get_arrays('users', $params);
+			$users = $this->select()
+                ->where($where)
+                ->execute()
+                ->get_arrays();
 			$this->cached_users[$key] = $users;
 			return $users;
 		}
@@ -116,14 +129,20 @@ class UserModel extends SuperModel {
 		if(!empty($_COOKIE['user'])) {
 			$remember_hash  = $_COOKIE['user'];
 		} else {
+            /**
+             * @var $session Session
+             */
 			$session    = Application::get_class('Session');
 			$remember_hash  = $session->get_var('user');
 		}
 		if($remember_hash) {
-			$params = [
-				'where'    => "remember_hash = '{$remember_hash}'"
+			$where = [
+				'remember_hash'    => ['=', $remember_hash]
 			];
-			$result = $this->select('users', $params);
+			$result = $this->select()
+                ->where($where)
+                ->execute()
+                ->get_result();
 			return !empty($result['id']) ? $result['id'] : 0;
 		} else {
 			return 0;
@@ -134,17 +153,24 @@ class UserModel extends SuperModel {
 		if(!is_string($value) || !is_string($field)) {
 			throw new InvalidArgumentException('field name and value must be strings');
 		}
-        $sql    = "SELECT * FROM `users` WHERE `{$field}` = ? and deleted = 0";
-        $sth    = $this->db->prepare($sql);
-        $sth->bindParam(1, $value);
-        $sth->execute();
-        return $this->get_array_from_statement($sth);
+        return $this->select()
+            ->where([
+                $field => ['=', $value],
+                'and' => [
+                    'deleted' => ['=', 0]
+                ]
+            ])
+            ->execute()
+            ->get_array();
     }
 
     public function log_out() {
         if(!empty($_COOKIE['user'])) {
             setcookie('user', '', -1, '/');
         } else {
+            /**
+             * @var $session Session
+             */
             $session    = Application::get_class('Session');
             $session->unset_var('user');
         }

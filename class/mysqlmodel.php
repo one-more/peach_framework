@@ -207,15 +207,16 @@ abstract class MysqlModel {
 			}
 			$sth->execute();
 			$this->statement = $sth;
+			$this->bind_values = [];
 		}
 		return $this;
 	}
 
 	protected function get_insert_id() {
-		return $this->db->lastInsertId();
+		return (int)$this->db->lastInsertId();
 	}
 
-	protected function get_arrays_from_statement(PDOStatement $sth) {
+	private function get_arrays_from_statement(PDOStatement $sth) {
 		$result = $this->return_from_statement($sth);
 		return $this->data_to_arrays($result);
 	}
@@ -224,47 +225,50 @@ abstract class MysqlModel {
 		return $this->get_arrays_from_statement($this->statement);
 	}
 
-	protected function data_to_arrays($data) {
+	private function data_to_arrays($data) {
 		if(is_array($data) && count($data)) {
 			if(empty($data[0]) || count($data) == 1) {
 				return [$data];
 			} else {
 				return $data;
 			}
-		} else {
+		} elseif(!empty($data)) {
 			return [[$data]];
-		}
+		} else {
+            return [[]];
+        }
 	}
 
-	protected function get_array_from_statement(PDOStatement $sth) {
+	private function get_array_from_statement(PDOStatement $sth) {
 		$result = $this->return_from_statement($sth);
 		return $this->data_to_array($result);
 	}
 
-	protected function data_to_array($data) {
+	private function data_to_array($data) {
 		if(is_array($data)) {
 			if(count($data) > 1 && isset($data[0])) {
 				return $data[0];
 			} else {
 				return $data;
 			}
-		} else {
+		} elseif(!empty($data)) {
 			return [$data];
-		}
+		} else {
+            return [];
+        }
 	}
 
 	protected function get_array() {
 		return $this->get_array_from_statement($this->statement);
 	}
 
-    protected function return_from_statement(PDOStatement $sth) {
+    private function return_from_statement(PDOStatement $sth) {
         if($sth->columnCount()) {
 			if($data = $sth->fetch()) {
 				$rows[] = $data;
 				while($data = $sth->fetch()) {
 					$rows[] = $data;
 				}
-				$sth = $rows;
 			} else {
 				return null;
 			}
@@ -275,17 +279,15 @@ abstract class MysqlModel {
 			if(!is_array($array)) {
 				return $array;
 			} else {
-				if(count($array) == 0) {
-					return $array;
-				} elseif (count($array) > 1) {
+				if (count($array) > 1) {
 					return array_map($return_from_array, $array);
 				} else {
-					$result = array_values($array)[0];
+					$result = reset($array);
 					if(is_array($result)) {
 						if(count($result) > 1) {
 							return array_map($return_from_array, $result);
 						} else {
-							return array_values($result)[0];
+							return reset($result);
 						}
 					} else {
 						return $result;
@@ -293,7 +295,7 @@ abstract class MysqlModel {
 				}
 			}
 		};
-		return $return_from_array($sth);
+		return $return_from_array($rows);
     }
 
     protected function get_result() {
