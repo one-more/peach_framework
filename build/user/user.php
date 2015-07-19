@@ -3,6 +3,9 @@
 class User {
     use trait_extension;
 
+    /**
+     * @var $model UserModel
+     */
 	private $model;
 
     public function __construct() {

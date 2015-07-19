@@ -3,15 +3,6 @@
     window.EditUserView = Backbone.View.extend({
         el: '#edit-user-form',
 
-        initialize: function() {
-            var $this = this;
-            App.on('Page:loaded', function() {
-                if(location.pathname.indexOf('admin_panel/edit_user') !== -1) {
-                    $this.setElement('#edit-user-form');
-                }
-            })
-        },
-
         events: {
             'submit': 'save',
             'click button': 'cancel'
@@ -32,5 +23,4 @@
             App.go_to('/admin_panel');
         }
     });
-    window.EditUserView = new window.EditUserView;
 })();

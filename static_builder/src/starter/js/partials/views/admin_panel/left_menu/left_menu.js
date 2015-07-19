@@ -12,5 +12,4 @@
             }.bind(this))
         }
     });
-    window.LeftMenuView = new window.LeftMenuView;
 })();

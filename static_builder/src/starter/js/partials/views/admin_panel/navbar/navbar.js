@@ -14,5 +14,4 @@
                 });
         }
     });
-    window.NavbarView = new window.NavbarView;
 })();

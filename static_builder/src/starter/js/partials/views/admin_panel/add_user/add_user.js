@@ -1,16 +1,7 @@
 (function() {
     'use strict';
-    window.EditUserView = Backbone.View.extend({
+    window.AddUserView = Backbone.View.extend({
         el: '#add-user-form',
-
-        initialize: function() {
-            var $this = this;
-            App.on('Page:loaded', function(event) {
-                if(event.page == 'add_user') {
-                    $this.setElement('#add-user-form');
-                }
-            })
-        },
 
         events: {
             'submit': 'save',
@@ -32,5 +23,4 @@
             App.go_to('/admin_panel');
         }
     });
-    window.EditUserView = new window.EditUserView;
 })();

@@ -33,7 +33,8 @@ class SiteRouter extends Router {
 
 	public function language_model() {
 		$template = Application::get_class('Starter');
-		echo file_get_contents($template->path.DS.'lang'.DS.CURRENT_LANG.DS.'languagemodel.json');
+		$path = $template->path.DS.'lang'.DS.CURRENT_LANG.DS.'model'.DS.'languagemodel.json';
+		echo file_get_contents($path);
 	}
 
 	public function logout() {

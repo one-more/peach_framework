@@ -10,8 +10,9 @@
         login: function(event) {
             var form = event.target;
             $.post('/login', $(form).serializeArray(), function(user) {
-                if(typeof user !== 'object') {
-                    NotificationView.display(LanguageModel.get('login_error'), 'error')
+                if(typeof user !== 'object' || Object.keys(user).length == 0) {
+                    var msg = Factory.get_class('LanguageModel').get('login_error');
+                    NotificationView.display(msg, 'error')
                 } else {
                     var credentials = user['credentials'];
                     var is_admin = credentials == 'administrator' ||
@@ -19,11 +20,11 @@
                     if(is_admin) {
                         location.reload();
                     } else {
-                        NotificationView.display(LanguageModel.get('credentials_error'), 'error');
+                        msg = Factory.get_class('LanguageModel').get('credentials_error');
+                        NotificationView.display(msg, 'error');
                     }
                 }
             }, 'json');
         }
     });
-    window.LoginFormView = new window.LoginFormView;
 })(window);

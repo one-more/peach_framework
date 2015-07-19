@@ -106,7 +106,7 @@ class Application {
 			}
 			return static::$instances[$name];
 		} else {
-			throw new InvalidArgumentException('class does not exists');
+			throw new InvalidArgumentException("class {$name} does not exists");
 		}
     }
 

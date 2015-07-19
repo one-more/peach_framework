@@ -5,6 +5,8 @@
         start: function() {
             this.register_events();
 
+            this.init_global_models();
+
             $.ajaxSetup({
                 beforeSend  : function() {
                     this.url += (this.url.indexOf('?') > -1 ? '&' : '?') + 'ajax=1';
@@ -14,7 +16,8 @@
                     this.url += '&token='+App.get_token(get_params, post_params);
                 },
                 error : function(xhr,status, error) {
-                    NotificationView.display(LanguageModel.get('request_error'), 'error');
+                    var msg = Factory.get_class('LanguageModel').get('request_error');
+                    NotificationView.display(msg, 'error');
                 }
             });
         },
@@ -34,6 +37,10 @@
             $(document).on('submit', 'form', function(e) {
                 e.preventDefault();
             });
+        },
+
+        init_global_models: function () {
+            Factory.get_class('LanguageModel');
         },
 
         get_cookie : function(name) {

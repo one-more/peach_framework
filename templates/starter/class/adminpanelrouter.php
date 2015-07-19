@@ -18,10 +18,16 @@ class AdminPanelRouter extends Router {
 	}
 
 	public function index() {
+		/**
+		 * @var $user_controller UserController
+		 */
 		$user_controller = Application::get_class('UserController');
 		if($user_controller->is_admin()) {
-			$users_table_view = Application::get_class('AdminPanelUsersTable');
-			$this->positions['main_content'] = $users_table_view->render();
+            /**
+             * @var $view \AdminPanel\UsersTableView
+             */
+			$view = Application::get_class('\AdminPanel\UsersTableView');
+			$this->positions['main_content'] = $view->render();
 		} else {
             /**
              * @var $view \AdminPanel\LoginFormView

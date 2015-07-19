@@ -44,7 +44,7 @@ class Router {
 									break;
 								case 'string':
 								default:
-									$part = str_replace([$sub_str, ':'], ['(\S+)', ''], $part);
+									$part = str_replace([$sub_str, ':'], ['(\w+)', ''], $part);
 									break;
 							}
 						}
