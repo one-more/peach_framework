@@ -10,7 +10,7 @@
         logout: function() {
             $.post('/logout')
                 .success(function() {
-                    location.reload();
+                    App.go_to('/admin_panel/login');
                 });
         }
     });
