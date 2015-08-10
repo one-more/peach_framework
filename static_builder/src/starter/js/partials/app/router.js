@@ -4,16 +4,11 @@
         routes: {
             'admin_panel/edit_user/:id': 'edit_user',
             'admin_panel': 'admin_panel',
+            'admin_panel/login': 'login',
             'admin_panel/add_user': 'add_user'
         },
 
         initialize: function () {
-            if(location.pathname.indexOf('admin_panel') !== -1) {
-                this.global_views = [
-                    new LeftMenuView,
-                    new NavbarView
-                ];
-            }
             this.init_views();
         },
 
@@ -41,23 +36,28 @@
         },
 
         init_views: function () {
+            var global_views = [
+                new LeftMenuView,
+                new NavbarView
+            ];
             switch(this.current().route) {
                 case 'edit_user':
                     this.page_views = [
                         new EditUserView
-                    ];
+                    ].concat(global_views);
                     break;
                 case 'add_user':
                     this.page_views = [
                         new AddUserView
-                    ];
+                    ].concat(global_views);
                     break;
                 case 'admin_panel':
-                    if(!App.get_cookie('user')) {
-                        this.page_views = [
-                            new LoginFormView
-                        ];
-                    }
+                    this.page_views = global_views;
+                    break;
+                case 'login':
+                    this.page_views = [
+                        new LoginFormView
+                    ];
                     break;
             }
         },
@@ -78,19 +78,32 @@
             this.load_positions();
         },
 
+        login: function () {
+            this.load_positions();
+        },
+
         load_positions: function() {
             var $this = this;
-            return $.post(location.pathname, {}, function(data) {
-                for(var i in data) {
-                    $('#'+i).html(data[i]);
-                     App.trigger('Page:loaded', {
-                        page: location.pathname.split('/').slice(-1)[0]
-                    });
+            return $.post(location.pathname, {}, function(response) {
+                var blocks = response.blocks;
+                for(var name in blocks) {
+                    if(blocks.hasOwnProperty(name)) {
+                        $('[data-block="'+name+'"]').html(blocks[name]);
+                    }
                 }
-            }, 'json')
-                .then(function() {
-                    $this.init_views();
+
+                var views = response.views;
+                for(name in views) {
+                    if(views.hasOwnProperty(name)) {
+                        $('[data-view="'+name+'"]').replaceWith(views[name]);
+                    }
+                }
+                App.trigger('Page:loaded', {
+                    page: location.pathname.split('/').slice(-1)[0],
+                    response: response
                 });
+                $this.init_views();
+            }, 'json');
         },
 
         reload: function() {

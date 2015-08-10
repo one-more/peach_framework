@@ -2,7 +2,7 @@
 
 class Error {
     public static function initialize() {
-        $log_file_path  = ROOT_PATH.DS.'www'.DS.'error.log';
+        $log_file_path  = WEB_ROOT.DS.'error.log';
         if(file_exists($log_file_path)) {
             if(filesize($log_file_path) > (1024*1024*3)) {
                 unlink($log_file_path);
@@ -14,6 +14,6 @@ class Error {
     }
 
     public static function log($msg) {
-        file_put_contents(ROOT_PATH.DS.'www'.DS.'error.log',date('j.m.Y H:i:s').' - '.$msg."\r\n", FILE_APPEND);
+        file_put_contents(WEB_ROOT.DS.'error.log',date('j.m.Y H:i:s').' - '.$msg."\r\n", FILE_APPEND);
     }
 }

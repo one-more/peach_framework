@@ -18,7 +18,7 @@
                     var is_admin = credentials == 'administrator' ||
                         credentials == 'super_administrator';
                     if(is_admin) {
-                        location.reload();
+                        App.go_to('/admin_panel');
                     } else {
                         msg = Factory.get_class('LanguageModel').get('credentials_error');
                         NotificationView.display(msg, 'error');

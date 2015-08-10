@@ -3,9 +3,17 @@
 trait trait_starter_router {
 
 	public function route() {
+        /**
+         * @var $user_controller UserController
+         */
 		$user_controller = Application::get_class('UserController');
 		if(strtolower(__CLASS__) == 'adminpanelrouter' && !$user_controller->is_admin()) {
-			$callback = [$this, 'index', 'no_check'];
+			$callback = $this->get_callback();
+            $method = $callback[1];
+            if($method !== 'login') {
+                header('Refresh: 0; url=/admin_panel/login');
+                $callback = false;
+            }
 		} else {
 			$callback = $this->get_callback();
 		}
@@ -28,6 +36,7 @@ trait trait_starter_router {
 					$callback[0] = Application::get_class($class);
 				}
 			}
+            $this->callback = $callback;
 			call_user_func_array($callback, $this->route_params);
 		}
 	}

@@ -7,7 +7,7 @@ class StaticBuilderProcess {
 
 	public function __construct() {
 		$this->cwd = ROOT_PATH.DS.'static_builder';
-		$this->build_dir = ROOT_PATH.DS.'www';
+		$this->build_dir = WEB_ROOT;
 		if(!$this->initialized()) {
 			$this->build();
 		}
@@ -55,7 +55,7 @@ class StaticBuilderProcess {
 	}
 
 	private function run_cmd($command = 'watch') {
-		$error_path = ROOT_PATH.DS.'www'.DS.'error.log';
+		$error_path = WEB_ROOT.DS.'error.log';
 		switch($command) {
 			case 'watch':
 				$cmd = "gulp > $error_path 2>&1 &";
