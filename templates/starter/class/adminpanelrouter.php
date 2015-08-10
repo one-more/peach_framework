@@ -53,20 +53,28 @@ class AdminPanelRouter extends Router {
         $this->response['blocks']['main'] = $view->render();
 	}
 
+    private function add_blocks_for_logined() {
+        $callback_method = $this->callback[1];
+        if($callback_method != 'login') {
+            /**
+             * @var $view \AdminPanel\LeftMenuView
+             */
+            $view = Application::get_class('\AdminPanel\LeftMenuView');
+            $response['blocks']['left'] = $view->render();
+            /**
+             * @var $view \AdminPanel\NavbarView
+             */
+            $view = Application::get_class('\AdminPanel\NavbarView');
+            $response['blocks']['header'] = $view->render();
+        }
+    }
+
     public function __destruct() {
-		$callback_method = $this->callback[1];
-		if($callback_method != 'login') {
-			/**
-			 * @var $view \AdminPanel\LeftMenuView
-			 */
-			$view = Application::get_class('\AdminPanel\LeftMenuView');
-			$response['blocks']['left'] = $view->render();
-			/**
-			 * @var $view \AdminPanel\NavbarView
-			 */
-			$view = Application::get_class('\AdminPanel\NavbarView');
-			$response['blocks']['header'] = $view->render();
-		}
-		$this->show_result($this->response);
+        $this->add_blocks_for_logined();
+        if($this->response_type == 'AjaxResponse') {
+            $this->show_result($this->response);
+        } else {
+            echo $this->response;
+        }
     }
 }

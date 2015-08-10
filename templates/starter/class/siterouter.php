@@ -31,9 +31,8 @@ class SiteRouter extends Router {
 	}
 
 	public function language_model() {
-		$template = Application::get_class('Starter');
-		$path = $template->path.DS.'lang'.DS.CURRENT_LANG.DS.'model'.DS.'languagemodel.json';
-		echo file_get_contents($path);
+        $this->response_type = 'raw';
+		$this->response = new LanguageFile('model'.DS.'languagemodel.json');
 	}
 
 	public function logout() {
@@ -42,9 +41,14 @@ class SiteRouter extends Router {
          */
         $user = Application::get_class('User');
 		$user->log_out();
+        $this->response->status = 'success';
 	}
 
 	public function __destruct() {
-        $this->show_result($this->response);
+        if($this->response_type == 'AjaxResponse') {
+            $this->show_result($this->response);
+        } else {
+            echo $this->response;
+        }
     }
 }

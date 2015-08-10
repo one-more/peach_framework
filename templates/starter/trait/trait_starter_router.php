@@ -2,6 +2,8 @@
 
 trait trait_starter_router {
 
+    private $response_type = 'AjaxResponse';
+
 	public function route() {
         /**
          * @var $user_controller UserController
