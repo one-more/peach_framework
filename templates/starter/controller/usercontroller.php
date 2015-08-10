@@ -25,7 +25,10 @@ class UserController {
          * @var $user User
          */
 		$user = Application::get_class('User');
-		return $user->login($login, $password, $remember);
+		$response = new JsonResponse();
+		$response->user = $user->login($login, $password, $remember);
+        $response->status = !empty($response->user);
+        return $response;
 	}
 
 	public function is_admin() {

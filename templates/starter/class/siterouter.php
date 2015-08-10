@@ -3,7 +3,7 @@
 class SiteRouter extends Router {
 	use trait_controller, trait_starter_router;
 
-	private $positions = [];
+	private $response;
 
 	public function __construct() {
 		$this->routes = [
@@ -14,11 +14,10 @@ class SiteRouter extends Router {
 			'/add_user' => ['UserController', 'add_user'],
 			'/language_model' => [$this, 'language_model', 'no check']
 		];
+        $this->response = new JsonResponse();
 	}
 
-	public function index() {
-		$this->show_result();
-	}
+	public function index() {}
 
 	public function login() {
 		$login = Request::get_var('login', 'string');
@@ -28,7 +27,7 @@ class SiteRouter extends Router {
          * @var $user_controller UserController
          */
         $user_controller = Application::get_class('UserController');
-		echo json_encode($user_controller->login($login, $password, (bool)$remember));
+		$this->response = $user_controller->login($login, $password, (bool)$remember);
 	}
 
 	public function language_model() {
@@ -45,26 +44,7 @@ class SiteRouter extends Router {
 		$user->log_out();
 	}
 
-	private function show_result() {
-		if(!Request::is_ajax()) {
-			$template   = Application::get_class('Starter');
-			$templator = new Smarty();
-			$static_path = DS.'starter';
-			$static_paths = [
-				'css_path' => $static_path.DS.'css',
-				'images_path' => $static_path.DS.'images',
-				'js_path' => $static_path.DS.'js'
-			];
-			$templator->assign($static_paths);
-			$templator->setTemplateDir($template->path.DS.'templates'.DS.'index');
-			$templator->setCompileDir($template->path.DS.'templates_c');
-			$templator->assign($this->positions);
-			echo $templator->getTemplate('index.tpl.html');
-		} else {
-			$this->positions = array_filter($this->positions, function($el) {
-				return $el !== null;
-			});
-			echo json_encode($this->positions);
-		}
-	}
+	public function __destruct() {
+        $this->show_result($this->response);
+    }
 }

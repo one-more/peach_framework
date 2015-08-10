@@ -1,10 +1,12 @@
 <?php
 
-class AjaxResponse implements ArrayAccess {
+class JsonResponse implements AjaxResponse {
 
     public $blocks = [];
     public $views = [];
     public $title = '';
+    public $status;
+    public $message;
 
     public function offsetSet($offset, $value) {
         $this->$offset = $value;

@@ -40,4 +40,28 @@ trait trait_starter_router {
 			call_user_func_array($callback, $this->route_params);
 		}
 	}
+
+	private function show_result(AjaxResponse $response) {
+		if(!Request::is_ajax()) {
+			$template   = Application::get_class('Starter');
+			$templator = new Smarty();
+			$static_path = DS.'starter';
+			$static_paths = [
+				'css_path' => $static_path.DS.'css',
+				'images_path' => $static_path.DS.'images',
+				'js_path' => $static_path.DS.'js'
+			];
+			$templator->assign($static_paths);
+            if(strtolower(__CLASS__) == 'adminpanelrouter') {
+                $templator->setTemplateDir($template->path.DS.'templates'.DS.'admin_panel');
+            } else {
+                $templator->setTemplateDir($template->path.DS.'templates'.DS.'index');
+            }
+			$templator->setCompileDir($template->path.DS.'templates_c');
+			$templator->assign($response['blocks']);
+			echo $templator->getTemplate('index.tpl.html');
+		} else {
+			echo $response;
+		}
+	}
 }

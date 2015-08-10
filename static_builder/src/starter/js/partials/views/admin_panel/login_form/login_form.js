@@ -9,11 +9,12 @@
 
         login: function(event) {
             var form = event.target;
-            $.post('/login', $(form).serializeArray(), function(user) {
-                if(typeof user !== 'object' || Object.keys(user).length == 0) {
+            $.post('/login', $(form).serializeArray(), function(response) {
+                if(!response.status) {
                     var msg = Factory.get_class('LanguageModel').get('login_error');
                     NotificationView.display(msg, 'error')
                 } else {
+                    var user = response.user;
                     var credentials = user['credentials'];
                     var is_admin = credentials == 'administrator' ||
                         credentials == 'super_administrator';
