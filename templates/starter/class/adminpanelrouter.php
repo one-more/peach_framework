@@ -33,8 +33,6 @@ class AdminPanelRouter extends Router {
          */
         $view = Application::get_class('\AdminPanel\LoginFormView');
         $this->response['blocks']['main'] = $view->render();
-        $this->response['blocks']['header'] = '';
-        $this->response['blocks']['left'] = '';
     }
 
 	public function edit_user_page($id) {

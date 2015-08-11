@@ -12,9 +12,7 @@ abstract class SuperView extends Smarty {
 	abstract protected function get_lang_file();
 
 	protected function load_lang_vars($file) {
-		if(file_exists($file)) {
-			$lang_vars = json_decode(file_get_contents($file), true);
-			$this->assign($lang_vars);
-		}
+		$lang_file = new LanguageFile($file);
+        $this->assign('lang_vars', $lang_file->get_data());
 	}
 }

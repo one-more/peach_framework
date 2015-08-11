@@ -31,7 +31,7 @@ class SiteRouter extends Router {
 	}
 
 	public function language_model() {
-        $this->response_type = 'raw';
+        $this->response_type = 'Json';
 		$this->response = new LanguageFile('model'.DS.'languagemodel.json');
 	}
 

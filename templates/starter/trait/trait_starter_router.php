@@ -57,11 +57,11 @@ trait trait_starter_router {
             if(strtolower(__CLASS__) == 'adminpanelrouter') {
                 $templator->setTemplateDir($template->path.DS.'templates'.DS.'admin_panel');
             } else {
-                $templator->setTemplateDir($template->path.DS.'templates'.DS.'index');
+                $templator->setTemplateDir($template->path.DS.'templates'.DS.'site');
             }
 			$templator->setCompileDir($template->path.DS.'templates_c');
 			$templator->assign($response['blocks']);
-			echo $templator->getTemplate('index.tpl.html');
+			echo $templator->getTemplate('index'.DS.'index.tpl.html');
 		} else {
 			echo $response;
 		}

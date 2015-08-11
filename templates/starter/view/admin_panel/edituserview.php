@@ -5,7 +5,7 @@ class EditUserView extends \TemplateView {
 
 	public function __construct($id) {
 		parent::__construct();
-		$this->setTemplateDir($this->template->path.DS.'templates'.DS.'admin_panel');
+		$this->setTemplateDir($this->template->path.DS.'templates'.DS.'admin_panel'.DS.'edit_user');
         /**
          * @var $user \User
          */

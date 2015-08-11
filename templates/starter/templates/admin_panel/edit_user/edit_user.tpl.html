@@ -4,7 +4,7 @@
         <div class="row">
             <div class="col-lg-5">
                 <div class="form-group">
-                    <label for="login">{$login}</label>
+                    <label for="login">{$lang_vars.login}</label>
                     <input value="{$user['login']}" id="login" name="login" class="form-control" type="text"/>
                 </div>
             </div>
@@ -12,7 +12,7 @@
         <div class="row">
             <div class="col-lg-5">
                 <div class="form-group">
-                    <label for="password">{$password}</label>
+                    <label for="password">{$lang_vars.password}</label>
                     <input value="{$user['password']}" class="form-control" id="password" name="password" type="text"/>
                 </div>
             </div>
@@ -20,7 +20,7 @@
         <div class="row">
             <div class="col-lg-5">
                 <div class="form-group">
-                    <label for="credentials">{$credentials}</label>
+                    <label for="credentials">{$lang_vars.credentials}</label>
                     <select name="credentials" id="credentials" class="form-control">
                         {foreach $credentials_labels as $k=>$el}
                         {if $k == $user['credentials']}
@@ -36,12 +36,12 @@
         <div class="row">
             <div class="col-lg-5">
                 <div class="form-group">
-                    <input class="btn btn-success" type="submit" value="{$save}"/>
-                    <button class="btn btn-info">{$cancel}</button>
+                    <input class="btn btn-success" type="submit" value="{$lang_vars.save}"/>
+                    <button class="btn btn-info">{$lang_vars.cancel}</button>
                 </div>
             </div>
         </div>
     </form>
     {else}
-        <div class="alert alert-danger">{$user_not_exists}</div>
+        <div class="alert alert-danger">{$lang_vars.user_not_exists}</div>
 {/if}
