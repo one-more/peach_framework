@@ -1,7 +1,7 @@
 <?php
 
 class UserController {
-	use trait_controller, trait_validator;
+	use trait_controller;
 
 	public function is_token_valid() {
 		$client_token = Request::get_var('token');
@@ -49,8 +49,21 @@ class UserController {
 	}
 
 	public function edit_user() {
+        Application::init_validator();
+
+        $user_data = [
+            'login' => Request::get_var('login', 'string'),
+            'password' => Request::get_var('password', 'string'),
+            'credentials' => Request::get_var('credentials', 'string')
+        ];
+
+        $validator = new Validator\LIVR([
+            'login' => 'required',
+            'password' => 'required'
+        ]);
+
 		if(!$this->is_super_admin()) {
-			throw new Exception('you must be super admin to edit users');
+			throw new WrongRightsException('you must be super admin to edit users');
 		}
 		$lang_vars = $this->get_lang_vars();
 		try {

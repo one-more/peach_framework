@@ -10,7 +10,7 @@ class User {
 
     public function __construct() {
         $this->register_autoload();
-		$this->model = $this->get_model('UserModel');
+		$this->model = Application::get_class('UserModel');
     }
 
     public function is_logined() {

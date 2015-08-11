@@ -39,13 +39,6 @@ trait trait_extension {
 		 return static::load_extension_class($name, $dir = 'view');
 	}
 
-    protected function get_model($name) {
-        $system = Application::get_class('System');
-        $params = $system->get_configuration()['db_params'];
-        $model  = Application::get_class($name, $params);
-        return $model;
-    }
-
 	protected function register_autoload() {
 		spl_autoload_register([__CLASS__, 'load_extension_class']);
         spl_autoload_register([__CLASS__, 'load_extension_model']);

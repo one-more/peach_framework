@@ -226,4 +226,9 @@ class Application {
 	public static function camelcase_to_dash($string) {
 		return strtolower(preg_replace('/([a-zA-Z])(?=[A-Z])/', '$1_', $string));
 	}
+
+	public static function init_validator() {
+        require_once ROOT_PATH.DS.'lib'.DS.'Validator'.DS.'LIVR.php';
+        Validator\LIVR::defaultAutoTrim(true);
+    }
 }
