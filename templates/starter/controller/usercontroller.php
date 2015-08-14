@@ -116,16 +116,43 @@ class UserController {
             $user = Application::get_class('User');
             $user->update_fields($fields, $uid);
             $response->status = 'success';
-            $response->message = $lang_vars['edit_user']['success'];
+            $response->message = $lang_vars['messages']['edited'];
         } else {
-            $errors = $validator->getErrors();
-            Error::log(print_r($errors, 1));
+            $errors = $validator->getErrors($lang_vars['errors']);
+            $response->errors = $errors;
             $response->status = 'error';
         }
         return $response;
 	}
 
 	public function add_user() {
+        Application::init_validator();
+
+        $user_data = [
+            'login' => Request::get_var('login', 'string'),
+            'password' => Request::get_var('password', 'string'),
+            'credentials' => Request::get_var('credentials', 'string')
+        ];
+
+        $validator = new Validator\LIVR([
+            'login' => ['required', 'unique_login'],
+            'password' => 'hash_password',
+            'credentials' => 'required'
+        ]);
+
+        $validator->registerRules(['unique_login' => function() {
+            return function ($value) {
+                /**
+                 * @var $user User
+                 */
+                $user = Application::get_class('User');
+                if(count($user->get_user_by_field('login', $value))) {
+                    return 'LOGIN_EXISTS';
+                }
+            };
+        }]);
+
+        $validator->registerRules(['hash_password' => $this->get_hash_password_rule($user_data)]);
 
         $response = new JsonResponse();
 
@@ -133,47 +160,22 @@ class UserController {
 			throw new Exception('you must be super admin to add users');
 		}
 		$lang_vars = $this->get_lang_vars();
-		try {
-			$fields = $this->get_sanitized_vars([
-				[
-					'name' => 'login',
-					'required' => true,
-					'error' => $lang_vars['add_user']['empty_login'],
-					'type' => 'string'
-				],
-				[
-					'name' => 'password',
-					'type' => 'string'
-				],
-				[
-					'name' => 'credentials',
-					'required' => true,
-					'type' => 'string',
-					'error' => $lang_vars['add_user']['empty_credentials']
-				]
-			]);
-		} catch(Exception $e) {
-            $response->status = 'error';
-            $response->message = $e->getMessage();
-            return $response;
-		}
-        /**
-         * @var $user User
-         */
-		$user = Application::get_class('User');
-		if($user->get_user_by_field('login', $fields['login'])) {
-            $response->status = 'error';
-            $response->message = $lang_vars['add_user']['login_exists'];
-            return $response;
-		}
-		if(trim($fields['password'])) {
-			$fields['password'] =
-				$this->crypt_password($fields['login'], $fields['password']);
-		}
-		$user->register($fields);
 
-        $response->status = 'success';
-        $response->message = $lang_vars['add_user']['success'];
+        $fields = $validator->validate($user_data);
+        if($fields) {
+            /**
+             * @var $user User
+             */
+            $user = Application::get_class('User');
+            $user->register($fields);
+
+            $response->status = 'success';
+            $response->message = $lang_vars['messages']['added'];
+        } else {
+            $response->status = 'error';
+            $response->errors = $validator->getErrors($lang_vars['errors']);
+        }
+
         return $response;
 	}
 }

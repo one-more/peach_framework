@@ -5,7 +5,8 @@ trait trait_controller {
 	protected $language_vars;
 
 	protected function get_lang_vars() {
-		return new LanguageFile($this->get_lang_vars_file());
+		$lang_file = new LanguageFile($this->get_lang_vars_file());
+		return $lang_file->get_data();
 	}
 
 	protected function get_lang_vars_file() {

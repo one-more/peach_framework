@@ -1,14 +1,15 @@
 {
-    "edit_user": {
-        "empty_login" : "введите логин",
-        "login_exists" : "логин уже занят",
-        "empty_credentials" : "введите привилегии",
-        "success" : "данные обновлены"
+    "errors": {
+        "login": {
+            "REQUIRED": "введите логин",
+            "LOGIN_EXISTS": "логин уже занят"
+        },
+        "credentials": {
+            "REQUIRED": "введите привилегии"
+        }
     },
-    "add_user": {
-        "empty_login" : "введите логин",
-        "login_exists" : "логин уже занят",
-        "empty_credentials" : "введите привилегии",
-        "success" : "пользователь добавлен"
+    "messages": {
+        "edited": "данные обновлены",
+        "added": "пользователь добавлен"
     }
 }

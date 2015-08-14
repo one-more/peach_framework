@@ -166,7 +166,16 @@ class LIVR {
     }
 
 
-    public function getErrors() {
+    public function getErrors($user_descriptions = null) {
+        if($user_descriptions && (is_array($user_descriptions) || $user_descriptions instanceof \Traversable)) {
+            $keys = array_keys($this->errors);
+            foreach($keys as $key) {
+                $el = $this->errors[$key];
+                if(!empty($user_descriptions[$key][$el])) {
+                    $this->errors[$key] = $user_descriptions[$key][$el];
+                }
+            }
+        }
         return $this->errors;
     }
 
