@@ -10,8 +10,8 @@ class SiteRouter extends Router {
 			'/' => [$this, 'index', 'no check'],
 			'/login' => [$this, 'login'],
 			'/logout' => [$this, 'logout'],
-			'/edit_user' => ['UserController', 'edit_user'],
-			'/add_user' => ['UserController', 'add_user'],
+			'/edit_user' => [$this, 'edit_user'],
+			'/add_user' => [$this, 'add_user'],
 			'/language_model' => [$this, 'language_model', 'no check']
 		];
         $this->response = new JsonResponse();
@@ -43,6 +43,22 @@ class SiteRouter extends Router {
 		$user->log_out();
         $this->response->status = 'success';
 	}
+
+	public function add_user() {
+        /**
+         * @var $controller UserController
+         */
+        $controller = Application::get_class('UserController');
+        $this->response = $controller->add_user();
+    }
+
+    public function edit_user() {
+        /**
+         * @var $controller UserController
+         */
+        $controller = Application::get_class('UserController');
+        $this->response = $controller->edit_user();
+    }
 
 	public function __destruct() {
         if($this->response_type == 'AjaxResponse') {

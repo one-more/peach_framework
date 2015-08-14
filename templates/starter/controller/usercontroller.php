@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Class UserController
+ * @decorate AnnotationsDecorator
+ */
 class UserController {
 	use trait_controller;
 
@@ -48,6 +52,18 @@ class UserController {
 		return $user->get_field('credentials') == 'super_administrator';
 	}
 
+    public function get_hash_password_rule($fields) {
+        return function() use($fields) {
+            return function($value, $undef, &$output_arr) use($fields) {
+                if(trim($value)) {
+                    $output_arr = $this->crypt_password($fields['login'], $value);
+                    return;
+                }
+                return;
+            };
+        };
+    }
+
 	public function edit_user() {
         Application::init_validator();
 
@@ -57,72 +73,60 @@ class UserController {
             'credentials' => Request::get_var('credentials', 'string')
         ];
 
+        $uid = Request::get_var('id', 'int');
+        if(!$uid) {
+            throw new InvalidArgumentException('empty id');
+        }
+
         $validator = new Validator\LIVR([
-            'login' => 'required',
+            'login' => ['required', 'unique_login', 'hash_password'],
             'password' => 'required'
         ]);
+
+        $validator->registerRules(['unique_login' => function() use($uid) {
+            return function ($value) use($uid) {
+                /**
+                 * @var $user User
+                 */
+                $user = Application::get_class('User');
+                $old_fields = $user->get_fields($uid);
+                if($old_fields['login'] != $value) {
+                    if($user->get_user_by_field('login', $value)) {
+                        return 'LOGIN_EXISTS';
+                    }
+                }
+            };
+        }]);
+
+        $validator->registerRules(['hash_password' => $this->get_hash_password_rule($user_data)]);
+
+        $response = new JsonResponse();
 
 		if(!$this->is_super_admin()) {
 			throw new WrongRightsException('you must be super admin to edit users');
 		}
+
 		$lang_vars = $this->get_lang_vars();
-		try {
-			$fields = $this->get_sanitized_vars([
-				[
-					'name' => 'login',
-					'required' => true,
-					'error' => $lang_vars['edit_user']['empty_login'],
-					'type' => 'string'
-				],
-				[
-					'name' => 'password',
-					'type' => 'string'
-				],
-				[
-					'name' => 'credentials',
-					'required' => true,
-					'type' => 'string',
-					'error' => $lang_vars['edit_user']['empty_credentials']
-				]
-			]);
-		} catch(Exception $e) {
-			$error = [
-				'status' => 'error',
-				'message' => $e->getMessage()
-			];
-			echo json_encode($error);
-			return;
-		}
-		$uid = Request::get_var('id', 'int');
-		if(!$uid) {
-			throw new Exception('empty id');
-		}
-        /**
-         * @var $user User
-         */
-		$user = Application::get_class('User');
-		$old_fields = $user->get_fields($uid);
-		if($old_fields['login'] != $fields['login']) {
-			if($user->get_user_by_field('login', $fields['login'])) {
-				echo json_encode([
-					'status' => 'error',
-					'message' => $lang_vars['edit_user']['login_exists']
-				]);
-				return;
-			}
-		}
-		if(trim($fields['password'])) {
-			$fields['password'] =
-				$this->crypt_password($fields['login'], $fields['password']);
-		}
-		$user->update_fields($fields, $uid);
-		echo json_encode([
-			'status' => 'success',
-			'message' => $lang_vars['edit_user']['success']
-		]);
+        $fields = $validator->validate($user_data);
+        if($fields) {
+            /**
+             * @var $user User
+             */
+            $user = Application::get_class('User');
+            $user->update_fields($fields, $uid);
+            $response->status = 'success';
+            $response->message = $lang_vars['edit_user']['success'];
+        } else {
+            $errors = $validator->getErrors();
+            $response->status = 'error';
+            return $response;
+        }
 	}
 
 	public function add_user() {
+
+        $response = new JsonResponse();
+
 		if(!$this->is_super_admin()) {
 			throw new Exception('you must be super admin to add users');
 		}
@@ -147,32 +151,27 @@ class UserController {
 				]
 			]);
 		} catch(Exception $e) {
-			$error = [
-				'status' => 'error',
-				'message' => $e->getMessage()
-			];
-			echo json_encode($error);
-			return;
+            $response->status = 'error';
+            $response->message = $e->getMessage();
+            return $response;
 		}
         /**
          * @var $user User
          */
 		$user = Application::get_class('User');
 		if($user->get_user_by_field('login', $fields['login'])) {
-			echo json_encode([
-				'status' => 'error',
-				'message' => $lang_vars['add_user']['login_exists']
-			]);
-			return;
+            $response->status = 'error';
+            $response->message = $lang_vars['add_user']['login_exists'];
+            return $response;
 		}
 		if(trim($fields['password'])) {
 			$fields['password'] =
 				$this->crypt_password($fields['login'], $fields['password']);
 		}
 		$user->register($fields);
-		echo json_encode([
-			'status' => 'success',
-			'message' => $lang_vars['add_user']['success']
-		]);
+
+        $response->status = 'success';
+        $response->message = $lang_vars['add_user']['success'];
+        return $response;
 	}
 }
