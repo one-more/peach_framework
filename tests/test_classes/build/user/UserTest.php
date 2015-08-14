@@ -2,19 +2,6 @@
 require_once ROOT_PATH.DS."build".DS.'user'.DS.'user.php';
 require_once ROOT_PATH.DS."build".DS.'user'.DS.'model'.DS.'usermodel.php';
 
-class UserTestModel extends MysqlModel {
-    public function get_table() {
-        return 'users';
-    }
-
-    public function get_hash() {
-        return $this->select(['remember_hash'])
-            ->where(['id' => ['=', 1]])
-            ->execute()
-            ->get_result();
-    }
-}
-
 class UserTest extends PHPUnit_Framework_TestCase {
 
 	private $session_id = 1;
@@ -31,8 +18,14 @@ class UserTest extends PHPUnit_Framework_TestCase {
 	private $test_user_password = '';
 
     public function __construct() {
-        $model = new UserTestModel();
-        $this->remember_hash = $model->get_hash();
+        /**
+         * @var $user User
+         */
+        $user = Application::get_class('User');
+        $fields = $user->get_fields(1);
+        $this->remember_hash = $fields['remember_hash'];
+        $this->test_user_login = $fields['login'];
+        $this->test_user_password = $fields['password'];
     }
 
 	public function setUp() {

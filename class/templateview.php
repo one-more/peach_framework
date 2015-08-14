@@ -18,7 +18,7 @@ abstract class TemplateView extends SuperView {
 		$parts = explode('\\', get_class($this));
 		$class = strtolower(array_pop($parts));
 		$parts = array_map(['Application', 'camelcase_to_dash'], $parts);
-		$file = implode(DS, $parts).DS.$class.'.json';
-		return 'view'.DS.$file;
+		$file = 'view'.DS.implode(DS, $parts).DS.$class.'.json';
+		return $file;
 	}
 }

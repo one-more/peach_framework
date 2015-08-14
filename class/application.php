@@ -228,7 +228,7 @@ class Application {
 	}
 
 	public static function init_validator() {
-        require_once ROOT_PATH.DS.'lib'.DS.'Validator'.DS.'LIVR.php';
+        require_once ROOT_PATH.DS.'lib'.DS.'Validator'.DS.'autoload.php';
         Validator\LIVR::defaultAutoTrim(true);
     }
 }

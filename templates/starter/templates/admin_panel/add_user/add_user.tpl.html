@@ -21,7 +21,7 @@
             <div class="form-group">
                 <label for="credentials">{$lang_vars.credentials}</label>
                 <select name="credentials" id="credentials" class="form-control">
-                    {foreach $credentials_labels as $k=>$el}
+                    {foreach $lang_vars.credentials_labels as $k=>$el}
                         <option value="{$k}">{$el}</option>
                     {/foreach}
                 </select>

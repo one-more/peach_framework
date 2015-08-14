@@ -1,7 +1,7 @@
 <?php
 
 class SiteRouter extends Router {
-	use trait_controller, trait_starter_router;
+	use trait_starter_router;
 
 	private $response;
 

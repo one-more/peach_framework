@@ -43,7 +43,7 @@ trait trait_starter_router {
 		}
 	}
 
-	private function show_result(AjaxResponse $response) {
+	protected function show_result(AjaxResponse $response) {
 		if(!Request::is_ajax()) {
 			$template   = Application::get_class('Starter');
 			$templator = new Smarty();

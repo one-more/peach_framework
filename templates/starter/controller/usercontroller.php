@@ -79,8 +79,9 @@ class UserController {
         }
 
         $validator = new Validator\LIVR([
-            'login' => ['required', 'unique_login', 'hash_password'],
-            'password' => 'required'
+            'login' => ['required', 'unique_login'],
+            'password' => 'hash_password',
+            'credentials' => 'required'
         ]);
 
         $validator->registerRules(['unique_login' => function() use($uid) {
@@ -118,9 +119,10 @@ class UserController {
             $response->message = $lang_vars['edit_user']['success'];
         } else {
             $errors = $validator->getErrors();
+            Error::log(print_r($errors, 1));
             $response->status = 'error';
-            return $response;
         }
+        return $response;
 	}
 
 	public function add_user() {

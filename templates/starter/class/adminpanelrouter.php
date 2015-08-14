@@ -52,8 +52,8 @@ class AdminPanelRouter extends Router {
 	}
 
     private function add_blocks_for_logined() {
-        $callback_method = $this->callback[1];
-        if($callback_method != 'login') {
+        $callback_method = (!empty($this->callback[1])) ? $this->callback[1] : null;
+        if($callback_method && $callback_method != 'login') {
             /**
              * @var $view \AdminPanel\LeftMenuView
              */
