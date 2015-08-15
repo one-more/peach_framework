@@ -8,6 +8,9 @@ class Starter implements Template {
     }
 
 	public function route() {
+        /**
+         * @var $router Router
+         */
 		if(strpos(Request::uri(), 'admin_panel') === false) {
 			$router = Application::get_class('SiteRouter');
 			$router->route();

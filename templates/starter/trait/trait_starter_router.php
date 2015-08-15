@@ -3,43 +3,32 @@
 trait trait_starter_router {
 
     private $response_type = 'AjaxResponse';
+    private $response;
+    private $callback = [];
 
 	public function route() {
         /**
          * @var $user_controller UserController
          */
 		$user_controller = Application::get_class('UserController');
-		if(strtolower(__CLASS__) == 'adminpanelrouter' && !$user_controller->is_admin()) {
-			$callback = $this->get_callback();
+        $callback = $this->get_callback();
+        $this->callback = $callback;
+        if(strtolower(__CLASS__) == 'adminpanelrouter' && !$user_controller->is_admin()) {
             $method = $callback[1];
             if($method !== 'login') {
                 header('Refresh: 0; url=/admin_panel/login');
                 $callback = false;
             }
-		} else {
-			$callback = $this->get_callback();
 		}
 		if($callback !== false) {
 			$check = true;
 			if(count($callback) == 3) {
 				$check = (array_pop($callback) == 'check');
 			}
-			if($check) {
-				$user_controller = Application::get_class('UserController');
-				if(!$user_controller->is_token_valid()) {
-					throw new Exception('invalid token');
-				}
+			if($check && !$user_controller->is_token_valid()) {
+			    throw new InvalidTokenException('invalid token');
 			}
-			$class = $callback[0];
-			if(is_string($class)) {
-				$reflection = new ReflectionClass($class);
-				$method = $reflection->getMethod($callback[1]);
-				if(!$method->isStatic()) {
-					$callback[0] = Application::get_class($class);
-				}
-			}
-            $this->callback = $callback;
-			call_user_func_array($callback, $this->route_params);
+			parent::route();
 		}
 	}
 

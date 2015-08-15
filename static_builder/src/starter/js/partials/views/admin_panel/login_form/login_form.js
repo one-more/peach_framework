@@ -10,7 +10,7 @@
         login: function(event) {
             var form = event.target;
             $.post('/login', $(form).serializeArray(), function(response) {
-                if(!response.status) {
+                if(response.status == 'error') {
                     var msg = Factory.get_class('LanguageModel').get('login_error');
                     NotificationView.display(msg, 'error')
                 } else {

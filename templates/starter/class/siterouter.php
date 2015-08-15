@@ -3,8 +3,6 @@
 class SiteRouter extends Router {
 	use trait_starter_router;
 
-	private $response;
-
 	public function __construct() {
 		$this->routes = [
 			'/' => [$this, 'index', 'no check'],

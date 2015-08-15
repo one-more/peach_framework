@@ -13,13 +13,18 @@ class Router {
 	public function route() {
 		$callback = $this->get_callback();
 		if($callback !== false) {
-			$class = $callback[0];
-			if(is_string($class)) {
-				$reflection = new ReflectionClass($class);
-				$method = $reflection->getMethod($callback[1]);
-				if(!$method->isStatic()) {
-					$callback[0] = Application::get_class($class);
+			if(is_array($callback)) {
+				$class = $callback[0];
+				if(is_string($class)) {
+					$reflection = new ReflectionClass($class);
+					$method = $reflection->getMethod($callback[1]);
+					if(!$method->isStatic()) {
+						$callback[0] = Application::get_class($class);
+					}
 				}
+                if(count($callback) > 2) {
+                    $callback = array_slice($callback, 0, 2);
+                }
 			}
 			return call_user_func_array($callback, $this->route_params);
 		}

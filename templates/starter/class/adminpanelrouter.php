@@ -3,9 +3,6 @@
 class AdminPanelRouter extends Router {
 	use trait_starter_router;
 
-    private $response;
-    private $callback = [];
-
 	public function __construct() {
 		$this->routes = [
 			'/admin_panel' => [$this, 'index', 'no check'],

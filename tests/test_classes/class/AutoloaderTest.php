@@ -18,10 +18,10 @@ class AutoloaderTest extends PHPUnit_Framework_TestCase {
      * @covers Autoloader::load_extension
      */
     public function test_build_extension() {
-        $extension_file = ROOT_PATH.DS.'extensions'.DS.'paginator.tar.gz';
+        $extension_file = ROOT_PATH.DS.'extensions'.DS.'tools.tar.gz';
         Phar::unlinkArchive($extension_file);
         $this->assertFalse(file_exists($extension_file));
-        $this->assertTrue(Autoloader::load_extension('Paginator'));
+        $this->assertTrue(Autoloader::load_extension('Tools'));
         $this->assertTrue(file_exists($extension_file));
     }
 
@@ -29,9 +29,9 @@ class AutoloaderTest extends PHPUnit_Framework_TestCase {
      * @covers Autoloader::load_extension
      */
     public function test_changed_extension() {
-        $test_file = ROOT_PATH.DS.'build'.DS.'paginator'.DS.'test.php';
+        $test_file = ROOT_PATH.DS.'build'.DS.'tools'.DS.'test.php';
         file_put_contents($test_file, '');
-        $this->assertTrue(Autoloader::load_extension('Paginator'));
+        $this->assertTrue(Autoloader::load_extension('Tools'));
         unlink($test_file);
     }
 
@@ -42,31 +42,31 @@ class AutoloaderTest extends PHPUnit_Framework_TestCase {
         $method = new ReflectionMethod('Autoloader', 'is_extension_changed');
         $method->setAccessible(true);
 
-        $this->assertFalse($method->invoke(null, 'paginator'));
+        $this->assertFalse($method->invoke(null, 'tools'));
 
-        $test_file = ROOT_PATH.DS.'build'.DS.'paginator'.DS.'test.php';
-        if(file_exists('pfmextension://paginator'.DS.'test.php')) {
-            unlink('pfmextension://paginator'.DS.'test.php');
+        $test_file = ROOT_PATH.DS.'build'.DS.'tools'.DS.'test.php';
+        if(file_exists('pfmextension://tools'.DS.'test.php')) {
+            unlink('pfmextension://tools'.DS.'test.php');
         }
         file_put_contents($test_file, '');
-        $this->assertTrue($method->invoke(null, 'paginator'));
+        $this->assertTrue($method->invoke(null, 'tools'));
         unlink($test_file);
 
-        $this->assertFalse($method->invoke(null, 'paginator'));
+        $this->assertFalse($method->invoke(null, 'tools'));
 
-        $paginator_file = ROOT_PATH.DS.'build'.DS.'paginator'.DS.'paginator.php';
-        $old_data = file_get_contents($paginator_file);
-        file_put_contents($paginator_file, '/*test comment*/', FILE_APPEND);
-        $this->assertTrue($method->invoke(null, 'paginator'));
+        $tools_file = ROOT_PATH.DS.'build'.DS.'tools'.DS.'tools.php';
+        $old_data = file_get_contents($tools_file);
+        file_put_contents($tools_file, '/*test comment*/', FILE_APPEND);
+        $this->assertTrue($method->invoke(null, 'tools'));
 
-        file_put_contents($paginator_file, $old_data);
+        file_put_contents($tools_file, $old_data);
 
-        $this->assertFalse($method->invoke(null, 'paginator'));
+        $this->assertFalse($method->invoke(null, 'tools'));
 
-        $extension_file = ROOT_PATH.DS.'extensions'.DS.'paginator.tar.gz';
+        $extension_file = ROOT_PATH.DS.'extensions'.DS.'tools.tar.gz';
         Phar::unlinkArchive($extension_file);
-        $this->assertFalse($method->invoke(null, 'paginator'));
-        $this->assertTrue(Autoloader::load_extension('Paginator'));
+        $this->assertFalse($method->invoke(null, 'tools'));
+        $this->assertTrue(Autoloader::load_extension('Tools'));
     }
 
     /**

@@ -5,7 +5,7 @@ trait trait_configuration {
 
 	protected function get_params($name = null) {
 		if(!$name) {
-			$name   = strtolower(__CLASS__);
+			$name = strtolower(__CLASS__);
 		}
 		$path   = ROOT_PATH.DS.'resource'.DS."{$name}.json";
 		if(file_exists($path)) {
@@ -29,7 +29,7 @@ trait trait_configuration {
 
     protected function save_params($name = null, $params) {
         if(!$name) {
-			$name   = strtolower(__CLASS__);
+			$name = strtolower(__CLASS__);
 		}
         $params_str = $this->array_to_json_string($params);
         file_put_contents(ROOT_PATH.DS.'resource'.DS."{$name}.json", $params_str);

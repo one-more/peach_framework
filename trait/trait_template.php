@@ -1,6 +1,7 @@
 <?php
 
 trait trait_template {
+
     public function __get($name) {
         switch($name) {
             case 'path':
@@ -19,10 +20,10 @@ trait trait_template {
             $parts = array_map(['StringHelper','camelcase_to_dash'], $parts);
             $name = implode(DS, $parts).DS.strtolower($name);
         } else {
-            $name   = strtolower($name);
+            $name = strtolower($name);
         }
-        $class  = "{$name}.php";
-        $file   = ROOT_PATH.DS.'templates'.DS.strtolower(__CLASS__).DS.$dir.DS.$class;
+        $class = "{$name}.php";
+        $file = ROOT_PATH.DS.'templates'.DS.strtolower(__CLASS__).DS.$dir.DS.$class;
         if(file_exists($file)) {
             require_once $file;
 			return true;

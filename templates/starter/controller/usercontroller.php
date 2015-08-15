@@ -38,7 +38,7 @@ class UserController {
 		$user = Application::get_class('User');
 		$response = new JsonResponse();
 		$response->user = $user->login($login, $password, $remember);
-        $response->status = !empty($response->user);
+        $response->status = !empty($response->user) ? 'success' : 'error';
         return $response;
 	}
 
@@ -47,8 +47,10 @@ class UserController {
          * @var $user User
          */
         $user = Application::get_class('User');
-		return $user->get_field('credentials') == 'administrator' ||
-			$user->get_field('credentials') == 'super_administrator';
+        return in_array($user->get_field('credentials'), [
+            'administrator',
+            'super_administrator'
+        ]);
 	}
 
 	public function is_super_admin() {
@@ -73,7 +75,7 @@ class UserController {
 
     /**
      * @return JsonResponse
-     * @throws WrongRightsException
+     * @throws InvalidArgumentException
      * @credentials super_admin
      * @credentialsError you must be super admin to edit users
      * @requestMethod Ajax
@@ -137,7 +139,6 @@ class UserController {
 
     /**
      * @return JsonResponse
-     * @throws Exception
      * @credentials super_admin
      * @credentialsError you must be super admin to add users
      * @requestMethod Ajax

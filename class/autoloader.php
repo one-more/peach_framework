@@ -101,12 +101,12 @@ class Autoloader {
     }
 
     public static function init_autoload() {
-        spl_autoload_register(['Autoloader','load_class']);
-        spl_autoload_register(['Autoloader','load_extension']);
-        spl_autoload_register(['Autoloader','load_trait']);
-        spl_autoload_register(['Autoloader','load_template']);
-        spl_autoload_register(['Autoloader','load_interface']);
-        spl_autoload_register(['Autoloader','load_exception']);
-        spl_autoload_register(['Autoloader','load_helper']);
+        spl_autoload_register([__CLASS__,'load_class']);
+        spl_autoload_register([__CLASS__,'load_extension']);
+        spl_autoload_register([__CLASS__,'load_trait']);
+        spl_autoload_register([__CLASS__,'load_template']);
+        spl_autoload_register([__CLASS__,'load_interface']);
+        spl_autoload_register([__CLASS__,'load_exception']);
+        spl_autoload_register([__CLASS__,'load_helper']);
     }
 }
