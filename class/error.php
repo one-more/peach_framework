@@ -1,6 +1,7 @@
 <?php
 
 class Error {
+
     public static function initialize() {
         $log_file_path  = WEB_ROOT.DS.'error.log';
         if(file_exists($log_file_path)) {

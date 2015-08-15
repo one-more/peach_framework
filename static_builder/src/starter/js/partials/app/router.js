@@ -5,7 +5,8 @@
             'admin_panel/edit_user/:id': 'edit_user',
             'admin_panel': 'admin_panel',
             'admin_panel/login': 'login',
-            'admin_panel/add_user': 'add_user'
+            'admin_panel/add_user': 'add_user',
+            '': 'index'
         },
 
         initialize: function () {
@@ -36,10 +37,12 @@
         },
 
         init_views: function () {
-            var global_views = [
-                new LeftMenuView,
-                new NavbarView
-            ];
+            if(location.pathname.indexOf('admin_panel') != -1) {
+                var global_views = [
+                    new LeftMenuView,
+                    new NavbarView
+                ];
+            }
             switch(this.current().route) {
                 case 'edit_user':
                     this.page_views = [
@@ -65,6 +68,8 @@
         global_views: [],
 
         page_views: [],
+
+        index: function() {},
 
         edit_user: function() {
             this.load_positions();
@@ -110,6 +115,7 @@
             this.load_positions();
         }
     });
+
     App.router = new App.router;
     Backbone.history.start({pushState: true, silent: true});
 })();
