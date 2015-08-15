@@ -4,7 +4,6 @@ trait trait_starter_router {
 
     private $response_type = 'AjaxResponse';
     private $response;
-    private $callback = [];
 
 	public function route() {
         /**
@@ -12,7 +11,6 @@ trait trait_starter_router {
          */
 		$user_controller = Application::get_class('UserController');
         $callback = $this->get_callback();
-        $this->callback = $callback;
         if(strtolower(__CLASS__) == 'adminpanelrouter' && !$user_controller->is_admin()) {
             $method = $callback[1];
             if($method !== 'login') {

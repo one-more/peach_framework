@@ -49,16 +49,20 @@ class AdminPanelRouter extends Router {
 	}
 
     private function add_blocks_for_logined() {
-        $callback_method = (!empty($this->callback[1])) ? $this->callback[1] : null;
-        if($callback_method && $callback_method != 'login') {
+        /**
+         * @var $user_controller UserController
+         */
+        $user_controller = Application::get_class('UserController');
+        /*
+         * User can be logged only if he is administrator
+         */
+        if($user_controller->is_admin()) {
             /**
-             * @var $view \AdminPanel\LeftMenuView
+             * @var $view TemplateView
              */
             $view = Application::get_class('\AdminPanel\LeftMenuView');
             $this->response['blocks']['left'] = $view->render();
-            /**
-             * @var $view \AdminPanel\NavbarView
-             */
+
             $view = Application::get_class('\AdminPanel\NavbarView');
             $this->response['blocks']['header'] = $view->render();
         }
