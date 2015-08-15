@@ -17,7 +17,7 @@ abstract class TemplateView extends SuperView {
 	protected function get_lang_file() {
 		$parts = explode('\\', get_class($this));
 		$class = strtolower(array_pop($parts));
-		$parts = array_map(['Application', 'camelcase_to_dash'], $parts);
+		$parts = array_map(['StringHelper', 'camelcase_to_dash'], $parts);
 		$file = 'view'.DS.implode(DS, $parts).DS.$class.'.json';
 		return $file;
 	}

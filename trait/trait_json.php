@@ -7,7 +7,7 @@ trait trait_json {
 		$json_chunks    = [];
 		foreach($array as $k=>$el) {
 			if(is_array($el)) {
-				if(!Application::is_assoc_array($el)) {
+				if(!ArrayHelper::is_assoc_array($el)) {
 					$el = array_map(function($value) use($tabs) {
 						if($value === true) {
 							return '"1"';

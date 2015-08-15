@@ -20,7 +20,14 @@ class UserController {
         return crypt(trim($password), md5($password).md5($login));
     }
 
-	public function login($login, $password, $remember) {
+    /**
+     * @param $login
+     * @param $password
+     * @param $remember
+     * @return JsonResponse
+     * @requestMethod Ajax
+     */
+    public function login($login, $password, $remember) {
 		$password = trim($password);
 		if($password) {
 			$password = $this->crypt_password($login, $password);
@@ -52,7 +59,7 @@ class UserController {
 		return $user->get_field('credentials') == 'super_administrator';
 	}
 
-    public function get_hash_password_rule($fields) {
+    private function get_hash_password_rule($fields) {
         return function() use($fields) {
             return function($value, $undef, &$output_arr) use($fields) {
                 if(trim($value)) {
@@ -64,12 +71,19 @@ class UserController {
         };
     }
 
+    /**
+     * @return JsonResponse
+     * @throws WrongRightsException
+     * @credentials super_admin
+     * @credentialsError you must be super admin to edit users
+     * @requestMethod Ajax
+     */
 	public function edit_user() {
         Application::init_validator();
 
         $user_data = [
             'login' => Request::get_var('login', 'string'),
-            'password' => Request::get_var('password', 'string'),
+            'password' => Request::get_var('password', 'string', ''),
             'credentials' => Request::get_var('credentials', 'string')
         ];
 
@@ -103,10 +117,6 @@ class UserController {
 
         $response = new JsonResponse();
 
-		if(!$this->is_super_admin()) {
-			throw new WrongRightsException('you must be super admin to edit users');
-		}
-
 		$lang_vars = $this->get_lang_vars();
         $fields = $validator->validate($user_data);
         if($fields) {
@@ -125,12 +135,19 @@ class UserController {
         return $response;
 	}
 
+    /**
+     * @return JsonResponse
+     * @throws Exception
+     * @credentials super_admin
+     * @credentialsError you must be super admin to add users
+     * @requestMethod Ajax
+     */
 	public function add_user() {
         Application::init_validator();
 
         $user_data = [
             'login' => Request::get_var('login', 'string'),
-            'password' => Request::get_var('password', 'string'),
+            'password' => Request::get_var('password', 'string', ''),
             'credentials' => Request::get_var('credentials', 'string')
         ];
 
@@ -156,9 +173,6 @@ class UserController {
 
         $response = new JsonResponse();
 
-		if(!$this->is_super_admin()) {
-			throw new Exception('you must be super admin to add users');
-		}
 		$lang_vars = $this->get_lang_vars();
 
         $fields = $validator->validate($user_data);

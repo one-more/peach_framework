@@ -8,7 +8,9 @@ require_once ROOT_PATH.DS.'lib/Smarty/Smarty.class.php';
 
 class TestsEnv {
 	public static function initialize() {
-		Application::init_autoload();
+		require_once ROOT_PATH.DS.'class'.DS.'autoloader.php';
+		Autoloader::init_autoload();
+
 		$_SESSION = [];
 		static::init_test_tables();
 

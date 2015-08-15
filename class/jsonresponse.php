@@ -25,10 +25,6 @@ class JsonResponse implements AjaxResponse {
     }
 
     public function __toString() {
-        return json_encode([
-            'blocks' => $this->blocks,
-            'views' => $this->views,
-            'title' => $this->title
-        ]);
+        return json_encode((array)$this);
     }
 }

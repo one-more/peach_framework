@@ -13,6 +13,11 @@
             $.post('/add_user', $(table).serializeArray(), function(json) {
                 if(json.status == 'success') {
                     App.go_to('/admin_panel');
+                } else {
+                    json.message = '';
+                    $.each(json.errors, function (i, error) {
+                        json.message += error+'\n';
+                    })
                 }
                 NotificationView.display(json.message, json.status);
             }, 'json');

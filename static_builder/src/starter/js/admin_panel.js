@@ -21,3 +21,5 @@
 //= partials/app/crypto/md5.js
 //= partials/app/app.js
 //= partials/app/router.js
+
+//= partials/classes/cookie.js

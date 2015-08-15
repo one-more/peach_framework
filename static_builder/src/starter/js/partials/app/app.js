@@ -43,54 +43,14 @@
             Factory.get_class('LanguageModel');
         },
 
-        get_cookie : function(name) {
-            var matches = document.cookie.match(new RegExp(
-                "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
-              ));
-            return matches ? decodeURIComponent(matches[1]) : undefined;
-        },
-
-        set_cookie : function(name, value, options) {
-              options = options || {};
-
-              var expires = options.expires;
-
-              if (typeof expires == "number" && expires) {
-                var d = new Date();
-                d.setTime(d.getTime() + expires*1000);
-                expires = options.expires = d;
-              }
-              if (expires && expires.toUTCString) {
-                options.expires = expires.toUTCString();
-              }
-
-              value = encodeURIComponent(value);
-
-              var updatedCookie = name + "=" + value;
-
-              for(var propName in options) {
-                updatedCookie += "; " + propName;
-                var propValue = options[propName];
-                if (propValue !== true) {
-                  updatedCookie += "=" + propValue;
-                 }
-              }
-
-              document.cookie = updatedCookie;
-        },
-
-        delete_cookie : function(name) {
-            this.set_cookie(name, "", { expires: -1 })
-        },
-
         go_to: function(url, options) {
             options = options || {trigger : true};
             App.router.navigate(url, options);
         },
 
         get_token: function(get_params, post_params) {
-            var str_to_hash = (App.get_cookie('user') || '') +
-                (App.get_cookie('pfm_session_id') || '')
+            var str_to_hash = (Cookie.get_cookie('user') || '') +
+                (Cookie.get_cookie('pfm_session_id') || '')
                 + JSON.stringify($.extend(get_params, post_params));
             return CryptoJS.MD5(str_to_hash).toString();
         },

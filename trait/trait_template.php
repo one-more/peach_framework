@@ -16,7 +16,7 @@ trait trait_template {
         if(strpos($name, '\\')) {
             $parts = explode('\\', $name);
             $name = array_pop($parts);
-            $parts = array_map(['Application','camelcase_to_dash'], $parts);
+            $parts = array_map(['StringHelper','camelcase_to_dash'], $parts);
             $name = implode(DS, $parts).DS.strtolower($name);
         } else {
             $name   = strtolower($name);

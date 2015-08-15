@@ -7,6 +7,14 @@ class Request {
 			strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
     }
 
+	public static function is_post() {
+        return strtolower($_SERVER['REQUEST_METHOD']) == 'post';
+    }
+
+    public static function is_get() {
+        return strtolower($_SERVER['REQUEST_METHOD']) == 'get';
+    }
+
     public static function get_var($name, $filter = 'raw', $default = null) {
 		$request_vars = array_merge($_REQUEST, $_COOKIE);
 		if(empty($request_vars[$name])) {

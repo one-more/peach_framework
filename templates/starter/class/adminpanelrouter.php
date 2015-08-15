@@ -58,12 +58,12 @@ class AdminPanelRouter extends Router {
              * @var $view \AdminPanel\LeftMenuView
              */
             $view = Application::get_class('\AdminPanel\LeftMenuView');
-            $response['blocks']['left'] = $view->render();
+            $this->response['blocks']['left'] = $view->render();
             /**
              * @var $view \AdminPanel\NavbarView
              */
             $view = Application::get_class('\AdminPanel\NavbarView');
-            $response['blocks']['header'] = $view->render();
+            $this->response['blocks']['header'] = $view->render();
         }
     }
 

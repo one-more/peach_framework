@@ -195,7 +195,7 @@ class MysqlModelTest extends PHPUnit_Framework_TestCase {
 	 * @covers MysqlModel::get_configuration
 	 */
 	public function test_get_configuration() {
-		$this->assertTrue(Application::is_assoc_array($this->model->get_configuration()));
+		$this->assertTrue(ArrayHelper::is_assoc_array($this->model->get_configuration()));
 	}
 
 	public function values_provider() {
@@ -217,6 +217,10 @@ class MysqlModelTest extends PHPUnit_Framework_TestCase {
 	 */
 	public function test_insert($fields) {
 		$this->model->insert($fields);
+		$this->model->execute();
+
+		$this->model->table_name = 'tests_table';
+        $this->model->insert($fields);
 		$this->model->execute();
 	}
 

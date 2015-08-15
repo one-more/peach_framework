@@ -29,6 +29,9 @@ class PFMExtensionWrapperTest extends PHPUnit_Framework_TestCase {
      */
     public function test_create_phar_data() {
         $wrapper = new PFMExtensionWrapper;
+		$parse_path = new ReflectionMethod('PFMExtensionWrapper', 'parse_path');
+        $parse_path->setAccessible(true);
+        $parse_path->invoke($wrapper, 'pfmextension://system');
         $method = new ReflectionMethod('PFMExtensionWrapper', 'create_phar_data');
         $method->setAccessible(true);
         $result = $method->invoke($wrapper);
