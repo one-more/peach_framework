@@ -50,13 +50,13 @@ class AdminPanelRouter extends Router {
 
     private function add_blocks_for_logined() {
         /**
-         * @var $user_controller UserController
+         * @var $user UserIdentity
          */
-        $user_controller = Application::get_class('UserController');
+        $user = Application::get_class('User')->get_identity();
         /*
-         * User can be logged only if he is administrator
+         * User can be logged in only if he is administrator
          */
-        if($user_controller->is_admin()) {
+        if($user->is_admin()) {
             /**
              * @var $view TemplateView
              */

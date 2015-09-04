@@ -45,14 +45,14 @@ class AnnotationsDecorator {
 
     private function check_credentials($value) {
         /**
-         * @var $controller UserController
+         * @var $user UserIdentity
          */
-        $controller = Application::get_class('UserController');
+        $user = Application::get_class('User')->get_identity();
         switch($value) {
             case 'super_admin':
-                return $controller->is_super_admin();
+                return $user->is_super_admin();
             case 'admin':
-                return $controller->is_admin();
+                return $user->is_admin();
         }
     }
 

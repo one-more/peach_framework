@@ -7,11 +7,11 @@ trait trait_starter_router {
 
 	public function route() {
         /**
-         * @var $user_controller UserController
+         * @var $user UserIdentity
          */
-		$user_controller = Application::get_class('UserController');
+		$user = Application::get_class('User')->get_identity();
         $callback = $this->get_callback();
-        if(strtolower(__CLASS__) == 'adminpanelrouter' && !$user_controller->is_admin()) {
+        if(strtolower(__CLASS__) == 'adminpanelrouter' && !$user->is_admin()) {
             $method = $callback[1];
             if($method !== 'login') {
                 header('Refresh: 0; url=/admin_panel/login');
@@ -23,7 +23,7 @@ trait trait_starter_router {
 			if(count($callback) == 3) {
 				$check = (array_pop($callback) == 'check');
 			}
-			if($check && !$user_controller->is_token_valid()) {
+			if($check && !Request::is_token_valid()) {
 			    throw new InvalidTokenException('invalid token');
 			}
 			parent::route();

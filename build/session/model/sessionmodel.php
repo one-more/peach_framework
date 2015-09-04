@@ -7,11 +7,7 @@ class SessionModel extends MysqlModel {
     }
 
     public function start_session() {
-        /**
-         * @var $user User
-         */
-        $user   = Application::get_class('User');
-        $uid    = $user->get_id();
+        $uid    = Application::get_class('User')->get_identity()['id'];
         $fields = [
             'datetime'  => date('Y-m-d H:i:s'),
             'uid'   => $uid

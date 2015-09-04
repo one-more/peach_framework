@@ -17,15 +17,16 @@ class SiteRouter extends Router {
 
 	public function index() {}
 
+    /**
+     * @requestMethod Ajax
+     */
 	public function login() {
 		$login = Request::get_var('login', 'string');
 		$password = Request::get_var('password', 'string');
 		$remember = Request::get_var('remember', 'string');
-        /**
-         * @var $user_controller UserController
-         */
-        $user_controller = Application::get_class('UserController');
-		$this->response = $user_controller->login($login, $password, (bool)$remember);
+
+		$this->response->user = Application::get_class('User')->get_auth()->login($login, $password, (bool)$remember);
+        $this->response->status = !empty($this->response->user) ? 'success' : 'error';
 	}
 
 	public function language_model() {
@@ -34,28 +35,16 @@ class SiteRouter extends Router {
 	}
 
 	public function logout() {
-        /**
-         * @var $user User
-         */
-        $user = Application::get_class('User');
-		$user->log_out();
+        Application::get_class('User')->get_auth()->log_out();
         $this->response->status = 'success';
 	}
 
 	public function add_user() {
-        /**
-         * @var $controller UserController
-         */
-        $controller = Application::get_class('UserController');
-        $this->response = $controller->add_user();
+        $this->response = Application::get_class('User')->add_by_ajax();
     }
 
     public function edit_user() {
-        /**
-         * @var $controller UserController
-         */
-        $controller = Application::get_class('UserController');
-        $this->response = $controller->edit_user();
+        $this->response = Application::get_class('User')->edit_by_ajax();
     }
 
 	public function __destruct() {

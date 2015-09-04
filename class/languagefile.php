@@ -1,7 +1,6 @@
 <?php
 
-class LanguageFile implements ArrayAccess {
-    private $data = [];
+class LanguageFile extends ArrayAccessObj {
     private $base_path;
 
     public function __construct($file, $base_dir = null) {
@@ -18,31 +17,11 @@ class LanguageFile implements ArrayAccess {
 
         $file_path = $this->base_path.DS.$file;
         if(file_exists($file_path)) {
-            $this->data = json_decode(file_get_contents($file_path), true);
+            parent::__construct(json_decode(file_get_contents($file_path), true));
         }
     }
 
     public function get_data() {
-        return $this->data;
-    }
-
-    public function offsetSet($offset, $value) {
-        $this->data[$offset] = $value;
-    }
-
-    public function offsetExists($offset) {
-        return isset($this->data[$offset]);
-    }
-
-    public function offsetUnset($offset) {
-        unset($this->data[$offset]);
-    }
-
-    public function &offsetGet($offset) {
-        return $this->data;
-    }
-
-    public function __toString() {
-        return json_encode($this->data);
+        return $this->values;
     }
 }

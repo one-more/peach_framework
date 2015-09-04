@@ -89,7 +89,7 @@ class UserModel extends MysqlModel {
 			throw new InvalidArgumentException('fields must be array or traversable object');
 		}
         if(!$uid) {
-            $uid    = $this->get_id();
+            $uid = $this->get_id();
         }
         $this->update($fields)
             ->where(['id' => ['=', (int)$uid]])

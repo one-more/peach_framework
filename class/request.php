@@ -52,4 +52,13 @@ class Request {
 			return [];
 		}
 	}
+
+	public static function is_token_valid() {
+		$client_token = self::get_var('token');
+		unset($_GET['token']);
+		$str_to_hash = self::get_var('user', null, '')
+			.self::get_var('pfm_session_id', null, '')
+			.json_encode(array_merge($_GET, $_POST), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+		return md5($str_to_hash) == $client_token;
+	}
 }

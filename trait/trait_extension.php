@@ -11,6 +11,11 @@ trait trait_extension {
                     $this->path = 'phar://'.ROOT_PATH.DS.'extensions'.DS.$extension;
                 }
                 break;
+            case 'lang_path':
+                if(empty($this->lang_path)) {
+                    $this->lang_path = $this->path.DS.'lang'.DS.CURRENT_LANG;
+                }
+                break;
         }
         return $this->$name;
     }
