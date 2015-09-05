@@ -10,22 +10,21 @@ class UserTest extends PHPUnit_Framework_TestCase {
      */
     private $session_obj;
     /**
-     * @var $user_obj User
+     * @var $user_obj UserIdentity
      */
     private $user_obj;
 	private $remember_hash;
-	private $test_user_login = 'root';
-	private $test_user_password = '';
+	private $test_user_login;
+	private $test_user_password;
 
     public function __construct() {
         /**
-         * @var $user User
+         * @var $user UserIdentity
          */
-        $user = Application::get_class('User');
-        $fields = $user->get_fields(1);
-        $this->remember_hash = $fields['remember_hash'];
-        $this->test_user_login = $fields['login'];
-        $this->test_user_password = $fields['password'];
+        $user = Application::get_class('User')->get_identity(1);
+        $this->remember_hash = $user['remember_hash'];
+        $this->test_user_login = $user['login'];
+        $this->test_user_password = $user['password'];
     }
 
 	public function setUp() {
@@ -33,32 +32,9 @@ class UserTest extends PHPUnit_Framework_TestCase {
 			$_COOKIE['pfm_session_id'] = $this->session_id;
 		}
 		if(is_null($this->user_obj)) {
-			$this->user_obj = Application::get_class('User');
+			$this->user_obj = Application::get_class('User')->get_identity(1);
 			$this->session_obj = Application::get_class('Session');
 		}
-	}
-
-	/**
-	 * @covers User::is_logined
-	 */
-	public function test_is_logined() {
-		$this->assertFalse($this->user_obj->is_logined());
-
-		$_COOKIE['user'] = $this->remember_hash;
-		$this->assertTrue($this->user_obj->is_logined());
-		unset($_COOKIE['user']);
-
-		$_COOKIE['user'] = 123;
-		$this->assertFalse($this->user_obj->is_logined());
-		unset($_COOKIE['user']);
-
-		$_COOKIE['user'] = null;
-		$this->assertFalse($this->user_obj->is_logined());
-		unset($_COOKIE['user']);
-
-		$this->session_obj->set_var('user', $this->remember_hash);
-		$this->assertTrue($this->user_obj->is_logined());
-		$this->session_obj->unset_var('user', $this->remember_hash);
 	}
 
 	/**
