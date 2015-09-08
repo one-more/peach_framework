@@ -8,6 +8,12 @@ class UserModel extends MysqlModel {
         return 'users';
     }
 
+    /**
+     * @param $login
+     * @param $password
+     * @param bool|false $remember
+     * @return bool
+     */
     public function login($login, $password, $remember = false) {
         $login  = VarHandler::sanitize_var($login, 'string', '');
         $password   = VarHandler::sanitize_var($password, 'string', '');
@@ -37,7 +43,23 @@ class UserModel extends MysqlModel {
             }
             $session->set_uid($result['id']);
         }
-        return !empty($result) ? $result : [];
+        return !empty($result);
+    }
+
+    /**
+     * @return bool
+     */
+    public function log_out() {
+        if(!empty($_COOKIE['user'])) {
+            setcookie('user', '', -1, '/');
+        } else {
+            /**
+             * @var $session Session
+             */
+            $session = Application::get_class('Session');
+            $session->unset_var('user');
+        }
+        return true;
     }
 
     public function get_fields($uid = null) {
@@ -162,17 +184,5 @@ class UserModel extends MysqlModel {
             ])
             ->execute()
             ->get_array();
-    }
-
-    public function log_out() {
-        if(!empty($_COOKIE['user'])) {
-            setcookie('user', '', -1, '/');
-        } else {
-            /**
-             * @var $session Session
-             */
-            $session    = Application::get_class('Session');
-            $session->unset_var('user');
-        }
     }
 }

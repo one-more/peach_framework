@@ -24,6 +24,6 @@ class UserAuth {
     }
 
     public function log_out() {
-        $this->model->log_out();
+        return $this->model->log_out();
     }
 }

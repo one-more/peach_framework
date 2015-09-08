@@ -13,126 +13,49 @@ class UserTest extends PHPUnit_Framework_TestCase {
      * @var $user_obj UserIdentity
      */
     private $user_obj;
-	private $remember_hash;
-	private $test_user_login;
-	private $test_user_password;
-
-    public function __construct() {
-        /**
-         * @var $user UserIdentity
-         */
-        $user = Application::get_class('User')->get_identity(1);
-        $this->remember_hash = $user['remember_hash'];
-        $this->test_user_login = $user['login'];
-        $this->test_user_password = $user['password'];
-    }
 
 	public function setUp() {
 		if(empty($_COOKIE['pfm_session_id'])) {
 			$_COOKIE['pfm_session_id'] = $this->session_id;
 		}
-		if(is_null($this->user_obj)) {
+		if(empty($this->user_obj)) {
 			$this->user_obj = Application::get_class('User')->get_identity(1);
 			$this->session_obj = Application::get_class('Session');
 		}
 	}
 
-	/**
-	 * @covers User::get_id
-	 */
-	public function test_get_id() {
-		$this->assertEquals(0, $this->user_obj->get_id());
-
-		$_COOKIE['user'] = $this->remember_hash;
-		$this->assertEquals(1, $this->user_obj->get_id());
-	}
-
-	/**
-	 * @covers User::login
-	 */
-	public function test_login() {
-		$this->assertCount(0, $this->user_obj->login(null,null,null));
-
-		$login = $this->test_user_login;
-		$password = $this->test_user_password;
-		$fields = $this->user_obj->login($login, $password);
-		$this->assertGreaterThan(5, count($fields));
-	}
-
-	/**
-	 * @covers User::log_out
-	 */
-	public function test_log_out() {
-		$this->assertNull($this->user_obj->log_out());
-	}
-
-	/**
-	 * @covers User::get_fields
-	 */
-	public function test_get_fields() {
-		$this->assertCount(0, $this->user_obj->get_fields());
-
-		$fields = $this->user_obj->get_fields(1);
-		$this->assertGreaterThan(5, $fields);
-
-		$_COOKIE['user'] = $this->remember_hash;
-		$fields = $this->user_obj->get_fields(1);
-		$this->assertGreaterThan(5, $fields);;
-	}
-
-	/**
-	 * @covers User::get_field
-	 */
-	public function test_get_field() {
-		$this->assertEquals('', $this->user_obj->get_field('login'));
-
-		$this->assertEquals($this->test_user_login, $this->user_obj->get_field('login', 1));
-
-		$_COOKIE['user'] = $this->remember_hash;
-		$this->assertEquals($this->test_user_login, $this->user_obj->get_field('login'));
-	}
-
-	/**
-	 * @expectedException LoginExistsException
-	 * @covers User::register
-	 */
-	public function test_register_existed() {
-		$fields = [
-			'login' => 'root'
-		];
-		$this->user_obj->register($fields);
-	}
-
-	/**
-	 * @expectedException InvalidArgumentException
-	 */
-	public function test_register_no_login() {
-		$this->user_obj->register([]);
-	}
-
-	/**
-	 * @expectedException InvalidArgumentException
-	 * @covers User::register
-	 */
-	public function test_register_no_array() {
-		$this->user_obj->register(new StdClass);
-	}
-
-	public function test_register() {
-		$fields = [
+    /**
+     * @covers User::add
+     */
+	public function test_add() {
+        $fields = [
 			'login' => uniqid('test_user', true)
 		];
-		$register_id = $this->user_obj->register($fields);
-		$this->assertInternalType('int', $register_id);
-		return $register_id;
-	}
+        Application::get_class('User')->add($fields);
+    }
+
+    /**
+     * @covers User::add
+     * @expectedException InvalidUserDataException
+     */
+    public function test_add_exception() {
+        Application::get_class('User')->add([]);
+    }
 
 	/**
-	 * @depends test_register
 	 * @covers User::delete_user
 	 */
-	public function test_delete_user($uid) {
-		$this->assertNull($this->user_obj->delete_user($uid));
+	public function test_delete_user() {
+        /**
+         * @var $user UserIdentity
+         */
+		$user = Application::get_class('User')->get_identity_by_field('id', 'MAX(id)');
+        $this->assertTrue($user instanceof UserIdentity);
+
+        Application::get_class('User')->delete($user['id']);
+
+        $user = Application::get_class('User')->get_identity_by_field('id', 'MAX(id)');
+        $this->assertNull($user);
 	}
 
 	/**

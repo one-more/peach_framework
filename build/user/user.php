@@ -31,10 +31,11 @@ class User {
     /**
      * @param $field
      * @param $value
-     * @return UserIdentity
+     * @return UserIdentity|null
      */
     public function get_identity_by_field($field, $value) {
-        return new UserIdentity($this->model->get_user_by_field($field, $value));
+        $fields = $this->model->get_user_by_field($field, $value);
+        return !empty($fields) ? new UserIdentity($fields) : null;
     }
 
     /**
