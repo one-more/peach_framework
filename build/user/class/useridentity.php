@@ -19,12 +19,12 @@ class UserIdentity extends ArrayAccessObj {
 
     public function is_admin() {
         return in_array($this['credentials'], [
-            'administrator',
-            'super_administrator'
+            User::credentials_admin,
+            User::credentials_super_admin
         ]);
     }
 
     public function is_super_admin() {
-        return $this['credentials'] == 'super_administrator';
+        return $this['credentials'] == User::credentials_super_admin;
     }
 }

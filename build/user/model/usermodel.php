@@ -15,8 +15,8 @@ class UserModel extends MysqlModel {
      * @return bool
      */
     public function login($login, $password, $remember = false) {
-        $login  = VarHandler::sanitize_var($login, 'string', '');
-        $password   = VarHandler::sanitize_var($password, 'string', '');
+        $login = VarHandler::sanitize_var($login, 'string', '');
+        $password = VarHandler::sanitize_var($password, 'string', '');
         $result = $this->select()
             ->where([
                 'login' => ['=', $login],
@@ -29,13 +29,12 @@ class UserModel extends MysqlModel {
         if(!empty($result)) {
             if(empty($result['remember_hash'])) {
                 $remember_hash  = password_hash($result['id'].$result['login'], PASSWORD_DEFAULT);
-                $result['remember_hash']    = $remember_hash;
-                $this->update_fields(['remember_hash'   => $remember_hash], $result['id']);
+                $this->update_fields(['remember_hash' => $remember_hash], $result['id']);
             }
             /**
              * @var $session Session
              */
-            $session    = Application::get_class('Session');
+            $session = Application::get_class('Session');
             if($remember) {
                 setcookie('user', $result['remember_hash'], strtotime('2037-12-31'), '/');
             } else {
@@ -62,9 +61,13 @@ class UserModel extends MysqlModel {
         return true;
     }
 
+    /**
+     * @param null $uid
+     * @return array
+     */
     public function get_fields($uid = null) {
         if(!$uid) {
-            $uid    = $this->get_id();
+            $uid = $this->get_id();
         } else {
 			$uid = (int)$uid;
 		}
@@ -79,37 +82,34 @@ class UserModel extends MysqlModel {
                 ->execute()
                 ->get_array();
 			$this->cached_fields[$uid] = $fields;
-			return $fields;
-		} else {
-			return $this->cached_fields[$uid];
 		}
+        return $this->cached_fields[$uid];
     }
 
+    /**
+     * @param $fields
+     * @return int
+     */
     public function register($fields) {
-		if(!is_array($fields) && !$fields instanceof Traversable) {
-			throw new InvalidArgumentException('fields must be array or traversable object');
-		}
-		if(empty($fields['login'])) {
-			throw new InvalidArgumentException('field login is empty');
-		}
-        if($this->get_user_by_field('login', $fields['login'])) {
-			throw new LoginExistsException('such user already exists');
-		}
         return $this->insert($fields)
             ->execute()
             ->get_insert_id();
     }
 
+    /**
+     * @param $uid
+     */
 	public function delete_user($uid) {
         $this->update(['deleted' => 1])
             ->where(['id' => ['=', (int)$uid]])
             ->execute();
 	}
 
+    /**
+     * @param $fields
+     * @param null $uid
+     */
     public function update_fields($fields, $uid = null) {
-		if(!is_array($fields) && !$fields instanceof Traversable) {
-			throw new InvalidArgumentException('fields must be array or traversable object');
-		}
         if(!$uid) {
             $uid = $this->get_id();
         }
@@ -118,6 +118,10 @@ class UserModel extends MysqlModel {
             ->execute();
     }
 
+    /**
+     * @param null $ids
+     * @return array
+     */
     public function get_users($ids = null) {
 		if($ids && is_array($ids)) {
 			$ids = array_map('intval', $ids);
@@ -147,19 +151,22 @@ class UserModel extends MysqlModel {
 		}
     }
 
+    /**
+     * @return int
+     */
     public function get_id() {
 		if(!empty($_COOKIE['user'])) {
-			$remember_hash  = $_COOKIE['user'];
+			$remember_hash = $_COOKIE['user'];
 		} else {
             /**
              * @var $session Session
              */
-			$session    = Application::get_class('Session');
-			$remember_hash  = $session->get_var('user');
+			$session = Application::get_class('Session');
+			$remember_hash = $session->get_var('user');
 		}
 		if($remember_hash) {
 			$where = [
-				'remember_hash'    => ['=', $remember_hash]
+				'remember_hash' => ['=', $remember_hash]
 			];
 			$result = $this->select()
                 ->where($where)
@@ -171,6 +178,11 @@ class UserModel extends MysqlModel {
 		}
     }
 
+    /**
+     * @param $field
+     * @param $value
+     * @return array
+     */
     public function get_user_by_field($field, $value) {
 		if(!is_string($value) || !is_string($field)) {
 			throw new InvalidArgumentException('field name and value must be strings');

@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Class UserIdentityTest
+ *
+ * @method bool assertTrue($cond)
+ * @method bool assertFalse($cond)
+ */
 class UserIdentityTest extends PHPUnit_Framework_TestCase {
 
     /**
@@ -9,7 +15,7 @@ class UserIdentityTest extends PHPUnit_Framework_TestCase {
 
     public function setUp() {
         if(empty($this->obj)) {
-            $this->obj = Application::get_class('User')->get_identity();
+            $this->obj = Application::get_class('User')->get_identity(1);
         }
     }
 
@@ -37,6 +43,32 @@ class UserIdentityTest extends PHPUnit_Framework_TestCase {
         $session_obj = Application::get_class('Session');
         $session_obj->set_var('user', $this->obj['remember_hash']);
         $this->assertFalse($this->obj->is_guest());
-        $session_obj->unset_var('user', $this->obj['remember_hash']);
+        $session_obj->unset_var('user');
+    }
+
+    /**
+     * @covers UserIdentity::is_admin
+     */
+    public function test_is_admin() {
+        /**
+         * @var $user UserIdentity
+         */
+        $user =
+            Application::get_class('User')->
+                get_identity_by_field('credentials', User::credentials_admin);
+        $this->assertTrue($user->is_admin());
+    }
+
+    /**
+     * @covers UserIdentity::is_super_admin
+     */
+    public function test_is_super_admin() {
+        /**
+         * @var $user UserIdentity
+         */
+        $user =
+            Application::get_class('User')->
+                get_identity_by_field('credentials', User::credentials_super_admin);
+        $this->assertTrue($user->is_admin());
     }
 }

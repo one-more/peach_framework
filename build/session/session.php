@@ -34,6 +34,11 @@ class Session {
         return empty($_COOKIE['pfm_session_id']) ? 0 : $_COOKIE['pfm_session_id'];
     }
 
+    /**
+     * @param $name
+     * @param bool|false $default
+     * @return bool
+     */
     public function get_var($name, $default = false) {
         /**
          * @var $system System
@@ -51,6 +56,10 @@ class Session {
 
     }
 
+    /**
+     * @param $name
+     * @param $value
+     */
     public function set_var($name, $value) {
         /**
          * @var $system System

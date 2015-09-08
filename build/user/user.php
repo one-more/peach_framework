@@ -8,6 +8,12 @@ class User {
      */
 	private $model;
 
+    const credentials_user = 'user';
+
+    const credentials_admin = 'administrator';
+
+    const credentials_super_admin = 'super_administrator';
+
     public function __construct() {
         $this->register_autoload();
 		$this->model = Application::get_class('UserModel');
@@ -71,7 +77,7 @@ class User {
         $user_data = [
             'login' => Request::get_var('login', 'string'),
             'password' => Request::get_var('password', 'string', ''),
-            'credentials' => Request::get_var('credentials', 'string')
+            'credentials' => Request::get_var('credentials', 'string', 'user')
         ];
 
         $uid = Request::get_var('id', 'int');
@@ -93,6 +99,11 @@ class User {
         return $response;
 	}
 
+    /**
+     * @param $fields
+     * @param null $uid
+     * @throws InvalidUserDataException
+     */
     public function edit($fields, $uid = null) {
         Application::init_validator();
 
@@ -102,15 +113,13 @@ class User {
             'credentials' => 'required'
         ]);
 
-        $validator->registerRules(['unique_login' => function() use($uid) {
-            return function ($value) use($uid) {
-                /**
-                 * @var $user User
-                 */
-                $user = Application::get_class('User');
-                $old_fields = $user->get_fields($uid);
-                if($old_fields['login'] != $value) {
-                    if($user->get_user_by_field('login', $value)) {
+        $old_fields = $this->model->get_fields($uid);
+        $fields = array_merge($old_fields, $fields);
+
+        $validator->registerRules(['unique_login' => function() use($uid, $fields) {
+            return function ($value) use($uid, $fields) {
+                if($fields['login'] != $value) {
+                    if($this->model->get_user_by_field('login', $value)) {
                         return 'LOGIN_EXISTS';
                     }
                 }
@@ -138,7 +147,7 @@ class User {
         $user_data = [
             'login' => Request::get_var('login', 'string'),
             'password' => Request::get_var('password', 'string', ''),
-            'credentials' => Request::get_var('credentials', 'string')
+            'credentials' => Request::get_var('credentials', 'string', 'user')
         ];
 
         $response = new JsonResponse();
@@ -156,6 +165,11 @@ class User {
         return $response;
 	}
 
+    /**
+     * @param $fields
+     * @throws InvalidUserDataException
+     * @throws LoginExistsException
+     */
     public function add($fields) {
         Application::init_validator();
 
@@ -168,10 +182,10 @@ class User {
         $validator->registerRules(['unique_login' => function() {
             return function ($value) {
                 /**
-                 * @var $user User
+                 * @var $user UserIdentity
                  */
-                $user = Application::get_class('User');
-                if(count($user->get_user_by_field('login', $value))) {
+                $user = Application::get_class('User')->get_identity_by_field('login', $value);
+                if($user) {
                     return 'LOGIN_EXISTS';
                 }
             };
