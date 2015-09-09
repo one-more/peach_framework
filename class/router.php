@@ -4,8 +4,6 @@ class Router {
 	protected $routes = [];
 	protected $route_params = [];
 
-	public function __construct() {}
-
 	public function set_routes($routes) {
 		$this->routes = $routes;
 	}

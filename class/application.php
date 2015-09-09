@@ -4,9 +4,14 @@ class Application {
 
     private static $instances = [];
 
-    public static function get_class($name, $params = array()) {
+    /**
+     * @param $name
+     * @param array $params
+     * @return mixed
+     */
+    public static function get_class($name, array $params = []) {
         if(class_exists($name)) {
-			if(!isset(static::$instances[$name])) {
+			if(!array_key_exists($name, static::$instances)) {
 				$reflection = new ReflectionClass($name);
 				static::$instances[$name] = $reflection->newInstanceArgs($params);
 			}
@@ -21,6 +26,19 @@ class Application {
 		}
     }
 
+    /**
+     * @param $class_name
+     * @return StaticClassDecorator
+     */
+	public static function get_static_class_decorator($class_name) {
+        return new StaticClassDecorator($class_name);
+    }
+
+    /**
+     * @param $class
+     * @param $annotations
+     * @return object
+     */
     private static function handle_annotations($class, $annotations) {
         foreach($annotations as $annotation) {
             switch($annotation['name']) {
@@ -67,7 +85,7 @@ class Application {
             $tools = static::get_class('Tools');
 			$tools->check_node_processes();
 		}
-		if($port == 8080 && static::is_dev()) {
+		if($port === 8080 && static::is_dev()) {
             /**
              * @var $tools Tools
              */
@@ -79,15 +97,18 @@ class Application {
 		}
 	}
 
+    /**
+     * @param Template $template
+     */
 	private static function start_template(Template $template) {
 		$template->route();
 	}
 
 	public static function is_dev() {
-		if(!isset($_SERVER['REMOTE_ADDR']) || !isset($_SERVER['HTTP_HOST'])) {
+		if(!array_key_exists('REMOTE_ADDR', $_SERVER) || !array_key_exists('HTTP_HOST', $_SERVER)) {
 			return true;
 		} else {
-			return $_SERVER['REMOTE_ADDR'] == '127.0.0.1' ||
+			return $_SERVER['REMOTE_ADDR'] === '127.0.0.1' ||
 			strpos($_SERVER['HTTP_HOST'], 'dev') !== false;
 		}
 	}

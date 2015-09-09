@@ -33,7 +33,7 @@ class NodeProcessesController {
 		$processes = json_decode(file_get_contents($file), true);
 		return array_map(function($el) {
 			if(!is_bool($el['enabled'])) {
-				$el['enabled'] = boolval($el['enabled'] == 'true');
+				$el['enabled'] = $el['enabled'] === 'true';
 			}
 			return $el;
 		}, $processes);
@@ -63,9 +63,11 @@ class NodeProcessesController {
 
 	private function update_process($process, $params) {
 		$processes = $this->get_processes_list();
-		foreach($processes as &$el) {
-			if($el['name'] == $process) {
-				$el = array_merge($el, $params);
+		$keys = array_keys($process);
+		foreach($keys as $key) {
+            $el = $process[$key];
+			if($el['name'] === $process) {
+                $process[$key] = array_merge($el, $params);
 			}
 		}
 		$this->save_processes_list($processes);

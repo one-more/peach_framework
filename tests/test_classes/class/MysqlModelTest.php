@@ -167,12 +167,12 @@ class MysqlModelTest extends PHPUnit_Framework_TestCase {
 		 * @var $system System
 		 */
 		$system = Application::get_class('System');
-		$use_db = $system->use_db();
-		$system->use_db(false);
+		$use_db = $system->get_use_db_param();
+		$system->set_use_db_param(false);
 		try {
 			$this->assertInternalType('object', new MysqlModelTestImpl);
 		} catch(InvalidDBParamException $e) {
-			$system->use_db($use_db);
+			$system->set_use_db_param($use_db);
 			throw $e;
 		}
 	}

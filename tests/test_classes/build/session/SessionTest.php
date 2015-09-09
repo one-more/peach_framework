@@ -2,16 +2,35 @@
 require_once ROOT_PATH.DS."build".DS.'session'.DS.'session.php';
 require_once ROOT_PATH.DS."build".DS.'session'.DS.'model'.DS.'sessionmodel.php';
 
+/**
+ * Class SessionTest
+ *
+ * @method bool assertInternalType($a, $b)
+ * @method bool assertEquals($a, $b)
+ * @method bool assertNotEmpty($a)
+ * @method bool assertNull($a)
+ * @method bool assertFalse($a)
+ */
 class SessionTest extends PHPUnit_Framework_TestCase {
 	use trait_configuration;
 
+    /**
+     * @var $session_obj Session
+     */
 	private $session_obj;
 	private $session_id = 1;
+    /**
+     * @var $system_obj System
+     */
 	private $system_obj;
 	private static $use_db_original;
 
 	public static function setUpBeforeClass() {
-		static::$use_db_original = Application::get_class('System')->use_db();
+        /**
+         * @var $system System
+         */
+		$system = Application::get_class('System');
+		static::$use_db_original = $system->get_use_db_param();
 	}
 
 	public function setUp() {
@@ -21,7 +40,7 @@ class SessionTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function tearDown() {
-		if($this->system_obj->use_db() !== static::$use_db_original) {
+		if($this->system_obj->get_use_db_param() !== static::$use_db_original) {
 			$this->set_params(['use_db' => static::$use_db_original], 'configuration');
 		}
 	}
@@ -31,7 +50,7 @@ class SessionTest extends PHPUnit_Framework_TestCase {
 	 * @expectedException PHPUnit_Framework_Error
 	 */
 	public function test_start() {
-		if($this->system_obj->use_db()) {
+		if($this->system_obj->get_use_db_param()) {
 			$this->assertInternalType('int', $this->session_obj->start());
 
 			unset($_COOKIE['pfm_session_id']);
@@ -48,7 +67,7 @@ class SessionTest extends PHPUnit_Framework_TestCase {
 	 * @expectedException PHPUnit_Framework_Error
 	 */
 	public function test_start_no_db() {
-		if($this->system_obj->use_db()) {
+		if($this->system_obj->get_use_db_param()) {
 			$this->set_params(['use_db' => false], 'configuration');
 			$this->assertInternalType('string', $this->session_obj->start());
 		}
@@ -65,7 +84,7 @@ class SessionTest extends PHPUnit_Framework_TestCase {
 	 * @covers Session::set_var
 	 */
 	public function test_set_var_db() {
-		$this->assertNull($this->session_obj->set_var('test', 'test'));
+		$this->session_obj->set_var('test', 'test');
 	}
 
 	/**
@@ -80,9 +99,9 @@ class SessionTest extends PHPUnit_Framework_TestCase {
 	 * @covers Session::set_var
 	 */
 	public function test_set_var_session() {
-		if($this->system_obj->use_db()) {
+		if($this->system_obj->get_use_db_param()) {
 			$this->set_params(['use_db' => false], 'configuration');
-			$this->assertNull($this->session_obj->set_var('test', 'test'));
+			$this->session_obj->set_var('test', 'test');
 		}
 	}
 
@@ -91,7 +110,7 @@ class SessionTest extends PHPUnit_Framework_TestCase {
 	 * @depends test_set_var_session
 	 */
 	public function test_get_var_session() {
-		if($this->system_obj->use_db()) {
+		if($this->system_obj->get_use_db_param()) {
 			$this->set_params(['use_db' => false], 'configuration');
 			$val = empty($_SESSION['test']) ? '' : $_SESSION['test'];
 			$this->assertEquals($val, $this->session_obj->get_var('test'));
@@ -102,7 +121,7 @@ class SessionTest extends PHPUnit_Framework_TestCase {
 	 * @covers Session::unset_var
 	 */
 	public function test_unset_var_db() {
-		$this->assertNull($this->session_obj->unset_var('test'));
+		$this->session_obj->unset_var('test');
 		$this->assertFalse($this->session_obj->get_var('test'));
 	}
 
@@ -110,9 +129,9 @@ class SessionTest extends PHPUnit_Framework_TestCase {
 	 * @covers Session::unset_var
 	 */
 	public function test_unset_var_session() {
-		if($this->system_obj->use_db()) {
+		if($this->system_obj->get_use_db_param()) {
 			$this->set_params(['use_db' => false], 'configuration');
-			$this->assertNull($this->session_obj->unset_var('test'));
+			$this->session_obj->unset_var('test');
 			$this->assertFalse($this->session_obj->get_var('test'));
 		}
 	}
@@ -121,6 +140,6 @@ class SessionTest extends PHPUnit_Framework_TestCase {
 	 * @covers Session::set_uid
 	 */
 	public function test_set_uid() {
-		$this->assertNull($this->session_obj->set_uid(1));
+		$this->session_obj->set_uid(1);
 	}
 }

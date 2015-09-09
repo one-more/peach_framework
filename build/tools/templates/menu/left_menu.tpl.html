@@ -1,10 +1,11 @@
+{$html = $App->get_static_class_decorator('HTMLHelper')}
 <div id="left-menu">
     <ul id="tools-menu" class="nav nav-stacked nav-pills">
-        <li {if $uri == '/'} class="active"{/if}>
-        <a href="/">{$templates}</a>
-        </li>
-        <li {if $uri == '/node_processes'} class="active"{/if}>
-        <a href="/node_processes">{$node_processes}</a>
-        </li>
+        {$html->begin_tag('li', ['class' => $uri == '/' ? 'active' : null])}
+            <a href="/">{$templates}</a>
+        {$html->end_tag('li')}
+        {$html->begin_tag('li', ['class' => $uri == '/node_processes' ? 'active' : null])}
+            <a href="/node_processes">{$node_processes}</a>
+        {$html->end_tag('li')}
     </ul>
 </div>

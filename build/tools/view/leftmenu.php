@@ -1,6 +1,7 @@
 <?php
 
 class LeftMenu extends SuperView {
+
 	public function __construct() {
 		parent::__construct();
 		$this->setTemplateDir('pfmextension://tools'.DS.'templates'.DS.'menu');

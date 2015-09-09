@@ -71,10 +71,12 @@ class StaticBuilderProcess {
 				return;
 				break;
 		}
-		$cwd = getcwd();
-		chdir($this->cwd);
-		`$cmd`;
-		chdir($cwd);
+		if(!empty($cmd)) {
+			$cwd = getcwd();
+			chdir($this->cwd);
+			`$cmd`;
+			chdir($cwd);
+		}
 	}
 
 	public function kill() {

@@ -16,8 +16,8 @@ abstract class MysqlModel {
 		 * @var $system System
 		 */
 		$system = Application::get_class('System');
-        if(!$system->use_db()) {
-            throw new InvalidDBParamException("could not create model: use db param is false");
+        if(!$system->get_use_db_param()) {
+            throw new InvalidDBParamException('could not create model: use db param is false');
         }
 		$configuration = $this->get_configuration();
 		$db_type = $configuration['db_type'];

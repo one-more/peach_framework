@@ -3,21 +3,17 @@
 trait trait_extension {
 	use trait_configuration;
 
-    public function __get($name) {
-        switch($name) {
-            case 'path':
-                if(empty($this->path)) {
-                    $extension  = strtolower(__CLASS__).'.tar.gz';
-                    $this->path = 'phar://'.ROOT_PATH.DS.'extensions'.DS.$extension;
-                }
-                break;
-            case 'lang_path':
-                if(empty($this->lang_path)) {
-                    $this->lang_path = $this->path.DS.'lang'.DS.CURRENT_LANG;
-                }
-                break;
-        }
-        return $this->$name;
+    private $path;
+
+    private $lang_path;
+
+    public function get_path() {
+        $extension  = strtolower(__CLASS__).'.tar.gz';
+        return 'phar://'.ROOT_PATH.DS.'extensions'.DS.$extension;
+    }
+
+    public function get_lang_path() {
+        return $this->get_path().DS.'lang'.DS.CURRENT_LANG;
     }
 
     public static function load_extension_class($name, $dir = 'class') {

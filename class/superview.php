@@ -10,6 +10,7 @@ abstract class SuperView extends Smarty {
 
 	public function getTemplate($template = null, $cache_id = null, $compiled_id = null, $parent = null) {
 		$this->load_lang_vars($this->get_lang_file());
+        $this->assign('App', new StaticClassDecorator('Application'));
 		return parent::getTemplate($template, $cache_id, $compiled_id, $parent);
 	}
 

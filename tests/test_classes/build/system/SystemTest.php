@@ -1,9 +1,22 @@
 <?php
 require_once ROOT_PATH.DS."build".DS.'system'.DS.'system.php';
 
+/**
+ * Class SystemTest
+ *
+ * @method bool assertInternalType($a, $b)
+ * @method bool assertEquals($a, $b)
+ * @method bool assertNotEmpty($a)
+ * @method bool assertNull($a)
+ * @method bool assertFalse($a)
+ * @method bool assertTrue($a)
+ */
 class SystemTest extends PHPUnit_Framework_TestCase {
 	use trait_configuration;
 
+    /**
+     * @var $system_obj System
+     */
 	private $system_obj;
 	private $configuration;
 	private $session_id = 1;
@@ -20,7 +33,7 @@ class SystemTest extends PHPUnit_Framework_TestCase {
 	 */
 	public function test_initialize() {
 		$_COOKIE['pfm_session_id'] = $this->session_id;
-		$this->assertNull($this->system_obj->initialize());
+		$this->system_obj->initialize();
 	}
 
 	/**
@@ -38,19 +51,19 @@ class SystemTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers System::use_db
+	 * @covers System::get_use_db_param
 	 */
 	public function test_use_db() {
-		$use_db_param = $this->system_obj->use_db();
+		$use_db_param = $this->system_obj->get_use_db_param();
 
 		$this->set_params(['use_db' => true], 'configuration');
-		$this->assertTrue($this->system_obj->use_db());
+		$this->assertTrue($this->system_obj->get_use_db_param());
 
 		$this->set_params(['use_db' => false], 'configuration');
-		$this->assertFalse($this->system_obj->use_db());
+		$this->assertFalse($this->system_obj->get_use_db_param());
 
 		$this->set_params(['use_db' => $use_db_param], 'configuration');
-		$this->assertEquals($this->configuration['use_db'], $this->system_obj->use_db());
+		$this->assertEquals($this->configuration['use_db'], $this->system_obj->get_use_db_param());
 	}
 
 	/**

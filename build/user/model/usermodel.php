@@ -62,7 +62,7 @@ class UserModel extends MysqlModel {
     }
 
     /**
-     * @param null $uid
+     * @param null|int $uid
      * @return array
      */
     public function get_fields($uid = null) {
@@ -107,7 +107,7 @@ class UserModel extends MysqlModel {
 
     /**
      * @param $fields
-     * @param null $uid
+     * @param null|int $uid
      */
     public function update_fields($fields, $uid = null) {
         if(!$uid) {
@@ -119,7 +119,7 @@ class UserModel extends MysqlModel {
     }
 
     /**
-     * @param null $ids
+     * @param null|array $ids
      * @return array
      */
     public function get_users($ids = null) {
@@ -172,7 +172,7 @@ class UserModel extends MysqlModel {
                 ->where($where)
                 ->execute()
                 ->get_result();
-			return !empty($result['id']) ? $result['id'] : 0;
+			return (is_array($result) && !empty($result['id'])) ? $result['id'] : 0;
 		} else {
 			return 0;
 		}
@@ -182,6 +182,7 @@ class UserModel extends MysqlModel {
      * @param $field
      * @param $value
      * @return array
+     * @throws InvalidArgumentException
      */
     public function get_user_by_field($field, $value) {
 		if(!is_string($value) || !is_string($field)) {

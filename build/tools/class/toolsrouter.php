@@ -1,7 +1,7 @@
 <?php
 
 class ToolsRouter extends Router {
-	protected $routes;
+
 	private $positions = [
 		'main_content' => null,
 		'left_block' => null,

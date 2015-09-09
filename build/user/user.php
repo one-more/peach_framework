@@ -58,10 +58,14 @@ class User {
         return function() use($fields) {
             return function($value, $undef, &$output_arr) use($fields) {
                 if(trim($value)) {
-                    $output_arr = $this->crypt_password($fields['login'], $value);
+                    /**
+                     * @var $user_auth UserAuth
+                     */
+                    $user_auth = Application::get_class('User')->get_auth();
+                    $output_arr = $user_auth->crypt_password($fields['login'], $value);
                     return;
                 }
-                return;
+                return null;
             };
         };
     }
@@ -87,7 +91,7 @@ class User {
 
         $response = new JsonResponse();
 
-        $lang_vars = new LanguageFile('user.json', $this->lang_path);
+        $lang_vars = new LanguageFile('user.json', $this->get_path());
         try {
             $this->edit($user_data, $uid);
             $response->status = 'success';
@@ -118,11 +122,10 @@ class User {
 
         $validator->registerRules(['unique_login' => function() use($uid, $fields) {
             return function ($value) use($uid, $fields) {
-                if($fields['login'] != $value) {
-                    if($this->model->get_user_by_field('login', $value)) {
+                if($fields['login'] !== $value && $this->model->get_user_by_field('login', $value)) {
                         return 'LOGIN_EXISTS';
-                    }
                 }
+                return null;
             };
         }]);
 
@@ -131,7 +134,7 @@ class User {
         if($validator->validate($fields)) {
             $this->model->update_fields($fields, $uid);
         } else {
-            $lang_vars = new LanguageFile('user.json', $this->lang_path);
+            $lang_vars = new LanguageFile('user.json', $this->get_lang_path());
             throw new InvalidUserDataException((array)$validator->getErrors($lang_vars['errors']));
         }
     }
@@ -152,7 +155,7 @@ class User {
 
         $response = new JsonResponse();
 
-        $lang_vars = new LanguageFile('user.json', $this->lang_path);
+        $lang_vars = new LanguageFile('user.json', $this->get_lang_path());
         try {
             $this->add($user_data);
             $response->status = 'success';
@@ -168,7 +171,6 @@ class User {
     /**
      * @param $fields
      * @throws InvalidUserDataException
-     * @throws LoginExistsException
      */
     public function add($fields) {
         Application::init_validator();
@@ -188,6 +190,7 @@ class User {
                 if($user) {
                     return 'LOGIN_EXISTS';
                 }
+                return null;
             };
         }]);
 
@@ -195,7 +198,7 @@ class User {
         if($validator->validate($fields)) {
             $this->model->register($fields);
         } else {
-            $lang_vars = new LanguageFile('user.json', $this->lang_path);
+            $lang_vars = new LanguageFile('user.json', $this->get_lang_path());
             throw new InvalidUserDataException((array)$validator->getErrors($lang_vars['errors']));
         }
     }

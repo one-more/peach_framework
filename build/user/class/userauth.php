@@ -19,7 +19,7 @@ class UserAuth {
         return $this->model->login($login, $password, $remember);
     }
 
-    private function crypt_password($login, $password) {
+    public function crypt_password($login, $password) {
         return crypt(trim($password), md5($password).md5($login));
     }
 

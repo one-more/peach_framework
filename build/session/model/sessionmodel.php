@@ -21,8 +21,8 @@ class SessionModel extends MysqlModel {
         /**
          * @var $session Session
          */
-        $session    = Application::get_class('Session');
-        $vars   = $this->select(['vars'])
+        $session = Application::get_class('Session');
+        $vars = $this->select(['vars'])
             ->where(['id' => ['=', $session->get_id()]])
             ->execute()
             ->get_result();
@@ -30,7 +30,7 @@ class SessionModel extends MysqlModel {
     }
 
     public function get_var($name, $default = false) {
-        $vars   = $this->get_vars();
+        $vars = $this->get_vars();
         return empty($vars[$name]) ? $default : $vars[$name];
     }
 
@@ -38,9 +38,9 @@ class SessionModel extends MysqlModel {
         /**
          * @var $session Session
          */
-        $session    = Application::get_class('Session');
-        $vars   = $this->get_vars();
-        $vars[$name]    = $value;
+        $session = Application::get_class('Session');
+        $vars = $this->get_vars();
+        $vars[$name] = $value;
         $this->update(['vars' => json_encode($vars)])
             ->where(['id' => ['=', $session->get_id()]])
             ->execute();
@@ -50,8 +50,8 @@ class SessionModel extends MysqlModel {
         /**
          * @var $session Session
          */
-        $session    = Application::get_class('Session');
-        $vars   = $this->get_vars();
+        $session = Application::get_class('Session');
+        $vars = $this->get_vars();
         if(isset($vars[$name])) {
             unset($vars[$name]);
             $this->update(['vars' => json_encode($vars)])
@@ -64,7 +64,7 @@ class SessionModel extends MysqlModel {
         /**
          * @var $session Session
          */
-        $session    = Application::get_class('Session');
+        $session = Application::get_class('Session');
         $this->update(['uid' => (int)$uid])
             ->where(['id' => ['=', $session->get_id()]])
             ->execute();
@@ -74,7 +74,7 @@ class SessionModel extends MysqlModel {
         /**
          * @var $session Session
          */
-		$session    = Application::get_class('Session');
+		$session = Application::get_class('Session');
 		return $this->select(['uid'])
             ->where(['id' => ['=', $session->get_id()]])
             ->execute()

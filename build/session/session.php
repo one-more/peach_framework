@@ -12,7 +12,7 @@ class Session {
          * @var $system System
          */
         $system = Application::get_class('System');
-        if($system->use_db()) {
+        if($system->get_use_db_param()) {
             if(empty($_COOKIE['pfm_session_id'])) {
                 /**
                  * @var $model SessionModel
@@ -44,7 +44,7 @@ class Session {
          * @var $system System
          */
         $system = Application::get_class('System');
-        if($system->use_db()) {
+        if($system->get_use_db_param()) {
             /**
              * @var $model SessionModel
              */
@@ -65,7 +65,7 @@ class Session {
          * @var $system System
          */
         $system = Application::get_class('System');
-        if($system->use_db()) {
+        if($system->get_use_db_param()) {
             /**
              * @var $model SessionModel
              */
@@ -81,7 +81,7 @@ class Session {
          * @var $system System
          */
         $system = Application::get_class('System');
-        if($system->use_db()) {
+        if($system->get_use_db_param()) {
             /**
              * @var $model SessionModel
              */
@@ -97,7 +97,7 @@ class Session {
          * @var $system System
          */
         $system = Application::get_class('System');
-        if($system->use_db()) {
+        if($system->get_use_db_param()) {
             /**
              * @var $model SessionModel
              */
