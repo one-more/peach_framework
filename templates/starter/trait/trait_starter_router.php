@@ -11,17 +11,17 @@ trait trait_starter_router {
          */
 		$user = Application::get_class('User')->get_identity();
         $callback = $this->get_callback();
-        if(strtolower(__CLASS__) == 'adminpanelrouter' && !$user->is_admin()) {
+        if(strtolower(__CLASS__) === 'adminpanelrouter' && !$user->is_admin()) {
             $method = $callback[1];
             if($method !== 'login') {
-                header('Refresh: 0; url=/admin_panel/login');
+                Response::redirect('/admin_panel/login');
                 $callback = false;
             }
 		}
 		if($callback !== false) {
 			$check = true;
-			if(count($callback) == 3) {
-				$check = (array_pop($callback) == 'check');
+			if(count($callback) === 3) {
+				$check = (array_pop($callback) === 'check');
 			}
 			if($check && !Request::is_token_valid()) {
 			    throw new InvalidTokenException('invalid token');
@@ -32,7 +32,10 @@ trait trait_starter_router {
 
 	protected function show_result(AjaxResponse $response) {
 		if(!Request::is_ajax()) {
-			$template   = Application::get_class('Starter');
+            /**
+             * @var $template Template
+             */
+			$template = Application::get_class('Starter');
 			$templator = new Smarty();
 			$static_path = DS.'starter';
 			$static_paths = [
@@ -41,12 +44,12 @@ trait trait_starter_router {
 				'js_path' => $static_path.DS.'js'
 			];
 			$templator->assign($static_paths);
-            if(strtolower(__CLASS__) == 'adminpanelrouter') {
-                $templator->setTemplateDir($template->path.DS.'templates'.DS.'admin_panel');
+            if(strtolower(__CLASS__) === 'adminpanelrouter') {
+                $templator->setTemplateDir($template->get_path().DS.'templates'.DS.'admin_panel');
             } else {
-                $templator->setTemplateDir($template->path.DS.'templates'.DS.'site');
+                $templator->setTemplateDir($template->get_path().DS.'templates'.DS.'site');
             }
-			$templator->setCompileDir($template->path.DS.'templates_c');
+			$templator->setCompileDir($template->get_path().DS.'templates_c');
 			$templator->assign($response['blocks']);
 			echo $templator->getTemplate('index'.DS.'index.tpl.html');
 		} else {

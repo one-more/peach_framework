@@ -4,19 +4,22 @@ namespace AdminPanel;
 class UsersTableView extends \TemplateView {
 	public function __construct() {
 		parent::__construct();
-		$this->setTemplateDir($this->template->path.DS.'templates'.DS.'admin_panel'.DS.'users_table');
+
+        $path = $this->template->get_path();
+		$this->setTemplateDir($path.DS.'templates'.DS.'admin_panel'.DS.'users_table');
 	}
 
 	public function render() {
         /**
-         * @var $user \User
+         * @var $ext \User
          */
-        $user = \Application::get_class('User');
-		$users = $user->get_users();
+        $ext = \Application::get_class('User');
+		$user = $ext->get_identity();
+		$users = $ext->get_list();
 		$this->assign('users', $users);
-		$this->assign('my_id', $user->get_id());
-		$is_super_admin = $user->get_field('credentials') == 'super_administrator';
+		$this->assign('my_id', $user->id);
+		$is_super_admin = $user->is_super_admin();
 		$this->assign('is_super_admin', $is_super_admin);
-		return $this->getTemplate('users_table.tpl.html');
+		return $this->get_template('users_table.tpl.html');
 	}
 }

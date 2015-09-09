@@ -1,6 +1,6 @@
 (function() {
     'use strict';
-    window.NodeProcessesTable = Backbone.View.extend({
+    window.NodeProcessesTableView = Backbone.View.extend({
         el: '#node-processes-table',
 
         initialize: function() {

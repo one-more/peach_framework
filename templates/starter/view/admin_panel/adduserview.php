@@ -5,10 +5,12 @@ class AddUserView extends \TemplateView {
 
 	public function __construct() {
 		parent::__construct();
-		$this->setTemplateDir($this->template->path.DS.'templates'.DS.'admin_panel'.DS.'add_user');
+
+        $path = $this->template->get_path();
+		$this->setTemplateDir($path.DS.'templates'.DS.'admin_panel'.DS.'add_user');
 	}
 
 	public function render() {
-		return $this->getTemplate('add_user.tpl.html');
+		return $this->get_template('add_user.tpl.html');
 	}
 }

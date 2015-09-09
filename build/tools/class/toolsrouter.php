@@ -2,11 +2,7 @@
 
 class ToolsRouter extends Router {
 
-	private $positions = [
-		'main_content' => null,
-		'left_block' => null,
-		'top_menu' => null
-	];
+    private $response;
 
 	public function __construct() {
 		$this->routes = [
@@ -15,26 +11,33 @@ class ToolsRouter extends Router {
 			'/node_processes/enable' => ['NodeProcessesController', 'enable_process'],
 			'/node_processes/disable' => ['NodeProcessesController', 'disable_process']
 		];
+
+        $this->response = new JsonResponse();
 	}
 
 	public function index() {
-		$view = Application::get_class('TemplatesTable');
-		$this->positions['main_content'] = $view->render();
-		$this->show_result();
+		/**
+		 * $var $view TemplatesTableView
+		 */
+		$view = Application::get_class('TemplatesTableView');
+		$this->response['blocks']['main'] = $view->render();
 	}
 
 	public function node_processes() {
-		$view = Application::get_class('NodeProcessesTable');
-		$this->positions['main_content'] = $view->render();
-		$this->show_result();
+        /**
+         * @var $view NodeProcessesTableView
+         */
+		$view = Application::get_class('NodeProcessesTableView');
+        $this->response['blocks']['main'] = $view->render();
 	}
+
+    public function __destruct() {
+        $this->show_result();
+    }
 
 	private function show_result() {
 		if(Request::is_ajax()) {
-			$this->positions = array_filter($this->positions, function($el) {
-				return $el !== null;
-			});
-			echo json_encode($this->positions);
+			echo $this->response;
 		} else {
 			$static_path = DS.'tools';
 			$paths = [
@@ -42,15 +45,26 @@ class ToolsRouter extends Router {
 				'js_path' => $static_path.DS.'js',
 				'images_path' => $static_path.DS.'images'
 			];
-			$left_menu_view = Application::get_class('LeftMenu');
-			$this->positions['left_block'] = $left_menu_view->render();
-			$top_menu_view = Application::get_class('TopMenu');
-			$this->positions['top_menu'] = $top_menu_view->render();
-			$smarty = new Smarty();
+
+            /**
+             * @var $view View
+             */
+			$view = Application::get_class('LeftMenuView');
+            $this->response['blocks']['left'] = $view->render();
+
+            $view = Application::get_class('TopMenuView');
+            $this->response['blocks']['top'] = $view->render();
+
+            $smarty = new Smarty();
 			$smarty->assign($paths);
-			$smarty->assign($this->positions);
-			$smarty->setTemplateDir('pfmextension://tools'.DS.'templates'.DS.'index');
-			$smarty->setCompileDir('pfmextension://tools'.DS.'templates_c');
+			$smarty->assign($this->response['blocks']);
+
+            /**
+             * @var $ext Tools
+             */
+            $ext = Application::get_class('Tools');
+			$smarty->setTemplateDir($ext->get_path().DS.'templates'.DS.'index');
+			$smarty->setCompileDir($ext->get_path().DS.'templates_c');
 			echo $smarty->getTemplate('index.tpl.html');
 		}
 	}

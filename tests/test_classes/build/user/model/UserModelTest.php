@@ -26,8 +26,11 @@ class UserModelTest extends \PHPUnit_Framework_TestCase {
 	public function test_login() {
 		$this->assertFalse($this->model->login(null,null,null));
 
+        /**
+         * @var $user UserIdentity
+         */
 		$user = Application::get_class('User')->get_identity(1);
-        $this->assertTrue($this->model->login($user['login'], $user['password']));
+        $this->assertTrue($this->model->login($user->login, $user->password));
 	}
 
 	/**
@@ -35,15 +38,18 @@ class UserModelTest extends \PHPUnit_Framework_TestCase {
 	 * @expectedException PHPUnit_Framework_Error_Warning
 	 */
 	public function test_log_out() {
-		$user = Application::get_class('User')->get_identity(1);
-        $_COOKIE['user'] = $user['remember_hash'];
+		/**
+         * @var $user UserIdentity
+         */
+        $user = Application::get_class('User')->get_identity(1);
+        $_COOKIE['user'] = $user->remember_hash;
         $this->model->log_out();
 
         /**
          * @var $session Session
          */
         $session = Application::get_class('Session');
-        $session->set_var('user', $user['remember_hash']);
+        $session->set_var('user', $user->remember_hash);
         $this->model->log_out();
         $this->assertNull($session->get_var('user', null));
 	}
@@ -54,10 +60,13 @@ class UserModelTest extends \PHPUnit_Framework_TestCase {
     public function test_get_fields() {
         $this->assertCount(0, $this->model->get_fields());
 
+        /**
+         * @var $user UserIdentity
+         */
         $user = Application::get_class('User')->get_identity(1);
-        $this->assertGreaterThan(0, count($this->model->get_fields($user['id'])));
+        $this->assertGreaterThan(0, count($this->model->get_fields($user->id)));
 
-        $_COOKIE['user'] = $user['remember_hash'];
+        $_COOKIE['user'] = $user->remember_hash;
         $this->assertGreaterThan(0, count($this->model->get_fields()));
     }
 
@@ -75,11 +84,14 @@ class UserModelTest extends \PHPUnit_Framework_TestCase {
      * @covers UserModel::delete_user
      */
     public function test_delete_user() {
+        /**
+         * @var $user UserIdentity
+         */
         $user = Application::get_class('User')
             ->get_identity_by_field('credentials', User::credentials_user);
 
-        $this->model->delete_user($user['id']);
+        $this->model->delete_user($user->id);
 
-        $this->assertCount(0, $this->model->get_fields($user['id']));
+        $this->assertCount(0, $this->model->get_fields($user->id));
     }
 }

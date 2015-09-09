@@ -8,8 +8,8 @@ trait trait_extension {
     private $lang_path;
 
     public function get_path() {
-        $extension  = strtolower(__CLASS__).'.tar.gz';
-        return 'phar://'.ROOT_PATH.DS.'extensions'.DS.$extension;
+        $extension  = strtolower(__CLASS__);
+        return "pfmextension://{$extension}";
     }
 
     public function get_lang_path() {

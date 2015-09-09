@@ -1,13 +1,7 @@
 (function() {
     'use strict';
-    App.router = Backbone.Router.extend({
-        routes: {
-            'admin_panel/edit_user/:id': 'edit_user',
-            'admin_panel': 'admin_panel',
-            'admin_panel/login': 'login',
-            'admin_panel/add_user': 'add_user',
-            '': 'index'
-        },
+
+    window.BaseRouter = {
 
         initialize: function () {
             this.init_views();
@@ -34,57 +28,6 @@
                 fragment : fragment,
                 params : params
             };
-        },
-
-        init_views: function () {
-            if(location.pathname.indexOf('admin_panel') != -1) {
-                var global_views = [
-                    new LeftMenuView,
-                    new NavbarView
-                ];
-            }
-            switch(this.current().route) {
-                case 'edit_user':
-                    this.page_views = [
-                        new EditUserView
-                    ].concat(global_views);
-                    break;
-                case 'add_user':
-                    this.page_views = [
-                        new AddUserView
-                    ].concat(global_views);
-                    break;
-                case 'admin_panel':
-                    this.page_views = global_views;
-                    break;
-                case 'login':
-                    this.page_views = [
-                        new LoginFormView
-                    ];
-                    break;
-            }
-        },
-
-        global_views: [],
-
-        page_views: [],
-
-        index: function() {},
-
-        edit_user: function() {
-            this.load_positions();
-        },
-
-        add_user: function() {
-            this.load_positions();
-        },
-
-        admin_panel: function () {
-            this.load_positions();
-        },
-
-        login: function () {
-            this.load_positions();
         },
 
         load_positions: function() {
@@ -114,8 +57,5 @@
         reload: function() {
             this.load_positions();
         }
-    });
-
-    App.router = new App.router;
-    Backbone.history.start({pushState: true, silent: true});
+    };
 })();

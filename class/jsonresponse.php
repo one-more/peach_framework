@@ -8,6 +8,10 @@ class JsonResponse implements AjaxResponse {
     public $status;
     public $message;
 
+    public function set_attribute($name, $value) {
+        $this->{$name} = $value;
+    }
+
     public function offsetSet($offset, $value) {
         $this->$offset = $value;
     }

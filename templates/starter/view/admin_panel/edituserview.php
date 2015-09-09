@@ -5,16 +5,18 @@ class EditUserView extends \TemplateView {
 
 	public function __construct($id) {
 		parent::__construct();
-		$this->setTemplateDir($this->template->path.DS.'templates'.DS.'admin_panel'.DS.'edit_user');
+
+		$path = $this->template->get_path();
+		$this->setTemplateDir($path.DS.'templates'.DS.'admin_panel'.DS.'edit_user');
+
         /**
-         * @var $user \User
+         * @var $user \UserIdentity
          */
-		$user = \Application::get_class('User');
-        $fields = $user->get_fields($id);
-		$this->assign('user', $fields);
+		$user = \Application::get_class('User')->get_identity();
+		$this->assign('user', $user);
 	}
 
 	public function render() {
-		return $this->getTemplate('edit_user.tpl.html');
+		return $this->get_template('edit_user.tpl.html');
 	}
 }

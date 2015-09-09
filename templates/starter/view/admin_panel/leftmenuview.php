@@ -4,11 +4,13 @@ namespace AdminPanel;
 class LeftMenuView extends \TemplateView {
 	public function __construct() {
 		parent::__construct();
-		$this->setTemplateDir($this->template->path.DS.'templates'.DS.'admin_panel'.DS.'left_menu');
+
+		$path = $this->template->get_path();
+		$this->setTemplateDir($path.DS.'templates'.DS.'admin_panel'.DS.'left_menu');
 	}
 
 	public function render() {
 		$this->assign('url', \Request::uri());
-		return $this->getTemplate('left_menu.tpl.html');
+		return $this->get_template('left_menu.tpl.html');
 	}
 }

@@ -1,13 +1,13 @@
-//= partials/core/jquery-2.1.3.js
-//= partials/core/bootstrap/bootstrap.js
-//= partials/core/underscore.js
-//= partials/core/backbone.js
-//= partials/core/modernizr.custom.js
-//= partials/core/classie.js
+//= ../../vendor/jquery-2.1.3.js
+//= ../../vendor/bootstrap/bootstrap.js
+//= ../../vendor/underscore.js
+//= ../../vendor/backbone.js
+//= ../../vendor/modernizr.custom.js
+//= ../../vendor/classie.js
 
 //= partials/models/global/language_model.js
 
-//= partials/modules/factory.js
+//= ../../vendor/modules/factory.js
 
 //= partials/views/admin_panel/login_form/login_form.js
 //= partials/views/admin_panel/edit_user/edit_user.js
@@ -18,8 +18,9 @@
 //= partials/views/global/notification/notificationFx.js
 //= partials/views/global/notification/notification.js
 
-//= partials/app/crypto/md5.js
-//= partials/app/app.js
-//= partials/app/router.js
+//= ../../vendor/crypto/md5.js
+//= ../../vendor/app/app.js
+//= ../../vendor/app/base_router.js
+//= partials/routers/admin_panel_router.js
 
-//= partials/classes/cookie.js
+//= ../../vendor/classes/cookie.js

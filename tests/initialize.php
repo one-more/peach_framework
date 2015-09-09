@@ -29,6 +29,7 @@ class TestsEnv {
 	private static function init_test_tables() {
 		$configuration_file = ROOT_PATH.DS.'resource'.DS.'configuration.json';
 		$params = json_decode(file_get_contents($configuration_file), true)['db_params'];
+
 		$user = $params['login'];
 		$pass = $params['password'];
 		$model = new PDO("mysql:host=localhost;dbname={$params['name']}",$user, $pass);

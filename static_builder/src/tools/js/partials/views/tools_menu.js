@@ -1,6 +1,7 @@
 (function() {
     'use strict';
-    window.ToolsMenu = Backbone.View.extend({
+
+    window.ToolsMenuView = Backbone.View.extend({
         el: '#tools-menu',
 
         initialize: function() {

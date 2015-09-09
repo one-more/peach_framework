@@ -107,19 +107,19 @@ class UserTest extends PHPUnit_Framework_TestCase {
          * @var $user UserIdentity
          */
 		$user = Application::get_class('User')->get_identity(1);
-        $old_login = $user['password'];
+        $old_login = $user->password;
         $new_login = 'test';
 
         Application::get_class('User')->edit([
             'login' => $new_login
-        ], $user['id']);
+        ], $user->id);
 
         $user = Application::get_class('User')->get_identity(1);
-        $this->assertEquals($new_login, $user['login']);
+        $this->assertEquals($new_login, $user->login);
 
         Application::get_class('User')->edit([
             'login' => $old_login
-        ], $user['id']);
+        ], $user->id);
 	}
 
     /**
@@ -147,12 +147,12 @@ class UserTest extends PHPUnit_Framework_TestCase {
          */
         $user = Application::get_class('User')->get_identity_by_field('id', 'MAX(id)');
         $new_login = $_REQUEST['login'];
-        $_REQUEST['id'] = $user['id'];
+        $_REQUEST['id'] = $user->id;
 
         Application::get_class('User')->edit_by_ajax();
 
-        $user = Application::get_class('User')->get_identity($user['id']);
-        $this->assertEquals($user['login'], $new_login);
+        $user = Application::get_class('User')->get_identity($user->id);
+        $this->assertEquals($user->login, $new_login);
     }
 
     /**
@@ -167,7 +167,7 @@ class UserTest extends PHPUnit_Framework_TestCase {
          * @var $user UserIdentity
          */
         $user = Application::get_class('User')->get_identity_by_field('id', 'MAX(id)');
-        $_REQUEST['id'] = $user['id'];
+        $_REQUEST['id'] = $user->id;
 
         Application::get_class('User')->edit_by_ajax();
     }
@@ -186,7 +186,7 @@ class UserTest extends PHPUnit_Framework_TestCase {
          * @var $user UserIdentity
          */
         $user = Application::get_class('User')->get_identity_by_field('id', 'MAX(id)');
-        $_REQUEST['id'] = $user['id'];
+        $_REQUEST['id'] = $user->id;
 
         Application::get_class('User')->edit_by_ajax();
     }
@@ -201,7 +201,7 @@ class UserTest extends PHPUnit_Framework_TestCase {
         $user = Application::get_class('User')->get_identity_by_field('id', 'MAX(id)');
         $this->assertTrue($user instanceof UserIdentity);
 
-        Application::get_class('User')->delete($user['id']);
+        Application::get_class('User')->delete($user->id);
 
         $user = Application::get_class('User')->get_identity_by_field('id', 'MAX(id)');
         $this->assertNull($user);

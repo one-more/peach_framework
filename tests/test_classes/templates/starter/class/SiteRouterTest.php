@@ -61,7 +61,7 @@ class SiteRouterTest extends PHPUnit_Framework_TestCase {
          * @var $user UserIdentity
          */
         $user = Application::get_class('User')->get_identity(1);
-        $_COOKIE['user'] = $user['remember_hash'];
+        $_COOKIE['user'] = $user->remember_hash;
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHTTPRequest';
 
@@ -88,7 +88,7 @@ class SiteRouterTest extends PHPUnit_Framework_TestCase {
          * @var $user UserIdentity
          */
         $user = Application::get_class('User')->get_identity(1);
-        $_COOKIE['user'] = $user['remember_hash'];
+        $_COOKIE['user'] = $user->remember_hash;
 
         $this->router->edit_user();
         $this->assertNull(error_get_last());
@@ -102,7 +102,7 @@ class SiteRouterTest extends PHPUnit_Framework_TestCase {
          * @var $user UserIdentity
          */
         $user = Application::get_class('User')->get_identity();
-        $_COOKIE['user'] = $user['remember_hash'];
+        $_COOKIE['user'] = $user->remember_hash;
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHTTPRequest';
 
@@ -119,7 +119,7 @@ class SiteRouterTest extends PHPUnit_Framework_TestCase {
          * @var $user UserIdentity
          */
         $user = Application::get_class('User')->get_identity();
-        $_COOKIE['user'] = $user['remember_hash'];
+        $_COOKIE['user'] = $user->remember_hash;
 
         $this->router->add_user();
         $this->assertNull(error_get_last());

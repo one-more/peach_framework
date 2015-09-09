@@ -11,8 +11,11 @@ class LanguageFile extends ArrayAccessObj {
              * @var $system System
              */
             $system = Application::get_class('System');
+            /**
+             * @var $template Template
+             */
             $template = Application::get_class($system->get_template());
-            $this->base_path = $template->path.DS.'lang'.DS.CURRENT_LANG;
+            $this->base_path = $template->get_lang_path();
         }
 
         $file_path = $this->base_path.DS.$file;
@@ -23,5 +26,9 @@ class LanguageFile extends ArrayAccessObj {
 
     public function get_data() {
         return $this->values;
+    }
+
+    public function __toString() {
+        return json_encode($this->values);
     }
 }

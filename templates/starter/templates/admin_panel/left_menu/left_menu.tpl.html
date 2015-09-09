@@ -1,5 +1,5 @@
 <ul id="left-menu" class="nav nav-pills nav-stacked">
-    <li {if $url == '/admin_panel'}class="active"{/if}>
+    {$HTML->begin_tag('li', ['class' => $url == '/admin_panel' ? 'active' : null])}
         <a href="/admin_panel">{$lang_vars.users}</a>
-    </li>
+    {$HTML->end_tag('li)}
 </ul>

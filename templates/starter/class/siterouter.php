@@ -25,8 +25,17 @@ class SiteRouter extends Router {
 		$password = Request::get_var('password', 'string');
 		$remember = Request::get_var('remember', 'string');
 
-		$this->response->user = Application::get_class('User')->get_auth()->login($login, $password, (bool)$remember);
-        $this->response->status = !empty($this->response->user) ? 'success' : 'error';
+        /**
+         * @var $ext User
+         */
+		$ext = Application::get_class('User');
+        if($ext->get_auth()->login($login, $password, (bool)$remember)) {
+            $user = $ext->get_identity_by_field('login', $login);
+            $this->response->set_attribute('user', $user);
+            $this->response->set_attribute('status', 'success');
+        } else {
+            $this->response->set_attribute('status', 'error');
+        }
 	}
 
 	public function language_model() {
@@ -36,7 +45,7 @@ class SiteRouter extends Router {
 
 	public function logout() {
         Application::get_class('User')->get_auth()->log_out();
-        $this->response->status = 'success';
+        $this->response->set_attribute('status', 'success');
 	}
 
 	public function add_user() {
@@ -48,7 +57,7 @@ class SiteRouter extends Router {
     }
 
 	public function __destruct() {
-        if($this->response_type == 'AjaxResponse') {
+        if($this->response_type === 'AjaxResponse') {
             $this->show_result($this->response);
         } else {
             echo $this->response;

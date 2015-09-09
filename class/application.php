@@ -27,14 +27,6 @@ class Application {
     }
 
     /**
-     * @param $class_name
-     * @return StaticClassDecorator
-     */
-	public static function get_static_class_decorator($class_name) {
-        return new StaticClassDecorator($class_name);
-    }
-
-    /**
      * @param $class
      * @param $annotations
      * @return object
@@ -85,15 +77,15 @@ class Application {
             $tools = static::get_class('Tools');
 			$tools->check_node_processes();
 		}
-		if($port === 8080 && static::is_dev()) {
+		if($port == 8080 && self::is_dev()) {
             /**
              * @var $tools Tools
              */
-            $tools = static::get_class('Tools');
-			$tools->route();
+            $tools = self::get_class('Tools');
+            $tools->route();
 		} else {
-			$template = static::get_class($system->get_template());
-			static::start_template($template);
+			$template = self::get_class($system->get_template());
+			self::start_template($template);
 		}
 	}
 
