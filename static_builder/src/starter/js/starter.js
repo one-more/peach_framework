@@ -7,14 +7,14 @@
 
 //= partials/models/global/language_model.js
 
-//= ../../vendor/modules/factory.js
-
-//= partials/views/global/notification/notificationFx.js
-//= partials/views/global/notification/notification.js
+//= ../../vendor/classes/factory.js
+//= ../../vendor/classes/cookie.js
 
 //= ../../vendor/crypto/md5.js
 //= ../../vendor/app/app.js
 //= ../../vendor/app/base_router.js
-//= partials/routers/site_router.js
 
-//= ../../vendor/classes/cookie.js
+//= partials/views/global/notification/notificationFx.js
+//= partials/views/global/notification/notification.js
+
+//= partials/routers/site_router.js

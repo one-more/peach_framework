@@ -8,14 +8,5 @@
         {$HTML->begin_tag('li', ['class' => $class])}
             <a href="/">{$lang_vars.templates}</a>
         {$HTML->end_tag('li')}
-
-        {if $uri == '/node_processes'}
-            {$class = 'active'}
-        {else}
-            {$class = null}
-        {/if}
-        {$HTML->begin_tag('li', ['class' => $class])}
-            <a href="/node_processes">{$lang_vars.node_processes}</a>
-        {$HTML->end_tag('li')}
     </ul>
 </div>

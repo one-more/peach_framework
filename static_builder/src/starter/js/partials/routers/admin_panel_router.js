@@ -40,7 +40,7 @@
             this.load_positions();
         },
 
-        admin_panel: function () {
+        index: function () {
             this.load_positions();
         },
 

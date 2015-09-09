@@ -5,9 +5,14 @@
 //= ../../vendor/modernizr.custom.js
 //= ../../vendor/classie.js
 
+//= ../../vendor/classes/cookie.js
+//= ../../vendor/classes/factory.js
+
 //= partials/models/global/language_model.js
 
-//= ../../vendor/modules/factory.js
+//= ../../vendor/crypto/md5.js
+//= ../../vendor/app/app.js
+//= ../../vendor/app/base_router.js
 
 //= partials/views/admin_panel/login_form/login_form.js
 //= partials/views/admin_panel/edit_user/edit_user.js
@@ -18,9 +23,4 @@
 //= partials/views/global/notification/notificationFx.js
 //= partials/views/global/notification/notification.js
 
-//= ../../vendor/crypto/md5.js
-//= ../../vendor/app/app.js
-//= ../../vendor/app/base_router.js
 //= partials/routers/admin_panel_router.js
-
-//= ../../vendor/classes/cookie.js

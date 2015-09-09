@@ -70,13 +70,6 @@ class Application {
          */
 		$system = static::get_class('System');
 		$port = $_SERVER['SERVER_PORT'];
-		if(static::is_dev()) {
-            /**
-             * @var $tools Tools
-             */
-            $tools = static::get_class('Tools');
-			$tools->check_node_processes();
-		}
 		if($port == 8080 && self::is_dev()) {
             /**
              * @var $tools Tools

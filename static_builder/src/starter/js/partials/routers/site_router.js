@@ -2,7 +2,9 @@
     'use strict';
 
     window.SiteRouter = Backbone.Router.extend($.extend(true, BaseRouter, {
-        routes: {}
+        routes: {},
+
+        init_views: function () {}
     }));
 
     App.router = new SiteRouter;

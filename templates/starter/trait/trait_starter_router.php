@@ -11,7 +11,7 @@ trait trait_starter_router {
          */
 		$user = Application::get_class('User')->get_identity();
         $callback = $this->get_callback();
-        if(strtolower(__CLASS__) === 'adminpanelrouter' && !$user->is_admin()) {
+        if(strtolower(__CLASS__) == 'adminpanelrouter' && !$user->is_admin()) {
             $method = $callback[1];
             if($method !== 'login') {
                 Response::redirect('/admin_panel/login');
@@ -44,7 +44,7 @@ trait trait_starter_router {
 				'js_path' => $static_path.DS.'js'
 			];
 			$templator->assign($static_paths);
-            if(strtolower(__CLASS__) === 'adminpanelrouter') {
+            if(strtolower(__CLASS__) == 'adminpanelrouter') {
                 $templator->setTemplateDir($template->get_path().DS.'templates'.DS.'admin_panel');
             } else {
                 $templator->setTemplateDir($template->get_path().DS.'templates'.DS.'site');

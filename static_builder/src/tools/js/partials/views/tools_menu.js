@@ -13,5 +13,5 @@
             }.bind(this))
         }
     });
-    window.ToolsMenu = new window.ToolsMenu;
+    window.ToolsMenu = new window.ToolsMenuView;
 })();
