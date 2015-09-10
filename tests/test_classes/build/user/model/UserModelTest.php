@@ -1,5 +1,5 @@
 <?php
-require_once ROOT_PATH.DS."build".DS.'user'.DS.'model'.DS.'usermodel.php';
+require_once ROOT_PATH.DS.'build'.DS.'user'.DS.'model'.DS.'usermodel.php';
 
 /**
  * Class UserModelTest

@@ -14,7 +14,7 @@ class UsersTableView extends \TemplateView {
          * @var $ext \User
          */
         $ext = \Application::get_class('User');
-		$user = $ext->get_identity();
+		$user = $ext->get_current();
 		$users = $ext->get_list();
 		$this->assign('users', $users);
 		$this->assign('my_id', $user->id);

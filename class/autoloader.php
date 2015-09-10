@@ -34,15 +34,18 @@ class Autoloader {
     private static function is_extension_changed($name) {
         $name   = strtolower($name);
         $extension_build_dir  = ROOT_PATH.DS.'build'.DS.$name;
-        $extension_path = ROOT_PATH.DS.'extensions'.DS.$name.".tar.gz";
+        $extension_path = ROOT_PATH.DS.'extensions'.DS.$name.'.tar.gz';
         if(file_exists($extension_build_dir) && file_exists($extension_path)) {
-            $dir_iterator   = new RecursiveDirectoryIterator($extension_build_dir);
-            $itertaor   = new RecursiveIteratorIterator($dir_iterator);
-            $itertaor->rewind();
-            while($itertaor->valid()) {
-                if(!$itertaor->isDot()) {
-                    $file   = $extension_build_dir.DS.$itertaor->getSubPathName();
-                    $phar_file  = "phar://{$extension_path}/".$itertaor->getSubPathName();
+            $dir_iterator = new RecursiveDirectoryIterator($extension_build_dir);
+            /**
+             * @var $iterator RecursiveDirectoryIterator
+             */
+            $iterator = new RecursiveIteratorIterator($dir_iterator);
+            $iterator->rewind();
+            while($iterator->valid()) {
+                if(!$iterator->isDot()) {
+                    $file = $extension_build_dir.DS.$iterator->getSubPathName();
+                    $phar_file  = "phar://{$extension_path}/".$iterator->getSubPathName();
                     if(!file_exists($phar_file)) {
                         return true;
                     } else {
@@ -53,7 +56,7 @@ class Autoloader {
                         }
                     }
                 }
-                $itertaor->next();
+                $iterator->next();
             }
             return false;
         } else {

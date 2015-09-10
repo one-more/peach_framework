@@ -5,6 +5,11 @@ class SilentAdminPanelRouter extends AdminPanelRouter {
     protected function show_result(AjaxResponse $response) {}
 }
 
+/**
+ * Class AdminPanelRouterTest
+ *
+ * @method bool assertNull($var)
+ */
 class AdminPanelRouterTest extends PHPUnit_Framework_TestCase {
 
     /**

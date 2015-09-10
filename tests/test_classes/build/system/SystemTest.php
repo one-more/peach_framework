@@ -1,5 +1,5 @@
 <?php
-require_once ROOT_PATH.DS."build".DS.'system'.DS.'system.php';
+require_once ROOT_PATH.DS.'build'.DS.'system'.DS.'system.php';
 
 /**
  * Class SystemTest

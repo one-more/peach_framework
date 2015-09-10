@@ -1,9 +1,9 @@
 <?php
-require_once ROOT_PATH.DS."build".DS.'session'.DS.'model'.DS.'sessionmodel.php';
+require_once ROOT_PATH.DS.'build'.DS.'session'.DS.'model'.DS.'sessionmodel.php';
 
 class SessionModelTest extends \PHPUnit_Framework_TestCase {
 	private $model;
-	static $session_id;
+	private static $session_id;
 
 	public function setUp() {
 		if(empty($this->model)) {

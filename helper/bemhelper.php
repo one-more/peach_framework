@@ -20,7 +20,9 @@ class BEMHelper {
 
         $attributes['class'] = implode(' ', $attributes['class']);
 
-        foreach ($attributes as $key => $value) {
+        $keys = array_keys($attributes);
+        foreach($keys as $key) {
+            $value = $attributes[$key];
             if (is_array($value)) {
                 $attributes[$key] = json_encode($value);
             }
@@ -30,7 +32,7 @@ class BEMHelper {
     }
 
 
-    public static function block($name = '', $content = '', $params = [])
+    public static function block($name = '', $content = '', array $params = [])
     {
         $singleTags = ['area', 'base', 'basefont', 'bgsound', 'br', 'col', 'command', 'embed', 'hr', 'img', 'input',
             'isindex', 'keygen', 'link', 'param', 'source', 'track', 'wbr'];
@@ -38,11 +40,11 @@ class BEMHelper {
         $tag = isset($params['tag']) ? $params['tag'] : 'div';
         $attributes = self::generate_attributes($name, $params);
 
-        $html = HTMLHelper::beginTag($tag, $attributes);
+        $html = HTMLHelper::begin_tag($tag, $attributes);
 
         if (!in_array($tag, $singleTags, true)) {
             $html .= $content;
-            $html .= HTMLHelper::endTag($tag);
+            $html .= HTMLHelper::end_tag($tag);
         }
 
         return $html;

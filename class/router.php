@@ -26,6 +26,7 @@ class Router {
 			}
 			return call_user_func_array($callback, $this->route_params);
 		}
+		return null;
 	}
 
 	protected function get_callback() {
@@ -37,24 +38,26 @@ class Router {
 			foreach($keys as $key) {
 				if(strpos($key, ':') !== false) {
 					$parts = explode('/', $key);
-					foreach($parts as &$part) {
+					$parts_keys = array_keys($parts);
+                    foreach($parts_keys as $part_key) {
+                        $part = $parts[$part_key];
 						$pos = strpos($part, ':');
 						if($pos !== false) {
 							$sub_str = substr($part, $pos+1);
 							switch($sub_str) {
 								case 'number':
-									$part = str_replace([$sub_str, ':'], ['(\d+)', ''], $part);
+                                    $parts[$part_key] = str_replace([$sub_str, ':'], ['(\d+)', ''], $part);
 									break;
 								case 'string':
 								default:
-									$part = str_replace([$sub_str, ':'], ['(\w+)', ''], $part);
+                                    $parts[$part_key] = str_replace([$sub_str, ':'], ['(\w+)', ''], $part);
 									break;
 							}
 						}
 					}
 					$parts = implode('\/', $parts);
-					preg_match_all("/^$parts$/iUs", $request_uri, $result, PREG_SET_ORDER);
-					if(count($result) && !empty($result[0])) {
+					preg_match_all("/^$parts$/iU", $request_uri, $result, PREG_SET_ORDER);
+					if(!empty($result[0]) && count($result)) {
 						$this->route_params = array_slice($result[0], 1);
 						return $this->routes[$key];
 					}

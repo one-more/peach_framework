@@ -5,28 +5,33 @@ trait trait_starter_router {
     private $response_type = 'AjaxResponse';
     private $response;
 
+    /**
+     * @throws InvalidTokenException
+     * @throws InvalidArgumentException
+     */
 	public function route() {
         /**
          * @var $user UserIdentity
          */
-		$user = Application::get_class('User')->get_identity();
+		$user = Application::get_class('User')->get_current();
         $callback = $this->get_callback();
-        if(strtolower(__CLASS__) == 'adminpanelrouter' && !$user->is_admin()) {
+        if(is_array($callback) && strtolower(__CLASS__) == 'adminpanelrouter' && !$user->is_admin()) {
             $method = $callback[1];
-            if($method !== 'login') {
+            if($method != 'login') {
                 Response::redirect('/admin_panel/login');
                 $callback = false;
             }
 		}
 		if($callback !== false) {
 			$check = true;
-			if(count($callback) === 3) {
+			if(count($callback) == 3) {
 				$check = (array_pop($callback) === 'check');
 			}
 			if($check && !Request::is_token_valid()) {
 			    throw new InvalidTokenException('invalid token');
 			}
-			parent::route();
+
+            parent::route();
 		}
 	}
 

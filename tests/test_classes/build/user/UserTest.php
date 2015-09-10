@@ -1,6 +1,18 @@
 <?php
-require_once ROOT_PATH.DS."build".DS.'user'.DS.'user.php';
-require_once ROOT_PATH.DS."build".DS.'user'.DS.'model'.DS.'usermodel.php';
+require_once ROOT_PATH.DS.'build'.DS.'user'.DS.'user.php';
+require_once ROOT_PATH.DS.'build'.DS.'user'.DS.'model'.DS.'usermodel.php';
+
+class TestModel extends UserModel {
+
+    public function get_user_with_max_id() {
+        return $this->select()
+            ->where(['deleted' => ['=', 0]])
+            ->order_by(['id DESC'])
+            ->limit(1)
+            ->execute()
+            ->get_array();
+    }
+}
 
 /**
  * Class UserTest
@@ -23,6 +35,11 @@ class UserTest extends PHPUnit_Framework_TestCase {
      */
     private $user_obj;
 
+    /**
+     * @var $test_model TestModel
+     */
+    private $test_model;
+
 	public function setUp() {
 		if(empty($_COOKIE['pfm_session_id'])) {
 			$_COOKIE['pfm_session_id'] = $this->session_id;
@@ -30,6 +47,7 @@ class UserTest extends PHPUnit_Framework_TestCase {
 		if(empty($this->user_obj)) {
 			$this->user_obj = Application::get_class('User')->get_identity(1);
 			$this->session_obj = Application::get_class('Session');
+            $this->test_model = new TestModel();
 		}
 	}
 
@@ -59,7 +77,11 @@ class UserTest extends PHPUnit_Framework_TestCase {
     public function test_add_by_ajax() {
         $_REQUEST['login'] = uniqid('test_user', true);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'xmlhttprequest';
-        $_COOKIE['user'] = Application::get_class('User')->get_identity(1)['remember_hash'];
+        /**
+         * @var $user UserIdentity
+         */
+        $user = Application::get_class('User')->get_identity(1);
+        $_COOKIE['user'] = $user->remember_hash;
 
         Application::get_class('User')->add_by_ajax();
     }
@@ -70,7 +92,17 @@ class UserTest extends PHPUnit_Framework_TestCase {
      */
     public function test_add_by_ajax_none_ajax() {
         $_REQUEST['login'] = uniqid('test_user', true);
-        $_COOKIE['user'] = Application::get_class('User')->get_identity(1)['remember_hash'];
+
+        /**
+         * @var $user UserIdentity
+         */
+        $user = Application::get_class('User')->get_identity(1);
+        $_COOKIE['user'] = $user->remember_hash;
+
+        if(!empty($_SERVER['HTTP_X_REQUESTED_WITH'])) {
+            unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+        }
+
         Application::get_class('User')->add_by_ajax();
     }
 
@@ -81,9 +113,11 @@ class UserTest extends PHPUnit_Framework_TestCase {
     public function test_add_by_ajax_not_admin() {
         $_REQUEST['login'] = uniqid('test_user', true);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'xmlhttprequest';
-        $_COOKIE['user'] =
-            Application::get_class('User')->get_identity_by_field('credentials', 'user')
-            ['remember_hash'];
+        /**
+         * @var $user UserIdentity
+         */
+        $user = Application::get_class('User')->get_identity_by_field('credentials', User::credentials_user);
+        $_COOKIE['user'] = $user->remember_hash;
 
         Application::get_class('User')->add_by_ajax();
     }
@@ -93,8 +127,12 @@ class UserTest extends PHPUnit_Framework_TestCase {
      * @expectedException InvalidUserDataException
      */
     public function test_add_login_exists() {
+        /**
+         * @var $user UserIdentity
+         */
+        $user = Application::get_class('User')->get_identity(1);
         $fields = [
-            'login' => Application::get_class('User')->get_identity(1)['login']
+            'login' =>$user->login
         ];
         Application::get_class('User')->add($fields);
     }
@@ -107,7 +145,7 @@ class UserTest extends PHPUnit_Framework_TestCase {
          * @var $user UserIdentity
          */
 		$user = Application::get_class('User')->get_identity(1);
-        $old_login = $user->password;
+        $old_login = $user->login;
         $new_login = 'test';
 
         Application::get_class('User')->edit([
@@ -127,10 +165,17 @@ class UserTest extends PHPUnit_Framework_TestCase {
      * @expectedException InvalidUserDataException
      */
     public function test_edit_login_exists() {
+        /**
+         * @var $user UserIdentity
+         */
+        $user = Application::get_class('User')->get_identity(1);
+        $uid = $user->id;
+
+        $user = Application::get_class('User')->get_identity_by_field('credentials', User::credentials_user);
         $fields = [
-            'login' => Application::get_class('User')->get_identity(1)['login']
+            'login' =>$user->login
         ];
-        $uid = Application::get_class('User')->get_identity_by_field('credentials', 'user')['id'];
+
         Application::get_class('User')->edit($fields, $uid);
     }
 
@@ -140,18 +185,19 @@ class UserTest extends PHPUnit_Framework_TestCase {
     public function test_edit_by_ajax() {
         $_REQUEST['login'] = uniqid('test_user', true);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'xmlhttprequest';
-        $_COOKIE['user'] = Application::get_class('User')->get_identity(1)['remember_hash'];
-
         /**
          * @var $user UserIdentity
          */
-        $user = Application::get_class('User')->get_identity_by_field('id', 'MAX(id)');
+        $user = Application::get_class('User')->get_identity(1);
+        $_COOKIE['user'] = $user->remember_hash;
+
+        $uid = $this->test_model->get_user_with_max_id()['id'];
         $new_login = $_REQUEST['login'];
-        $_REQUEST['id'] = $user->id;
+        $_REQUEST['id'] = $uid;
 
         Application::get_class('User')->edit_by_ajax();
 
-        $user = Application::get_class('User')->get_identity($user->id);
+        $user = Application::get_class('User')->get_identity($uid);
         $this->assertEquals($user->login, $new_login);
     }
 
@@ -161,12 +207,20 @@ class UserTest extends PHPUnit_Framework_TestCase {
      */
     public function test_edit_by_ajax_none_ajax() {
         $_REQUEST['login'] = uniqid('test_user', true);
-        $_COOKIE['user'] = Application::get_class('User')->get_identity(1)['remember_hash'];
+        /**
+         * @var $user UserIdentity
+         */
+        $user = Application::get_class('User')->get_identity(1);
+        $_COOKIE['user'] = $user->remember_hash;
+
+        if(!empty($_SERVER['HTTP_X_REQUESTED_WITH'])) {
+            unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+        }
 
         /**
          * @var $user UserIdentity
          */
-        $user = Application::get_class('User')->get_identity_by_field('id', 'MAX(id)');
+        $user = Application::get_class('User')->get_identity($this->test_model->get_user_with_max_id()['id']);
         $_REQUEST['id'] = $user->id;
 
         Application::get_class('User')->edit_by_ajax();
@@ -177,15 +231,17 @@ class UserTest extends PHPUnit_Framework_TestCase {
      * @expectedException WrongRightsException
      */
     public function test_edit_by_ajax_not_admin() {
-        $_COOKIE['user'] =
-            Application::get_class('User')->get_identity_by_field('credentials', 'user')
-            ['remember_hash'];
+        /**
+         * @var $user UserIdentity
+         */
+        $user = Application::get_class('User')->get_identity_by_field('credentials', User::credentials_user);
+        $_COOKIE['user'] = $user->remember_hash;
         $_REQUEST['login'] = uniqid('test_user', true);
 
         /**
          * @var $user UserIdentity
          */
-        $user = Application::get_class('User')->get_identity_by_field('id', 'MAX(id)');
+        $user = Application::get_class('User')->get_identity($this->test_model->get_user_with_max_id()['id']);
         $_REQUEST['id'] = $user->id;
 
         Application::get_class('User')->edit_by_ajax();
@@ -198,12 +254,12 @@ class UserTest extends PHPUnit_Framework_TestCase {
         /**
          * @var $user UserIdentity
          */
-        $user = Application::get_class('User')->get_identity_by_field('id', 'MAX(id)');
+        $user = Application::get_class('User')->get_identity($this->test_model->get_user_with_max_id()['id']);
         $this->assertTrue($user instanceof UserIdentity);
 
         Application::get_class('User')->delete($user->id);
 
-        $user = Application::get_class('User')->get_identity_by_field('id', 'MAX(id)');
+        $user = Application::get_class('User')->get_identity($user->id);
         $this->assertNull($user);
     }
 

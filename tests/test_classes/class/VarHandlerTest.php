@@ -45,12 +45,12 @@ class VarHandlerTest extends PHPUnit_Framework_TestCase {
 			[1, 'boolean', true],
 			[[1], 'boolean', true],
 			[new StdClass, 'boolean', true],
-			["1", 'boolean', true],
+			['1', 'boolean', true],
 			[true, 'boolean', true],
 			[null, 'boolean', false],
 			[0, 'boolean', false],
 			[[], 'boolean', false],
-			["", 'boolean', false],
+			['', 'boolean', false],
 			[false, 'boolean', false],
 
 			['asd', 'email', false],
@@ -108,6 +108,9 @@ class VarHandlerTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
+	 * @param string $var
+	 * @param string $filter
+	 * @param string $expected
 	 * @covers VarHandler::validate_var
 	 * @dataProvider validate_var_provider
 	 */
@@ -199,6 +202,10 @@ class VarHandlerTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
+	 * @param string $var
+	 * @param string $filter
+	 * @param string $default
+	 * @param string $expected
 	 * @covers VarHandler::sanitize_var
 	 * @dataProvider sanitize_var_provider
 	 */

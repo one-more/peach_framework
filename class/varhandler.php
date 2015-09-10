@@ -48,7 +48,7 @@ class VarHandler {
 				} else {
 					$url = $var;
 				}
-				$reg_host = '/^(\w*:)?([\w,#,\/,\d,\.,:]+)\.(\S+)$/suU';
+				$reg_host = '/^(\w*:)?([\w,#,\/,\d,\.,:]+)\.(\S+)$/uU';
 				if(preg_match($reg_host, trim($url))) {
 					return true;
 				} else {

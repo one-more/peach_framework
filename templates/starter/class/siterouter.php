@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Class SiteRouter
+ *
+ * @decorate AnnotationsDecorator
+ */
 class SiteRouter extends Router {
 	use trait_starter_router;
 
@@ -18,19 +23,16 @@ class SiteRouter extends Router {
 	public function index() {}
 
     /**
-     * @requestMethod Ajax
+     * @throws WrongRequestMethodException
+     * @throws InvalidArgumentException
      */
 	public function login() {
-		$login = Request::get_var('login', 'string');
-		$password = Request::get_var('password', 'string');
-		$remember = Request::get_var('remember', 'string');
-
         /**
          * @var $ext User
          */
 		$ext = Application::get_class('User');
-        if($ext->get_auth()->login($login, $password, (bool)$remember)) {
-            $user = $ext->get_identity_by_field('login', $login);
+        if($ext->get_auth()->login_by_ajax()) {
+            $user = $ext->get_identity_by_field('login', Request::get_var('login'));
             $this->response->set_attribute('user', $user);
             $this->response->set_attribute('status', 'success');
         } else {
@@ -38,20 +40,32 @@ class SiteRouter extends Router {
         }
 	}
 
+    /**
+     * @requestMethod Ajax
+     */
 	public function language_model() {
         $this->response_type = 'Json';
 		$this->response = new LanguageFile('model'.DS.'languagemodel.json');
 	}
 
+    /**
+     * @requestMethod Ajax
+     */
 	public function logout() {
         Application::get_class('User')->get_auth()->log_out();
         $this->response->set_attribute('status', 'success');
 	}
 
+    /**
+     * @requestMethod Ajax
+     */
 	public function add_user() {
         $this->response = Application::get_class('User')->add_by_ajax();
     }
 
+    /**
+     * @requestMethod Ajax
+     */
     public function edit_user() {
         $this->response = Application::get_class('User')->edit_by_ajax();
     }

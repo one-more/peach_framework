@@ -36,6 +36,9 @@ class FileSystemHelper {
           \RecursiveIteratorIterator::SELF_FIRST) as $item
         ) {
             if ($item->isDir()) {
+                /**
+                 * @var $iterator RecursiveDirectoryIterator
+                 */
                 mkdir($dest.DS.$iterator->getSubPathName());
             } else {
                 copy($item, $dest.DS.$iterator->getSubPathName());

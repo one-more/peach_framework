@@ -13,19 +13,19 @@ trait trait_configuration {
 		}
 	}
 
-	protected function set_params($params, $name = __CLASS__) {
+	protected function set_params(array $params, $name = __CLASS__) {
 		$old_params = $this->get_params($name);
 		$new_params = array_merge($old_params, $params);
-		$this->save_params($name, $new_params);
+		$this->save_params($new_params, $name);
 	}
 
 	protected function unset_param($param, $name = __CLASS__) {
 		$params = $this->get_params($name);
 		unset($params[$param]);
-		$this->save_params($name, $params);
+		$this->save_params($params, $name);
 	}
 
-    protected function save_params($params, $name = __CLASS__) {
+    protected function save_params(array $params, $name = __CLASS__) {
         $name = strtolower($name);
         $params_str = $this->array_to_json_string($params);
         file_put_contents(ROOT_PATH.DS.'resource'.DS."{$name}.json", $params_str);

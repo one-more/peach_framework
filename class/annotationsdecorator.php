@@ -47,12 +47,14 @@ class AnnotationsDecorator {
         /**
          * @var $user UserIdentity
          */
-        $user = Application::get_class('User')->get_identity();
+        $user = Application::get_class('User')->get_current();
         switch($value) {
             case 'super_admin':
                 return $user->is_super_admin();
             case 'admin':
                 return $user->is_admin();
+            default:
+                return false;
         }
     }
 
@@ -64,6 +66,8 @@ class AnnotationsDecorator {
                 return Request::is_post();
             case 'get':
                 return Request::is_get();
+            default:
+                return false;
         }
     }
 }

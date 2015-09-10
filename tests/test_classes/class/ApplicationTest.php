@@ -4,7 +4,7 @@ class ApplicationTest extends PHPUnit_Framework_TestCase {
 
 	public function setUp() {
 		if(!in_array('pfmextension', stream_get_wrappers())) {
-			stream_wrapper_register("pfmextension", "PFMExtensionWrapper");
+			stream_wrapper_register('pfmextension', 'PFMExtensionWrapper');
 		}
 	}
 

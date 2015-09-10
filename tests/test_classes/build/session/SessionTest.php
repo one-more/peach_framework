@@ -1,6 +1,6 @@
 <?php
-require_once ROOT_PATH.DS."build".DS.'session'.DS.'session.php';
-require_once ROOT_PATH.DS."build".DS.'session'.DS.'model'.DS.'sessionmodel.php';
+require_once ROOT_PATH.DS.'build'.DS.'session'.DS.'session.php';
+require_once ROOT_PATH.DS.'build'.DS.'session'.DS.'model'.DS.'sessionmodel.php';
 
 /**
  * Class SessionTest

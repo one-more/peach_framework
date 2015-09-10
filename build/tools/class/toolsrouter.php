@@ -23,14 +23,6 @@ class ToolsRouter extends Router {
 		$this->response['blocks']['main'] = $view->render();
 	}
 
-	public function node_processes() {
-        /**
-         * @var $view NodeProcessesTableView
-         */
-		$view = Application::get_class('NodeProcessesTableView');
-        $this->response['blocks']['main'] = $view->render();
-	}
-
     public function __destruct() {
         $this->show_result();
     }

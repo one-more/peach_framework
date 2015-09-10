@@ -1,8 +1,6 @@
 <?php
 
 class UserModel extends MysqlModel {
-	private $cached_fields = [];
-	private $cached_users = [];
 
 	protected function get_table() {
         return 'users';
@@ -71,19 +69,15 @@ class UserModel extends MysqlModel {
         } else {
 			$uid = (int)$uid;
 		}
-		if(empty($this->cached_fields[$uid])) {
-			$fields = $this->select()
-                ->where([
-                    'id' => ['=', $uid],
-                    'and' => [
-                        'deleted' => ['=', 0]
-                    ]
-                ])
-                ->execute()
-                ->get_array();
-			$this->cached_fields[$uid] = $fields;
-		}
-        return $this->cached_fields[$uid];
+		return $this->select()
+            ->where([
+                'id' => ['=', $uid],
+                'and' => [
+                    'deleted' => ['=', 0]
+                ]
+            ])
+            ->execute()
+            ->get_array();
     }
 
     /**
@@ -126,7 +120,6 @@ class UserModel extends MysqlModel {
 		if($ids && is_array($ids)) {
 			$ids = array_map('intval', $ids);
 			$ids_str = implode(',', $ids);
-			$key = md5($ids_str);
             $where = [
                 'id' => ['in', "({$ids_str})", false],
                 'and' => [
@@ -137,18 +130,11 @@ class UserModel extends MysqlModel {
 			$where = [
 				'deleted' => ['=', 0]
 			];
-			$key = 'all';
 		}
-		if(!empty($this->cached_users[$key])) {
-			return $this->cached_users[$key];
-		} else {
-			$users = $this->select()
-                ->where($where)
-                ->execute()
-                ->get_arrays();
-			$this->cached_users[$key] = $users;
-			return $users;
-		}
+		return $this->select()
+            ->where($where)
+            ->execute()
+            ->get_arrays();
     }
 
     /**

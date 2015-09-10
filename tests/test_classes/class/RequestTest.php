@@ -66,6 +66,10 @@ class RequestTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
+	 * @param string $name
+	 * @param string $filter
+	 * @param string $default
+	 * @param string $expected
 	 * @covers Request::get_var
 	 * @dataProvider get_var_provider
 	 */

@@ -8,6 +8,7 @@ class Application {
      * @param $name
      * @param array $params
      * @return mixed
+     * @throws InvalidArgumentException
      */
     public static function get_class($name, array $params = []) {
         if(class_exists($name)) {
@@ -42,6 +43,7 @@ class Application {
                     return $class;
             }
         }
+        return $class;
     }
 
 	public static function initialize() {

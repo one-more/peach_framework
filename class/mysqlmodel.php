@@ -58,10 +58,15 @@ abstract class MysqlModel {
 
 	abstract protected function get_table();
 
+	/**
+	 * @param null|array|string $fields
+	 * @return $this
+	 */
 	protected function select($fields = null) {
-		$fields = (array)$fields;
+        $this->bind_values = [];
+
 		if(!empty($fields)) {
-			$fields = implode(',', $fields);
+			$fields = implode(',', (array)$fields);
 		} else {
 			$fields = '*';
 		}
@@ -71,6 +76,8 @@ abstract class MysqlModel {
 	}
 
 	protected function update($fields) {
+        $this->bind_values = [];
+
 		$fields = (array)$fields;
 		$parts = [];
 		if(empty($fields) || !is_array($fields)) {
@@ -86,6 +93,8 @@ abstract class MysqlModel {
 	}
 
 	protected function insert($fields) {
+        $this->bind_values = [];
+
 		$fields = (array)$fields;
 		$parts = [];
 		if(empty($fields) || !is_array($fields)) {
@@ -100,7 +109,12 @@ abstract class MysqlModel {
 		return $this;
 	}
 
+    /**
+     * @return $this
+     */
 	protected function delete() {
+        $this->bind_values = [];
+
 		$this->query = 'DELETE FROM '.$this->get_table();
 		return $this;
 	}
@@ -111,6 +125,7 @@ abstract class MysqlModel {
 	 * 	'column name. might be also or || and operator' => 
 	 * 		['operator', 'value', (optional boolean) prepare column]
 	 * ]
+     * @return $this
 	 */
 	protected function where($conditions) {
 		if(is_string($conditions)) {
@@ -246,7 +261,7 @@ abstract class MysqlModel {
 
 	private function data_to_array($data) {
 		if(is_array($data)) {
-			if(count($data) > 1 && isset($data[0])) {
+			if(isset($data[0]) && count($data) > 1) {
 				return $data[0];
 			} else {
 				return $data;

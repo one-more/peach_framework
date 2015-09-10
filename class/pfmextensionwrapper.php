@@ -2,7 +2,10 @@
 
 class PFMExtensionWrapper {
 	private $extensions_path;
-	private $stream;
+    /**
+     * @var $stream PharData
+     */
+    private $stream;
 	private $extension;
 	private $phar_file;
 	private $phar_type = Phar::GZ;
@@ -122,6 +125,8 @@ class PFMExtensionWrapper {
 			case STREAM_META_ACCESS:
 				$phar_data[$this->phar_file]->chmod($value[1]);
 				return $value[1] === (fileperms($file) & 0777);
+			default:
+                return false;
 		}
 	}
 

@@ -202,9 +202,9 @@ class MysqlModelTest extends PHPUnit_Framework_TestCase {
 		$result = [];
 		for($i=0; $i<3; $i++) {
 			$result[][] = [
-				'field1' => md5(rand()),
+				'field1' => md5(mt_rand()),
 				'field2' => mt_rand(),
-				'field3' => ['val1', 'val2', 'val3'][rand(0,2)]
+				'field3' => ['val1', 'val2', 'val3'][mt_rand(0,2)]
 			];
 		}
 		return $result;
@@ -234,6 +234,7 @@ class MysqlModelTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
+     * @param array $fields
 	 * @covers MysqlModel::update
 	 * @dataProvider values_provider
 	 */

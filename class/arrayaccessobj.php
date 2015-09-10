@@ -1,6 +1,6 @@
 <?php
 
-class ArrayAccessObj {
+class ArrayAccessObj implements ArrayAccess {
 
     protected $values = [];
 

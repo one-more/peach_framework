@@ -12,7 +12,7 @@ trait trait_file_uploader {
 		$this->destination_path = $destination_path;
 
 		if(!empty($_FILES[$this->input_name]) && is_array($_FILES[$this->input_name]['name'])) {
-			$this->upload_files();
+			return $this->upload_files();
 		} elseif(!empty($_FILES[$this->input_name]['name'])) {
 			return $this->upload_file();
 		} else {
@@ -20,9 +20,15 @@ trait trait_file_uploader {
 		}
 	}
 
+    /**
+     * @return int - count of uploaded files
+     * @throws Exception
+     */
 	private function upload_files() {
+        $uploaded_count = 0;
 		if(!empty($_FILES[$this->input_name]['name'][0])) {
-			for($i=0; $i<count($_FILES[$this->input_name]['name']);$i++) {
+			$files = count($_FILES[$this->input_name]['name']);
+			for($i=0; $i<$files; $i++) {
 				$tmp_file = $_FILES[$this->input_name]['tmp_name'][$i];
 				$type = explode('/', $_FILES[$this->input_name]['type'][$i])[0];
 				$extension = explode('.', $_FILES[$this->input_name]['name'][$i])[1];
@@ -42,14 +48,20 @@ trait trait_file_uploader {
 					if(!move_uploaded_file($tmp_file, $new_file)) {
 						$message = 'could not upload file ';
 						$message .= $tmp_file;
-						throw new Exception($message);
+						throw new ErrorException($message);
 					}
 					@chmod($new_file, 0777);
+                    $uploaded_count++;
 				}
 			}
 		}
+        return $uploaded_count;
 	}
 
+    /**
+     * @return string - path to uploaded file
+     * @throws Exception
+     */
 	private function upload_file() {
 		$tmp_file = $_FILES[$this->input_name]['tmp_name'];
 		$type = explode('/', $_FILES[$this->input_name]['type'])[0];
@@ -69,7 +81,7 @@ trait trait_file_uploader {
 		if(!move_uploaded_file($tmp_file, $new_file)) {
 			$message = 'could not upload file ';
 			$message .= $tmp_file;
-			throw new Exception($message);
+			throw new ErrorException($message);
 		}
 		@chmod($new_file, 0777);
 		return $new_file;

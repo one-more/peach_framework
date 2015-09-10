@@ -3,7 +3,6 @@
 class FakeRouter extends Router {
 
 	public function __construct() {
-		parent::__construct();
 
 		$this->routes = [
 			'/users' => [$this, 'users'],

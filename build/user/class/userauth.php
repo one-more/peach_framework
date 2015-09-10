@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Class UserAuth
+ *
+ * @decorate AnnotationsDecorator
+ */
 class UserAuth {
 
     /**
@@ -17,6 +22,17 @@ class UserAuth {
             $password = $this->crypt_password($login, $password);
         }
         return $this->model->login($login, $password, $remember);
+    }
+
+    /**
+     * @requestMethod Ajax
+     */
+    public function login_by_ajax() {
+        $login = Request::get_var('login', 'string');
+        $password = Request::get_var('password', 'string');
+        $remember = Request::get_var('remember', 'string');
+
+        return $this->login($login, $password, (bool)$remember);
     }
 
     public function crypt_password($login, $password) {

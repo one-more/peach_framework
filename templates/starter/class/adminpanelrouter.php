@@ -52,7 +52,7 @@ class AdminPanelRouter extends Router {
         /**
          * @var $user UserIdentity
          */
-        $user = Application::get_class('User')->get_identity();
+        $user = Application::get_class('User')->get_current();
         /*
          * User can be logged in only if he is administrator
          */

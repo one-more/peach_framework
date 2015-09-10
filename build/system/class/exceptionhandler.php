@@ -28,7 +28,10 @@ class ExceptionHandler {
 }
 
 function peach_exception_handler($exception) {
-    $message    = $exception->getMessage();
+    /**
+     * @var $exception Exception
+     */
+    $message = $exception->getMessage();
     Error::log($message);
 
     ExceptionHandler::show_error('an exception occurred');

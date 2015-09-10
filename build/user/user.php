@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Class User
+ *
+ * @decorate AnnotationsDecorator
+ */
 class User {
     use trait_extension;
 
@@ -21,23 +26,35 @@ class User {
 
     /**
      * @return UserAuth
+     * @throws InvalidArgumentException
      */
     public function get_auth() {
         return Application::get_class('UserAuth');
     }
 
     /**
-     * @param null $id
+     * Returns current user in system. If user is not logged in, identity will have id = 0
+     *
      * @return UserIdentity
      */
-    public function get_identity($id = null) {
-        return new UserIdentity($this->model->get_fields($id));
+    public function get_current() {
+        return new UserIdentity($this->model->get_fields());
+    }
+
+    /**
+     * @param int $id
+     * @return UserIdentity|null
+     */
+    public function get_identity($id) {
+        $fields = $this->model->get_fields($id);
+        return count($fields) ? new UserIdentity($fields): null;
     }
 
     /**
      * @param $field
      * @param $value
-     * @return UserIdentity|null
+     * @throws InvalidArgumentException
+     * @return null|UserIdentity
      */
     public function get_identity_by_field($field, $value) {
         $fields = $this->model->get_user_by_field($field, $value);
@@ -81,7 +98,7 @@ class User {
         $user_data = [
             'login' => Request::get_var('login', 'string'),
             'password' => Request::get_var('password', 'string', ''),
-            'credentials' => Request::get_var('credentials', 'string', 'user')
+            'credentials' => Request::get_var('credentials', 'string', User::credentials_user)
         ];
 
         $uid = Request::get_var('id', 'int');
@@ -91,7 +108,7 @@ class User {
 
         $response = new JsonResponse();
 
-        $lang_vars = new LanguageFile('user.json', $this->get_path());
+        $lang_vars = new LanguageFile('user.json', $this->get_lang_path());
         try {
             $this->edit($user_data, $uid);
             $response->status = 'success';
@@ -107,8 +124,9 @@ class User {
      * @param $fields
      * @param null $uid
      * @throws InvalidUserDataException
+     * @throws InvalidArgumentException
      */
-    public function edit($fields, $uid = null) {
+    public function edit(array $fields, $uid = null) {
         Application::init_validator();
 
         $validator = new Validator\LIVR([
@@ -118,12 +136,16 @@ class User {
         ]);
 
         $old_fields = $this->model->get_fields($uid);
+        $is_login_changed = !empty($fields['login']) ? $old_fields['login'] != $fields['login'] : false;
         $fields = array_merge($old_fields, $fields);
+        if(!empty($fields['id'])) {
+            unset($fields['id']);
+        }
 
-        $validator->registerRules(['unique_login' => function() use($uid, $fields) {
-            return function ($value) use($uid, $fields) {
-                if($fields['login'] !== $value && $this->model->get_user_by_field('login', $value)) {
-                        return 'LOGIN_EXISTS';
+        $validator->registerRules(['unique_login' => function() use($uid, $is_login_changed) {
+            return function ($value) use($uid, $is_login_changed) {
+                if($is_login_changed && count($this->model->get_user_by_field('login', $value))) {
+                    return 'LOGIN_EXISTS';
                 }
                 return null;
             };
@@ -150,7 +172,7 @@ class User {
         $user_data = [
             'login' => Request::get_var('login', 'string'),
             'password' => Request::get_var('password', 'string', ''),
-            'credentials' => Request::get_var('credentials', 'string', 'user')
+            'credentials' => Request::get_var('credentials', 'string', User::credentials_user)
         ];
 
         $response = new JsonResponse();
@@ -162,7 +184,7 @@ class User {
             $response->message = $lang_vars['messages']['added'];
         } catch(InvalidUserDataException $e) {
             $response->status = 'error';
-            $response->errors = $e->errors;
+            $response->set_attribute('errors', $e->errors);
         }
 
         return $response;
@@ -174,6 +196,11 @@ class User {
      */
     public function add($fields) {
         Application::init_validator();
+
+        $fields = array_merge([
+            'password' => '',
+            'credentials' => User::credentials_user
+        ], $fields);
 
         $validator = new Validator\LIVR([
             'login' => ['required', 'unique_login'],

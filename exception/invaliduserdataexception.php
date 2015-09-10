@@ -6,6 +6,9 @@ class InvalidUserDataException extends Exception {
 
     public function __construct(array $errors) {
         $this->errors = $errors;
+        foreach($errors as $key=>$val) {
+            $this->message .= "{$key}: {$val}".PHP_EOL;
+        }
 
         parent::__construct();
     }
