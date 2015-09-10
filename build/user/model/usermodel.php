@@ -10,6 +10,7 @@ class UserModel extends MysqlModel {
      * @param $login
      * @param $password
      * @param bool|false $remember
+     * @throws InvalidArgumentException
      * @return bool
      */
     public function login($login, $password, $remember = false) {
@@ -34,6 +35,7 @@ class UserModel extends MysqlModel {
              */
             $session = Application::get_class('Session');
             if($remember) {
+                $_COOKIE['user'] = $result['remember_hash'];
                 setcookie('user', $result['remember_hash'], strtotime('2037-12-31'), '/');
             } else {
                 $session->set_var('user', $result['remember_hash']);
@@ -138,6 +140,7 @@ class UserModel extends MysqlModel {
     }
 
     /**
+     * @throws InvalidArgumentException
      * @return int
      */
     public function get_id() {
@@ -154,11 +157,11 @@ class UserModel extends MysqlModel {
 			$where = [
 				'remember_hash' => ['=', $remember_hash]
 			];
-			$result = $this->select()
+			$result = $this->select(['id'])
                 ->where($where)
                 ->execute()
                 ->get_result();
-			return (is_array($result) && !empty($result['id'])) ? $result['id'] : 0;
+			return !empty($result) ? (int)$result : 0;
 		} else {
 			return 0;
 		}
@@ -171,8 +174,8 @@ class UserModel extends MysqlModel {
      * @throws InvalidArgumentException
      */
     public function get_user_by_field($field, $value) {
-		if(!is_string($value) || !is_string($field)) {
-			throw new InvalidArgumentException('field name and value must be strings');
+		if(!is_string($field)) {
+			throw new InvalidArgumentException('field name must be a string');
 		}
         return $this->select()
             ->where([

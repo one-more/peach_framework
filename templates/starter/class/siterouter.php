@@ -32,7 +32,7 @@ class SiteRouter extends Router {
          */
 		$ext = Application::get_class('User');
         if($ext->get_auth()->login_by_ajax()) {
-            $user = $ext->get_identity_by_field('login', Request::get_var('login'));
+            $user = $ext->get_current();
             $this->response->set_attribute('user', $user);
             $this->response->set_attribute('status', 'success');
         } else {

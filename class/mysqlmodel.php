@@ -62,7 +62,7 @@ abstract class MysqlModel {
 	 * @param null|array|string $fields
 	 * @return $this
 	 */
-	protected function select($fields = null) {
+	protected function select(array $fields = null) {
         $this->bind_values = [];
 
 		if(!empty($fields)) {
