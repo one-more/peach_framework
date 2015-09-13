@@ -6,10 +6,10 @@
  * @decorate AnnotationsDecorator
  */
 class User {
-    use trait_extension;
+    use TraitExtension;
 
     /**
-     * @var $model UserModel
+     * @var $model \User\model\UserModel
      */
 	private $model;
 
@@ -21,53 +21,53 @@ class User {
 
     public function __construct() {
         $this->register_autoload();
-		$this->model = Application::get_class('UserModel');
+		$this->model = Application::get_class('\User\model\UserModel');
     }
 
     /**
-     * @return UserAuth
+     * @return \User\auth\UserAuth
      * @throws InvalidArgumentException
      */
     public function get_auth() {
-        return Application::get_class('UserAuth');
+        return Application::get_class('\User\auth\UserAuth');
     }
 
     /**
      * Returns current user in system. If user is not logged in, identity will have id = 0
      *
-     * @return UserIdentity
+     * @return \User\identity\UserIdentity
      */
     public function get_current() {
-        return new UserIdentity($this->model->get_fields());
+        return new \User\identity\UserIdentity($this->model->get_fields());
     }
 
     /**
      * @param int $id
-     * @return UserIdentity|null
+     * @return \User\identity\UserIdentity|null
      */
     public function get_identity($id) {
         $fields = $this->model->get_fields($id);
-        return count($fields) ? new UserIdentity($fields): null;
+        return count($fields) ? new \User\identity\UserIdentity($fields): null;
     }
 
     /**
      * @param $field
      * @param $value
      * @throws InvalidArgumentException
-     * @return null|UserIdentity
+     * @return null|\User\identity\UserIdentity
      */
     public function get_identity_by_field($field, $value) {
         $fields = $this->model->get_user_by_field($field, $value);
-        return !empty($fields) ? new UserIdentity($fields) : null;
+        return !empty($fields) ? new \User\identity\UserIdentity($fields) : null;
     }
 
     /**
      * @param null $ids
-     * @return UserIdentity[]
+     * @return \User\identity\UserIdentity[]
      */
     public function get_list($ids = null) {
         return array_map(function($fields) {
-            return new UserIdentity($fields);
+            return new \User\identity\UserIdentity($fields);
         }, $this->model->get_users($ids));
     }
 
@@ -76,7 +76,7 @@ class User {
             return function($value, $undef, &$output_arr) use($fields) {
                 if(trim($value)) {
                     /**
-                     * @var $user_auth UserAuth
+                     * @var $user_auth \User\auth\UserAuth
                      */
                     $user_auth = Application::get_class('User')->get_auth();
                     $output_arr = $user_auth->crypt_password($fields['login'], $value);
@@ -211,7 +211,7 @@ class User {
         $validator->registerRules(['unique_login' => function() {
             return function ($value) {
                 /**
-                 * @var $user UserIdentity
+                 * @var $user \User\identity\UserIdentity
                  */
                 $user = Application::get_class('User')->get_identity_by_field('login', $value);
                 if($user) {

@@ -11,6 +11,10 @@ class TestsEnv {
 		require_once ROOT_PATH.DS.'class'.DS.'autoloader.php';
 		Autoloader::init_autoload();
 
+        if(!in_array('pfmextension', stream_get_wrappers(), $strict = true)) {
+            stream_wrapper_register('pfmextension', 'PFMExtensionWrapper');
+        }
+
 		$_SESSION = [];
 		static::init_test_tables();
 

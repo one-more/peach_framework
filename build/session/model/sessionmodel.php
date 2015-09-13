@@ -1,6 +1,10 @@
 <?php
 
-class SessionModel extends MysqlModel {
+namespace Session\model;
+
+use User\identity\UserIdentity;
+
+class SessionModel extends \MysqlModel {
 
     protected function get_table() {
         return 'session';
@@ -8,13 +12,16 @@ class SessionModel extends MysqlModel {
 
     public function start_session() {
         /**
+         * @var $ext \User
+         */
+        $ext = \Application::get_class('User');
+        /**
          * @var $user UserIdentity
          */
-        $user = Application::get_class('User')->get_current();
-        $uid = $user->id;
+        $user = $ext->get_current();
         $fields = [
-            'datetime'  => date('Y-m-d H:i:s'),
-            'uid'   => $uid
+            'datetime' => date('Y-m-d H:i:s'),
+            'uid' => $user->id
         ];
         return $this->insert($fields)
             ->execute()
@@ -23,9 +30,9 @@ class SessionModel extends MysqlModel {
 
     protected function get_vars() {
         /**
-         * @var $session Session
+         * @var $session \Session
          */
-        $session = Application::get_class('Session');
+        $session = \Application::get_class('Session');
         $vars = $this->select(['vars'])
             ->where(['id' => ['=', $session->get_id()]])
             ->execute()
@@ -40,9 +47,9 @@ class SessionModel extends MysqlModel {
 
     public function set_var($name, $value) {
         /**
-         * @var $session Session
+         * @var $session \Session
          */
-        $session = Application::get_class('Session');
+        $session = \Application::get_class('Session');
         $vars = $this->get_vars();
         $vars[$name] = $value;
         $this->update(['vars' => json_encode($vars)])
@@ -52,9 +59,9 @@ class SessionModel extends MysqlModel {
 
     public function unset_var($name) {
         /**
-         * @var $session Session
+         * @var $session \Session
          */
-        $session = Application::get_class('Session');
+        $session = \Application::get_class('Session');
         $vars = $this->get_vars();
         if(isset($vars[$name])) {
             unset($vars[$name]);
@@ -66,9 +73,9 @@ class SessionModel extends MysqlModel {
 
     public function set_uid($uid) {
         /**
-         * @var $session Session
+         * @var $session \Session
          */
-        $session = Application::get_class('Session');
+        $session = \Application::get_class('Session');
         $this->update(['uid' => (int)$uid])
             ->where(['id' => ['=', $session->get_id()]])
             ->execute();
@@ -76,9 +83,9 @@ class SessionModel extends MysqlModel {
 
 	public function get_uid() {
         /**
-         * @var $session Session
+         * @var $session \Session
          */
-		$session = Application::get_class('Session');
+		$session = \Application::get_class('Session');
 		return $this->select(['uid'])
             ->where(['id' => ['=', $session->get_id()]])
             ->execute()

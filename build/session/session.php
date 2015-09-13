@@ -1,32 +1,38 @@
 <?php
 
 class Session {
-    use trait_extension;
+    use TraitExtension;
+
+    /**
+     * @var $model \Session\model\SessionModel
+     */
+    private $model;
 
 	public function __construct() {
+        $this->model = \Application::get_class('\Session\model\SessionModel');
 		$this->register_autoload();
 	}
 
+    /**
+     * @return int
+     * @throws InvalidArgumentException
+     */
     public function start() {
         /**
          * @var $system System
          */
-        $system = Application::get_class('System');
+        $system = \Application::get_class('System');
         if($system->get_use_db_param()) {
             if(empty($_COOKIE['pfm_session_id'])) {
-                /**
-                 * @var $model SessionModel
-                 */
-                $model  = Application::get_class('SessionModel');
-                $session_id = $model->start_session();
+                $session_id = $this->model->start_session();
                 setcookie('pfm_session_id', $session_id, null, '/');
-				return $session_id;
+				return (int)$session_id;
             } else {
-				return $_COOKIE['pfm_session_id'];
+				return (int)$_COOKIE['pfm_session_id'];
 			}
         } else {
             session_start();
-			return session_id();
+			return (int)session_id();
         }
     }
 
@@ -38,18 +44,15 @@ class Session {
      * @param $name
      * @param bool|false $default
      * @return bool
+     * @throws InvalidArgumentException
      */
     public function get_var($name, $default = false) {
         /**
          * @var $system System
          */
-        $system = Application::get_class('System');
+        $system = \Application::get_class('System');
         if($system->get_use_db_param()) {
-            /**
-             * @var $model SessionModel
-             */
-            $model  = Application::get_class('SessionModel');
-            return $model->get_var($name, $default);
+            return $this->model->get_var($name, $default);
         } else {
             return (empty($_SESSION[$name])) ? $default : $_SESSION[$name];
         }
@@ -59,50 +62,47 @@ class Session {
     /**
      * @param $name
      * @param $value
+     * @throws InvalidArgumentException
      */
     public function set_var($name, $value) {
         /**
          * @var $system System
          */
-        $system = Application::get_class('System');
+        $system = \Application::get_class('System');
         if($system->get_use_db_param()) {
-            /**
-             * @var $model SessionModel
-             */
-            $model  = Application::get_class('SessionModel');
-            $model->set_var($name, $value);
+            $this->model->set_var($name, $value);
         } else {
-            $_SESSION[$name]    = $value;
+            $_SESSION[$name] = $value;
         }
     }
 
+    /**
+     * @param $name
+     * @throws InvalidArgumentException
+     */
     public function unset_var($name) {
         /**
          * @var $system System
          */
-        $system = Application::get_class('System');
+        $system = \Application::get_class('System');
         if($system->get_use_db_param()) {
-            /**
-             * @var $model SessionModel
-             */
-            $model  = Application::get_class('SessionModel');
-            $model->unset_var($name);
+            $this->model->unset_var($name);
         } else {
             unset($_SESSION[$name]);
         }
     }
 
+    /**
+     * @param $uid
+     * @throws InvalidArgumentException
+     */
     public function set_uid($uid) {
         /**
          * @var $system System
          */
-        $system = Application::get_class('System');
+        $system = \Application::get_class('System');
         if($system->get_use_db_param()) {
-            /**
-             * @var $model SessionModel
-             */
-            $model  = Application::get_class('SessionModel');
-            $model->set_uid($uid);
+            $this->model->set_uid($uid);
         }
     }
 }

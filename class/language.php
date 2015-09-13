@@ -1,7 +1,7 @@
 <?php
 
 class Language {
-	use trait_configuration;
+	use TraitConfiguration;
 
 	public function get_language() {
 		return Request::get_var('language') ?

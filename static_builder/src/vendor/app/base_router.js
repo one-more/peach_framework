@@ -56,6 +56,10 @@
 
         reload: function() {
             this.load_positions();
+        },
+
+        extend: function (obj) {
+            return $.extend(true, this, obj);
         }
     };
 })();

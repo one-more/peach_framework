@@ -27,6 +27,13 @@ class Application {
 		}
     }
 
+    public static function extension_exists($name) {
+        $name = strtolower($name);
+        $file = ROOT_PATH.DS.'extensions'.DS.$name.'.tar.gz';
+        $build_dir = ROOT_PATH.DS.'build'.DS.$name;
+        return file_exists($file) || file_exists($build_dir);
+    }
+
     /**
      * @param $class
      * @param $annotations

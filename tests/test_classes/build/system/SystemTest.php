@@ -12,7 +12,7 @@ require_once ROOT_PATH.DS.'build'.DS.'system'.DS.'system.php';
  * @method bool assertTrue($a)
  */
 class SystemTest extends PHPUnit_Framework_TestCase {
-	use trait_configuration;
+	use TraitConfiguration;
 
     /**
      * @var $system_obj System
@@ -21,12 +21,12 @@ class SystemTest extends PHPUnit_Framework_TestCase {
 	private $configuration;
 	private $session_id = 1;
 
-	public function __construct() {
-		parent::__construct();
-		$this->system_obj = Application::get_class('System');
-		$file = ROOT_PATH.DS.'resource'.DS.'configuration.json';
-		$this->configuration = json_decode(file_get_contents($file), true);
-	}
+    public function setUp() {
+        if(empty($this->system_obj)) {
+            $this->system_obj = Application::get_class('System');
+            $this->configuration = $this->get_params('configuration');
+        }
+    }
 
 	/**
 	 * @covers System::initialize
@@ -53,7 +53,7 @@ class SystemTest extends PHPUnit_Framework_TestCase {
 	/**
 	 * @covers System::get_use_db_param
 	 */
-	public function test_use_db() {
+	public function test_use_db_param() {
 		$use_db_param = $this->system_obj->get_use_db_param();
 
 		$this->set_params(['use_db' => true], 'configuration');
@@ -65,6 +65,16 @@ class SystemTest extends PHPUnit_Framework_TestCase {
 		$this->set_params(['use_db' => $use_db_param], 'configuration');
 		$this->assertEquals($this->configuration['use_db'], $this->system_obj->get_use_db_param());
 	}
+
+    /**
+     * @covers System::set_use_db_param
+     */
+	public function test_set_use_db_param() {
+        $old_value = $this->system_obj->get_use_db_param();
+        $this->system_obj->set_use_db_param(!$old_value);
+        $this->assertEquals(!$old_value, $this->system_obj->get_use_db_param());
+        $this->system_obj->set_use_db_param($old_value);
+    }
 
 	/**
 	 * @covers System::init_db

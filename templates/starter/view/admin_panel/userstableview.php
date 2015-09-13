@@ -1,5 +1,7 @@
 <?php
-namespace AdminPanel;
+namespace Starter\view\AdminPanel;
+
+use User\identity\UserIdentity;
 
 class UsersTableView extends \TemplateView {
 	public function __construct() {
@@ -14,6 +16,9 @@ class UsersTableView extends \TemplateView {
          * @var $ext \User
          */
         $ext = \Application::get_class('User');
+        /**
+         * @var $user UserIdentity
+         */
 		$user = $ext->get_current();
 		$users = $ext->get_list();
 		$this->assign('users', $users);

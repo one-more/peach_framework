@@ -1,5 +1,6 @@
 <?php
-namespace AdminPanel;
+
+namespace Starter\view\AdminPanel;
 
 class LoginFormView extends \TemplateView {
 	public function __construct() {

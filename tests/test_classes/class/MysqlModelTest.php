@@ -15,7 +15,7 @@ class MysqlModelTestImpl extends MysqlModel {
 		return parent::add_lang($table_name);
 	}
 
-	public function select($fields = null) {
+	public function select(array $fields = null) {
 		parent::select($fields);
 		return $this;
 	}
@@ -474,7 +474,7 @@ class MysqlModelTest extends PHPUnit_Framework_TestCase {
 			->where(['id' => ['=', 0]])
 			->execute()
 			->get_result();
-		$this->assertCount(1, $this->model->data_to_arrays($data));
+		$this->assertCount(0, $this->model->data_to_arrays($data));
 	}
 
 	/**

@@ -1,9 +1,13 @@
 <?php
 
-class TemplatesTableView extends ExtensionView {
+namespace Tools\view;
+
+use Tools\controller\TemplatesController;
+
+class TemplatesTableView extends \ExtensionView {
 
 	public function get_extension() {
-        return Application::get_class('Tools');
+        return \Application::get_class('Tools');
     }
 
 	public function __construct() {
@@ -17,7 +21,7 @@ class TemplatesTableView extends ExtensionView {
         /**
          * @var $controller TemplatesController
          */
-		$controller = Application::get_class('TemplatesController');
+		$controller = \Application::get_class('Tools\controller\TemplatesController');
 		$templates_list = $controller->get_templates_list();
 		$this->assign('templates_list', $templates_list);
 		return $this->get_template('templates_table.tpl.html');

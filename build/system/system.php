@@ -4,21 +4,22 @@
  * Class System
  */
 class System {
-    use trait_extension;
+    use TraitExtension;
 
     public function initialize() {
+
+        if(!in_array('pfmextension', stream_get_wrappers(), $strict = true)) {
+            stream_wrapper_register('pfmextension', 'PFMExtensionWrapper');
+        }
+
+        $this->register_autoload();
+
         mb_internal_encoding('UTF-8');
         mb_http_output('UTF-8');
         mb_http_input('UTF-8');
 
-		if(!in_array('pfmextension', stream_get_wrappers(), $strict = true)) {
-			stream_wrapper_register('pfmextension', 'PFMExtensionWrapper');
-		}
-
-        $this->register_autoload();
-
-        error::initialize();
-        ExceptionHandler::initialize();
+        Error::initialize();
+        \System\handler\ExceptionHandler::initialize();
 
         $this->init_db();
 
@@ -48,11 +49,10 @@ class System {
     private function init_db() {
         $params = $this->get_configuration();
         if($params['use_db'] && empty($this->get_params()['db_initialized'])) {
-            $db_params = $params['db_params'];
             /**
-             * @var $model SystemInitModel
+             * @var $model \System\model\SystemInitModel
              */
-            $model = Application::get_class('SystemInitModel', $db_params);
+            $model = Application::get_class('\System\model\SystemInitModel');
             $model->initialize();
             $this->set_params(['db_initialized'=>true]);
         }

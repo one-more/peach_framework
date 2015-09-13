@@ -250,7 +250,7 @@ abstract class MysqlModel {
 		} elseif(!empty($data)) {
 			return [[$data]];
 		} else {
-            return [[]];
+            return [];
         }
 	}
 

@@ -1,7 +1,7 @@
 <?php
 
 abstract class FileModel {
-	use trait_json;
+	use TraitJSON;
 
 	protected $file;
 	protected $data;

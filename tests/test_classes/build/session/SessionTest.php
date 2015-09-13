@@ -12,7 +12,7 @@ require_once ROOT_PATH.DS.'build'.DS.'session'.DS.'model'.DS.'sessionmodel.php';
  * @method bool assertFalse($a)
  */
 class SessionTest extends PHPUnit_Framework_TestCase {
-	use trait_configuration;
+	use TraitConfiguration;
 
     /**
      * @var $session_obj Session
@@ -45,6 +45,13 @@ class SessionTest extends PHPUnit_Framework_TestCase {
 		}
 	}
 
+    /**
+     * @covers Session::__construct
+     */
+	public function test_construct() {
+        $this->assertInternalType('object', new Session());
+    }
+
 	/**
 	 * @covers Session::start
 	 * @expectedException PHPUnit_Framework_Error
@@ -69,7 +76,7 @@ class SessionTest extends PHPUnit_Framework_TestCase {
 	public function test_start_no_db() {
 		if($this->system_obj->get_use_db_param()) {
 			$this->set_params(['use_db' => false], 'configuration');
-			$this->assertInternalType('string', $this->session_obj->start());
+			$this->assertInternalType('int', $this->session_obj->start());
 		}
 	}
 

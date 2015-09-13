@@ -1,9 +1,11 @@
 <?php
 
-class LeftMenuView extends ExtensionView {
+namespace Tools\view;
+
+class LeftMenuView extends \ExtensionView {
 
 	public function get_extension() {
-        return Application::get_class('Tools');
+        return \Application::get_class('Tools');
     }
 
 	public function __construct() {
@@ -14,7 +16,7 @@ class LeftMenuView extends ExtensionView {
 	}
 
 	public function render() {
-		$this->assign('uri', Request::uri());
+		$this->assign('uri', \Request::uri());
 		return $this->get_template('left_menu.tpl.html');
 	}
 }

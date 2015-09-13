@@ -77,7 +77,6 @@ class PFMExtensionWrapperTest extends PHPUnit_Framework_TestCase {
 
 	/**
 	 * @covers PFMExtensionWrapper::url_stat
-	 * @expectedException PHPUnit_Framework_Error
 	 */
 	public function test_stat() {
 		$this->assertInternalType('array', lstat('pfmextension://system/system.php'));

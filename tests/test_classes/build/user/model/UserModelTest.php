@@ -13,42 +13,43 @@ require_once ROOT_PATH.DS.'build'.DS.'user'.DS.'model'.DS.'usermodel.php';
  */
 class UserModelTest extends \PHPUnit_Framework_TestCase {
     /**
-     * @var $model UserModel
+     * @var $model \User\model\UserModel
      */
     private $model;
 
 	public function setUp() {
-		$this->model = Application::get_class('UserModel');
+		$this->model = Application::get_class('\User\model\UserModel');
 	}
 
     /**
-     * @covers UserModel::get_table
+     * @covers \User\model\UserModel::get_table
      */
     public function test_get_table() {
         $method = new ReflectionMethod($this->model, 'get_table');
+        $method->setAccessible(true);
         $this->assertEquals('users', $method->invoke($this->model));
     }
 
 	/**
-	 * @covers UserModel::login
+	 * @covers \User\model\UserModel::login
 	 */
 	public function test_login() {
 		$this->assertFalse($this->model->login(null,null,null));
 
         /**
-         * @var $user UserIdentity
+         * @var $user \User\identity\UserIdentity
          */
 		$user = Application::get_class('User')->get_identity(1);
         $this->assertTrue($this->model->login($user->login, $user->password));
 	}
 
 	/**
-	 * @covers UserModel::log_out
+	 * @covers \User\model\UserModel::log_out
 	 * @expectedException PHPUnit_Framework_Error_Warning
 	 */
 	public function test_log_out() {
 		/**
-         * @var $user UserIdentity
+         * @var $user \User\identity\UserIdentity
          */
         $user = Application::get_class('User')->get_identity(1);
         $_COOKIE['user'] = $user->remember_hash;
@@ -64,13 +65,13 @@ class UserModelTest extends \PHPUnit_Framework_TestCase {
 	}
 
     /**
-     * @covers UserModel::get_fields
+     * @covers \User\model\UserModel::get_fields
      */
     public function test_get_fields() {
         $this->assertCount(0, $this->model->get_fields());
 
         /**
-         * @var $user UserIdentity
+         * @var $user \User\identity\UserIdentity
          */
         $user = Application::get_class('User')->get_identity(1);
         $this->assertGreaterThan(0, count($this->model->get_fields($user->id)));
@@ -80,7 +81,7 @@ class UserModelTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers UserModel::register
+     * @covers \User\model\UserModel::register
      */
     public function test_register() {
         $fields = [
@@ -90,11 +91,11 @@ class UserModelTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers UserModel::delete_user
+     * @covers \User\model\UserModel::delete_user
      */
     public function test_delete_user() {
         /**
-         * @var $user UserIdentity
+         * @var $user \User\identity\UserIdentity
          */
         $user = Application::get_class('User')
             ->get_identity_by_field('credentials', User::credentials_user);
@@ -105,7 +106,7 @@ class UserModelTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers UserModel::update_fields
+     * @covers \User\model\UserModel::update_fields
      */
     public function test_update_fields() {
         /**
@@ -126,7 +127,7 @@ class UserModelTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers UserModel::get_users
+     * @covers \User\model\UserModel::get_users
      */
     public function test_get_users() {
         $this->assertCount(0, $this->model->get_users([0]));
@@ -135,7 +136,7 @@ class UserModelTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers UserModel::get_id
+     * @covers \User\model\UserModel::get_id
      */
     public function test_get_id() {
         $this->assertEquals(0, $this->model->get_id());
@@ -158,7 +159,7 @@ class UserModelTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers UserModel::get_user_by_field
+     * @covers \User\model\UserModel::get_user_by_field
      */
     public function test_get_user_by_field() {
         $this->assertCount(0, $this->model->get_user_by_field('login', ''));
@@ -172,7 +173,7 @@ class UserModelTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers UserModel::get_user_by_field
+     * @covers \User\model\UserModel::get_user_by_field
      * @expectedException InvalidArgumentException
      */
     public function test_get_user_by_field_exception() {

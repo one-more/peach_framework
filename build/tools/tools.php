@@ -1,7 +1,7 @@
 <?php
 
 class Tools {
-	use trait_extension;
+	use TraitExtension;
 
 	public function __construct() {
 		$this->register_autoload();
@@ -9,9 +9,9 @@ class Tools {
 
 	public function route() {
         /**
-         * @var $router ToolsRouter
+         * @var $router \Tools\router\ToolsRouter
          */
-		$router = Application::get_class('ToolsRouter');
+		$router = Application::get_class('\Tools\router\ToolsRouter');
         $router->route();
 	}
 }

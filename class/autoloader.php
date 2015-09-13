@@ -3,10 +3,13 @@
 class Autoloader {
 
     public static function load_extension($name) {
+        if(!Application::extension_exists($name)) {
+            return false;
+        }
         $extension_class = $name;
-        $name   = strtolower($name);
-        $extension_dir  = ROOT_PATH.DS.'extensions'.DS.$name;
-        $extension_build_dir  = ROOT_PATH.DS.'build'.DS.$name;
+        $name = strtolower($name);
+        $extension_dir = ROOT_PATH.DS.'extensions'.DS.$name;
+        $extension_build_dir = ROOT_PATH.DS.'build'.DS.$name;
         $extension_path = "{$extension_dir}.tar";
         $extension_path_gz = "{$extension_dir}.tar.gz";
 
@@ -15,14 +18,14 @@ class Autoloader {
                 if(file_exists($extension_path_gz)) {
                     Phar::unlinkArchive($extension_path_gz);
                 }
-                $phar   = new PharData($extension_path);
+                $phar = new PharData($extension_path);
                 $phar->buildFromDirectory($extension_build_dir);
                 $phar->compress(Phar::GZ);
                 if(file_exists($extension_path)) {
                     unlink($extension_path);
                 }
             }
-        } else if(!file_exists($extension_path_gz)) {
+        } elseif(!file_exists($extension_path_gz)) {
             return false;
         }
         if(!class_exists($extension_class)) {
@@ -66,7 +69,7 @@ class Autoloader {
 
     public static function load_class($name, $dir = 'class') {
         $class_name = strtolower($name).'.php';
-        $file   = ROOT_PATH.DS.$dir.DS.$class_name;
+        $file = ROOT_PATH.DS.$dir.DS.$class_name;
         if(!file_exists($file)) {
             return false;
         } else {
@@ -103,6 +106,14 @@ class Autoloader {
         return static::load_class($name, $dir = 'helper');
     }
 
+    public static function load_controller($name) {
+        return static::load_class($name, $dir = 'controller');
+    }
+
+    public static function load_model($name) {
+		return static::load_class($name, $dir = 'model');
+    }
+
     public static function init_autoload() {
         spl_autoload_register([__CLASS__,'load_class']);
         spl_autoload_register([__CLASS__,'load_extension']);
@@ -110,6 +121,8 @@ class Autoloader {
         spl_autoload_register([__CLASS__,'load_template']);
         spl_autoload_register([__CLASS__,'load_interface']);
         spl_autoload_register([__CLASS__,'load_exception']);
+        spl_autoload_register([__CLASS__,'load_model']);
+        spl_autoload_register([__CLASS__,'load_controller']);
         spl_autoload_register([__CLASS__,'load_helper']);
     }
 }

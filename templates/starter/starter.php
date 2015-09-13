@@ -1,7 +1,7 @@
 <?php
 
 class Starter implements Template {
-    use trait_template;
+    use TraitTemplate;
 
     public function __construct() {
         $this->register_autoload();
@@ -12,11 +12,10 @@ class Starter implements Template {
          * @var $router Router
          */
 		if(strpos(Request::uri(), 'admin_panel') === false) {
-			$router = Application::get_class('SiteRouter');
-			$router->route();
+			$router = Application::get_class('Starter\router\SiteRouter');
 		} else {
-			$router = Application::get_class('AdminPanelRouter');
-			$router->route();
+			$router = Application::get_class('Starter\router\AdminPanelRouter');
 		}
+        $router->route();
 	}
 }

@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Class AutoloaderTest
+ *
+ * @method bool assertFalse($var)
+ * @method bool assertTrue($var)
+ */
 class AutoloaderTest extends PHPUnit_Framework_TestCase {
     
     /**

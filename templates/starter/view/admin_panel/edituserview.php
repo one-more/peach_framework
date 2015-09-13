@@ -1,5 +1,6 @@
 <?php
-namespace AdminPanel;
+
+namespace Starter\view\AdminPanel;
 
 class EditUserView extends \TemplateView {
 

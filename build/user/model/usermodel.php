@@ -1,6 +1,8 @@
 <?php
 
-class UserModel extends MysqlModel {
+namespace User\model;
+
+class UserModel extends \MysqlModel {
 
 	protected function get_table() {
         return 'users';
@@ -10,12 +12,12 @@ class UserModel extends MysqlModel {
      * @param $login
      * @param $password
      * @param bool|false $remember
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      * @return bool
      */
     public function login($login, $password, $remember = false) {
-        $login = VarHandler::sanitize_var($login, 'string', '');
-        $password = VarHandler::sanitize_var($password, 'string', '');
+        $login = \VarHandler::sanitize_var($login, 'string', '');
+        $password = \VarHandler::sanitize_var($password, 'string', '');
         $result = $this->select()
             ->where([
                 'login' => ['=', $login],
@@ -26,14 +28,11 @@ class UserModel extends MysqlModel {
             ->execute()
             ->get_array();
         if(!empty($result)) {
-            if(empty($result['remember_hash'])) {
-                $remember_hash  = password_hash($result['id'].$result['login'], PASSWORD_DEFAULT);
-                $this->update_fields(['remember_hash' => $remember_hash], $result['id']);
-            }
+            $result = $this->add_remember_hash($result);
             /**
-             * @var $session Session
+             * @var $session \Session
              */
-            $session = Application::get_class('Session');
+            $session = \Application::get_class('Session');
             if($remember) {
                 $_COOKIE['user'] = $result['remember_hash'];
                 setcookie('user', $result['remember_hash'], strtotime('2037-12-31'), '/');
@@ -45,17 +44,26 @@ class UserModel extends MysqlModel {
         return !empty($result);
     }
 
+    private function add_remember_hash(array $fields) {
+        if(count($fields) && empty($fields['remember_hash']) && !empty($fields['id'])) {
+            $remember_hash  = password_hash($fields['id'].$fields['login'], PASSWORD_DEFAULT);
+            $this->update_fields(['remember_hash' => $remember_hash], $fields['id']);
+        }
+        return $fields;
+    }
+
     /**
      * @return bool
+     * @throws \InvalidArgumentException
      */
     public function log_out() {
         if(!empty($_COOKIE['user'])) {
             setcookie('user', '', -1, '/');
         } else {
             /**
-             * @var $session Session
+             * @var $session \Session
              */
-            $session = Application::get_class('Session');
+            $session = \Application::get_class('Session');
             $session->unset_var('user');
         }
         return true;
@@ -64,6 +72,7 @@ class UserModel extends MysqlModel {
     /**
      * @param null|int $uid
      * @return array
+     * @throws \InvalidArgumentException
      */
     public function get_fields($uid = null) {
         if(!$uid) {
@@ -71,7 +80,7 @@ class UserModel extends MysqlModel {
         } else {
 			$uid = (int)$uid;
 		}
-		return $this->select()
+		$fields = $this->select()
             ->where([
                 'id' => ['=', $uid],
                 'and' => [
@@ -80,6 +89,7 @@ class UserModel extends MysqlModel {
             ])
             ->execute()
             ->get_array();
+        return $this->add_remember_hash($fields);
     }
 
     /**
@@ -104,6 +114,7 @@ class UserModel extends MysqlModel {
     /**
      * @param $fields
      * @param null|int $uid
+     * @throws \InvalidArgumentException
      */
     public function update_fields($fields, $uid = null) {
         if(!$uid) {
@@ -133,14 +144,17 @@ class UserModel extends MysqlModel {
 				'deleted' => ['=', 0]
 			];
 		}
-		return $this->select()
+		$result = $this->select()
             ->where($where)
             ->execute()
             ->get_arrays();
+        return array_map(function($fields) {
+            return $this->add_remember_hash($fields);
+        }, $result);
     }
 
     /**
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      * @return int
      */
     public function get_id() {
@@ -148,9 +162,9 @@ class UserModel extends MysqlModel {
 			$remember_hash = $_COOKIE['user'];
 		} else {
             /**
-             * @var $session Session
+             * @var $session \Session
              */
-			$session = Application::get_class('Session');
+			$session = \Application::get_class('Session');
 			$remember_hash = $session->get_var('user');
 		}
 		if($remember_hash) {
@@ -171,13 +185,13 @@ class UserModel extends MysqlModel {
      * @param $field
      * @param $value
      * @return array
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
     public function get_user_by_field($field, $value) {
 		if(!is_string($field)) {
-			throw new InvalidArgumentException('field name must be a string');
+			throw new \InvalidArgumentException('field name must be a string');
 		}
-        return $this->select()
+        $fields = $this->select()
             ->where([
                 $field => ['=', $value],
                 'and' => [
@@ -186,5 +200,6 @@ class UserModel extends MysqlModel {
             ])
             ->execute()
             ->get_array();
+        return $this->add_remember_hash($fields);
     }
 }

@@ -16,6 +16,6 @@ class Error {
 
     public static function log() {
         $msg = implode(' ', func_get_args());
-        file_put_contents(WEB_ROOT.DS.'error.log',date('j.m.Y H:i:s').' - '.$msg."\r\n", FILE_APPEND);
+        file_put_contents(WEB_ROOT.DS.'error.log', date('j.m.Y H:i:s').' - '.$msg.PHP_EOL, FILE_APPEND);
     }
 }

@@ -1,9 +1,11 @@
 <?php
 
-class TopMenuView extends ExtensionView {
+namespace Tools\view;
+
+class TopMenuView extends \ExtensionView {
 
 	public function get_extension() {
-        return Application::get_class('Tools');
+        return \Application::get_class('Tools');
     }
 
 	public function __construct() {

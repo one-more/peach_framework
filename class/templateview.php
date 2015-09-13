@@ -1,7 +1,7 @@
 <?php
 
 abstract class TemplateView extends Smarty implements View {
-    use trait_view;
+    use TraitView;
 
     /**
      * @var $template Template
@@ -23,23 +23,12 @@ abstract class TemplateView extends Smarty implements View {
     /**
      * @return string
      */
-	public function get_lang_file() {
-		$parts = explode('\\', get_class($this));
-		$class = strtolower(array_pop($parts));
-		$parts = array_map(['StringHelper', 'camelcase_to_dash'], $parts);
-		$file = 'view'.DS.implode(DS, $parts).DS.$class.'.json';
-		return $file;
-	}
-
-    /**
-     * @return string
-     */
 	abstract public function render();
 
     /**
      * @return null
      */
 	public function get_lang_vars_base_dir() {
-		return null;
+		return $this->template->get_lang_path();
 	}
 }
