@@ -33,7 +33,7 @@ class UserAuth {
     public function login_by_ajax() {
         $login = \Request::get_var('login', 'string');
         $password = \Request::get_var('password', 'string');
-        $remember = \Request::get_var('remember', 'string');
+        $remember = \Request::get_var('remember', 'string', false);
 
         return $this->login($login, $password, (bool)$remember);
     }

@@ -32,6 +32,7 @@ class UserModelTest extends \PHPUnit_Framework_TestCase {
 
 	/**
 	 * @covers \User\model\UserModel::login
+     * @expectedException PHPUnit_Framework_Error_Warning
 	 */
 	public function test_login() {
 		$this->assertFalse($this->model->login(null,null,null));
@@ -41,7 +42,23 @@ class UserModelTest extends \PHPUnit_Framework_TestCase {
          */
 		$user = Application::get_class('User')->get_identity(1);
         $this->assertTrue($this->model->login($user->login, $user->password));
+
+        $this->assertTrue($this->model->login($user->login, $user->password, $remember = true));
 	}
+
+    /**
+     * @covers \User\model\UserModel::add_remember_hash
+     */
+    public function test_add_remember_hash() {
+        /**
+         * @var $ext User
+         */
+        $ext = Application::get_class('User');
+        $user = $ext->get_identity_by_field('remember_hash', '');
+        $method = new ReflectionMethod($this->model, 'add_remember_hash');
+        $method->setAccessible(true);
+        $method->invoke($this->model, (array)$user);
+    }
 
 	/**
 	 * @covers \User\model\UserModel::log_out
@@ -54,6 +71,7 @@ class UserModelTest extends \PHPUnit_Framework_TestCase {
         $user = Application::get_class('User')->get_identity(1);
         $_COOKIE['user'] = $user->remember_hash;
         $this->model->log_out();
+        unset($_COOKIE['user']);
 
         /**
          * @var $session Session

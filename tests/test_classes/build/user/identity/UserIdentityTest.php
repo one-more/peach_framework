@@ -17,6 +17,13 @@ class UserIdentityTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
+     * @covers \User\identity\UserIdentity::__construct
+     */
+    public function test_construct() {
+        new \User\identity\UserIdentity([]);
+    }
+
+    /**
      * @covers \User\identity\UserIdentity::is_guest
      */
     public function test_is_guest() {
@@ -56,12 +63,15 @@ class UserIdentityTest extends PHPUnit_Framework_TestCase {
      */
     public function test_is_admin() {
         /**
+         * @var $user User
+         */
+        $ext = Application::get_class('User');
+        /**
          * @var $user \User\identity\UserIdentity
          */
-        $user = Application::get_class('User')->
-                get_identity_by_field('credentials', User::credentials_admin);
+        $user = $ext->get_identity_by_field('credentials', User::credentials_admin);
         if(empty($user)) {
-            $user = Application::get_class('User')->get_identity(1);
+            $user = $ext->get_identity_by_field('credentials', User::credentials_super_admin);
         }
         $this->assertTrue($user->is_admin());
     }
@@ -70,12 +80,15 @@ class UserIdentityTest extends PHPUnit_Framework_TestCase {
      * @covers \User\identity\UserIdentity::is_super_admin
      */
     public function test_is_super_admin() {
+         /**
+         * @var $user User
+         */
+        $ext = Application::get_class('User');
+
         /**
          * @var $user \User\identity\UserIdentity
          */
-        $user =
-            Application::get_class('User')->
-                get_identity_by_field('credentials', User::credentials_super_admin);
-        $this->assertTrue($user->is_admin());
+        $user = $ext->get_identity_by_field('credentials', User::credentials_super_admin);
+        $this->assertTrue($user->is_super_admin());
     }
 }

@@ -193,6 +193,7 @@ class User {
     /**
      * @param $fields
      * @throws InvalidUserDataException
+     * @return int $id
      */
     public function add($fields) {
         Application::init_validator();
@@ -223,7 +224,7 @@ class User {
 
         $validator->registerRules(['hash_password' => $this->get_hash_password_rule($fields)]);
         if($validator->validate($fields)) {
-            $this->model->register($fields);
+            return $this->model->register($fields);
         } else {
             $lang_vars = new LanguageFile('user.json', $this->get_lang_path());
             throw new InvalidUserDataException((array)$validator->getErrors($lang_vars['errors']));

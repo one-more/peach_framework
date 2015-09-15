@@ -52,6 +52,61 @@ class UserTest extends PHPUnit_Framework_TestCase {
 	}
 
     /**
+     * @covers User::__construct
+     */
+    public function test_construct() {
+        new User();
+    }
+
+    /**
+     * @covers User::get_auth
+     */
+    public function test_get_auth() {
+        /**
+         * @var $ext User
+         */
+        $ext = Application::get_class('User');
+        $this->assertTrue($ext->get_auth() instanceof AnnotationsDecorator);
+    }
+
+    /**
+     * @covers User::get_current
+     */
+    public function test_get_current() {
+        /**
+         * @var $ext User
+         */
+        $ext = Application::get_class('User');
+        $this->assertTrue($ext->get_current() instanceof \User\identity\UserIdentity);
+    }
+
+    /**
+     * @covers User::get_identity
+     */
+    public function test_get_identity() {
+        /**
+         * @var $ext User
+         */
+        $ext = Application::get_class('User');
+        $this->assertNull($ext->get_identity(0));
+
+        $this->assertTrue($ext->get_identity(1) instanceof \User\identity\UserIdentity);
+    }
+
+    /**
+     * @covers User::get_identity_by_field
+     */
+    public function test_get_identity_by_field() {
+         /**
+         * @var $ext User
+         */
+        $ext = Application::get_class('User');
+        $this->assertNull($ext->get_identity_by_field('id', 0));
+
+        $this->assertTrue($ext->get_identity_by_field('id', 1) instanceof \User\identity\UserIdentity);
+    }
+
+    /**
      * @covers User::add
      */
 	public function test_add() {
@@ -117,6 +172,20 @@ class UserTest extends PHPUnit_Framework_TestCase {
          * @var $user \User\identity\UserIdentity
          */
         $user = Application::get_class('User')->get_identity_by_field('credentials', User::credentials_user);
+        $_COOKIE['user'] = $user->remember_hash;
+
+        Application::get_class('User')->add_by_ajax();
+    }
+
+    /**
+     * @covers User::add_by_ajax
+     */
+    public function test_add_by_ajax_none_login() {
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'xmlhttprequest';
+        /**
+         * @var $user \User\identity\UserIdentity
+         */
+        $user = Application::get_class('User')->get_identity(1);
         $_COOKIE['user'] = $user->remember_hash;
 
         Application::get_class('User')->add_by_ajax();
@@ -245,6 +314,33 @@ class UserTest extends PHPUnit_Framework_TestCase {
         $_REQUEST['id'] = $user->id;
 
         Application::get_class('User')->edit_by_ajax();
+    }
+
+    /**
+     * @covers User::edit_by_ajax
+     * @expectedException InvalidArgumentException
+     */
+    public function test_edit_by_ajax_not_id() {
+        $_REQUEST['login'] = uniqid('test_user', true);
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'xmlhttprequest';
+
+        /**
+         * @var $ext User
+         */
+        $ext = Application::get_class('User');
+        /**
+         * @var $user \User\identity\UserIdentity
+         */
+        $user = $ext->get_identity_by_field('credentials', User::credentials_super_admin);
+        $_COOKIE['user'] = $user->remember_hash;
+
+        $uid = $this->test_model->get_user_with_max_id()['id'];
+        $new_login = $_REQUEST['login'];
+
+        Application::get_class('User')->edit_by_ajax();
+
+        $user = Application::get_class('User')->get_identity($uid);
+        $this->assertEquals($user->login, $new_login);
     }
 
     /**
