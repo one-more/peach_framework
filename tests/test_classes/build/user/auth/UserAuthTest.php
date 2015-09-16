@@ -44,8 +44,7 @@ class UserAuthTest extends PHPUnit_Framework_TestCase {
             'login' => uniqid('test_', true),
             'password' => uniqid('', true)
         ];
-        $id = $ext->add($fields);
-        Error::log($id);
+        $ext->add($fields);
         $this->assertTrue($this->obj->login($fields['login'], $fields['password']));
     }
 
@@ -61,10 +60,10 @@ class UserAuthTest extends PHPUnit_Framework_TestCase {
          * @var $ext User
          */
         $ext = Application::get_class('User');
-        $user = $ext->get_identity_by_field('credentials', User::credentials_user);
+        $user = $ext->get_identity_by_field('password', '');
         $_REQUEST['login'] = $user->login;
         $_REQUEST['password'] = $user->password;
-        $this->assertTrue($this->test_login_by_ajax());
+        $this->assertTrue($this->obj->login_by_ajax());
     }
 
     /**

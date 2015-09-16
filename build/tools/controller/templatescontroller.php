@@ -23,7 +23,7 @@ class TemplatesController {
 	public function get_templates_list() {
 		return array_map(function($fields) {
             return new TemplateRecord($fields);
-        }, $this->model->get_list());
+        }, $this->model->select()->toArray());
 	}
 
     /**
@@ -31,7 +31,9 @@ class TemplatesController {
      * @return null|TemplateRecord
      */
     public function get_template($id) {
-        $fields = $this->model->get_one($id);
+        $fields = $this->model->select()->where(function($record) use($id) {
+            return $record['id'] == $id;
+        })->firstOrDefault(null);
         return count($fields) ? new TemplateRecord($fields) : null;
     }
 }

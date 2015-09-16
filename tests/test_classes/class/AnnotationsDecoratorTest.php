@@ -66,7 +66,7 @@ class AnnotationsDecoratorTest extends PHPUnit_Framework_TestCase {
 
     /**
      * @covers AnnotationsDecorator::__call
-     * @expectedException InvalidArgumentException
+     * @expectedException NotExistedMethodException
      */
     public function test_call_none_existed_method() {
         $this->assertEquals('test', $this->obj->not_existed_method());

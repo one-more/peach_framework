@@ -8,15 +8,15 @@ class AnnotationsDecorator {
     }
 
     public function __call($method, $arguments) {
-        $annotations = ReflectionHelper::get_method_annotations($this->object, $method);
-        if(count($annotations)) {
-            $this->handle_annotations($annotations);
-        }
         if(is_callable([$this->object, $method])) {
+            $annotations = ReflectionHelper::get_method_annotations($this->object, $method);
+            if(count($annotations)) {
+                $this->handle_annotations($annotations);
+            }
             return call_user_func_array([$this->object, $method], $arguments);
         } else {
             $msg = get_class($this->object)." has no method {$method}";
-            throw new InvalidArgumentException($msg);
+            throw new NotExistedMethodException($msg);
         }
     }
 

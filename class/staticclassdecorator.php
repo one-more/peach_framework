@@ -13,7 +13,7 @@ class StaticClassDecorator {
             return $method->invokeArgs(null, $arguments);
         } else {
             $msg = "{$this->class_name} has no method {$name}";
-            throw new InvalidArgumentException($msg);
+            throw new NotExistedMethodException($msg);
         }
     }
 }

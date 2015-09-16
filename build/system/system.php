@@ -3,7 +3,7 @@
 /**
  * Class System
  */
-class System {
+class System implements Extension {
     use TraitExtension;
 
     public function initialize() {

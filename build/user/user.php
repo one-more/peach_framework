@@ -5,7 +5,7 @@
  *
  * @decorate AnnotationsDecorator
  */
-class User {
+class User implements Extension {
     use TraitExtension;
 
     /**
@@ -76,9 +76,13 @@ class User {
             return function($value, $undef, &$output_arr) use($fields) {
                 if(trim($value)) {
                     /**
+                     * @var $ext User
+                     */
+                    $ext = Application::get_class('User');
+                    /**
                      * @var $user_auth \User\auth\UserAuth
                      */
-                    $user_auth = Application::get_class('User')->get_auth();
+                    $user_auth = $ext->get_auth();
                     $output_arr = $user_auth->crypt_password($fields['login'], $value);
                     return;
                 }
@@ -108,6 +112,9 @@ class User {
 
         $response = new JsonResponse();
 
+        /**
+         * @var $lang_vars ArrayAccess
+         */
         $lang_vars = new LanguageFile('user.json', $this->get_lang_path());
         try {
             $this->edit($user_data, $uid);
@@ -153,7 +160,7 @@ class User {
 
         $validator->registerRules(['hash_password' => $this->get_hash_password_rule($fields)]);
 
-        if($validator->validate($fields)) {
+        if($fields = $validator->validate($fields)) {
             $this->model->update_fields($fields, $uid);
         } else {
             $lang_vars = new LanguageFile('user.json', $this->get_lang_path());
@@ -177,6 +184,9 @@ class User {
 
         $response = new JsonResponse();
 
+        /**
+         * @var $lang_vars ArrayAccess
+         */
         $lang_vars = new LanguageFile('user.json', $this->get_lang_path());
         try {
             $this->add($user_data);
@@ -223,7 +233,7 @@ class User {
         }]);
 
         $validator->registerRules(['hash_password' => $this->get_hash_password_rule($fields)]);
-        if($validator->validate($fields)) {
+        if($fields = $validator->validate($fields)) {
             return $this->model->register($fields);
         } else {
             $lang_vars = new LanguageFile('user.json', $this->get_lang_path());

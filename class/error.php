@@ -3,7 +3,7 @@
 class Error {
 
     public static function initialize() {
-        $log_file_path  = WEB_ROOT.DS.'error.log';
+        $log_file_path = WEB_ROOT.DS.'error.log';
         if(file_exists($log_file_path)) {
             if(filesize($log_file_path) > (1024*1024*3)) {
                 unlink($log_file_path);

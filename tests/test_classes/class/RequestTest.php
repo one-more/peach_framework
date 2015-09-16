@@ -10,6 +10,22 @@ class RequestTest extends PHPUnit_Framework_TestCase {
 		$this->assertTrue(Request::is_ajax());
 	}
 
+    /**
+     * @covers Request::is_post
+     */
+	public function test_is_post() {
+        $_SERVER['REQUEST_METHOD'] = 'post';
+        $this->assertTrue(Request::is_post());
+    }
+
+    /**
+     * @covers Request::is_get
+     */
+    public function test_is_get() {
+        $_SERVER['REQUEST_METHOD'] = 'get';
+        $this->assertTrue(Request::is_get());
+    }
+
 	public function get_var_provider() {
 		$_REQUEST['test_int'] = 1;
 		$_REQUEST['test_float'] = 1.3;

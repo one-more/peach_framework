@@ -74,10 +74,6 @@ class MysqlModelTestImpl extends MysqlModel {
 		return $this;
 	}
 
-	public function sub_query() {
-		return parent::sub_query();
-	}
-
 	public function join($type, $table, $conditions) {
 		parent::join($type, $table, $conditions);
 		return $this;
@@ -374,13 +370,6 @@ class MysqlModelTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers MysqlModel::sub_query
-	 */
-	public function test_sub_query() {
-		$this->assertTrue($this->model->sub_query() instanceof MysqlModelTestImpl);
-	}
-
-	/**
 	 * @covers MysqlModel::having
 	 */
 	public function test_having() {
@@ -509,6 +498,12 @@ class MysqlModelTest extends PHPUnit_Framework_TestCase {
 			->execute()
 			->get_result();
 		$this->assertCount(1, $this->model->data_to_array($data));
+
+		$data = $this->model->select()
+            ->where(['id' => ['=', 0]])
+            ->execute()
+            ->get_result();
+        $this->assertCount(0, $this->model->data_to_array($data));
 	}
 
 	/**

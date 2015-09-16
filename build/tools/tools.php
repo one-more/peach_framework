@@ -1,6 +1,6 @@
 <?php
 
-class Tools {
+class Tools implements Extension {
 	use TraitExtension;
 
 	public function __construct() {

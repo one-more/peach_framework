@@ -7,7 +7,7 @@ class FakeRouter extends Router {
 		$this->routes = [
 			'/users' => [$this, 'users'],
 			'/user/:number' => ['FakeRouter', 'user'],
-			'/team/:string' => ['FakeRouter', 'team'],
+			'/team/:string' => ['FakeRouter', 'team', 'no check'],
 			'/*not_found' => [$this, 'not_found']
 		];
 	}

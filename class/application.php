@@ -27,6 +27,10 @@ class Application {
 		}
     }
 
+    /**
+     * @param $name
+     * @return bool
+     */
     public static function extension_exists($name) {
         $name = strtolower($name);
         $file = ROOT_PATH.DS.'extensions'.DS.$name.'.tar.gz';

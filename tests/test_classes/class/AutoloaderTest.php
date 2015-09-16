@@ -18,6 +18,24 @@ class AutoloaderTest extends PHPUnit_Framework_TestCase {
             $this->assertTrue(Autoloader::load_extension($name));
         }
         $this->assertFalse(Autoloader::load_extension('NotExistedClass'));
+
+        $name = 'fakeextension';
+        $extension_file = ROOT_PATH.DS.'extensions'.DS.$name;
+        $extension_build_dir = ROOT_PATH.DS.'tests'.DS.'resource'.DS.$name;
+        $extension_file_tar = "{$extension_file}.tar";
+        $extension_file_gz = "{$extension_file}.tar.gz";
+
+        if(file_exists($extension_file_gz)) {
+            Phar::unlinkArchive($extension_file_gz);
+        }
+        $phar = new PharData($extension_file_tar);
+        $phar->buildFromDirectory($extension_build_dir);
+        $phar->compress(Phar::GZ);
+        if(file_exists($extension_file_tar)) {
+            unlink($extension_file_tar);
+        }
+        $this->assertTrue(Autoloader::load_extension($name));
+        unlink($extension_file_gz);
     }
 
     /**
@@ -133,5 +151,29 @@ class AutoloaderTest extends PHPUnit_Framework_TestCase {
             $this->assertTrue(Autoloader::load_exception($name));
         }
         $this->assertFalse(Autoloader::load_exception('NotExistedException'));
+    }
+
+    /**
+     * @covers Autoloader::load_helper
+     */
+    public function test_load_helper() {
+        $helpers = glob(ROOT_PATH.DS.'helper'.DS.'*');
+        foreach($helpers as $helper) {
+            $name = ucwords(explode('.', basename($helper))[0]);
+            $this->assertTrue(Autoloader::load_helper($name));
+        }
+        $this->assertFalse(Autoloader::load_helper('NotExistedHelper'));
+    }
+
+    /**
+     * @covers Autoloader::load_model
+     */
+    public function test_load_model() {
+        $models = glob(ROOT_PATH.DS.'model'.DS.'*');
+        foreach($models as $model) {
+            $name = ucwords(explode('.', basename($model))[0]);
+            $this->assertTrue(Autoloader::load_model($name));
+        }
+        $this->assertFalse(Autoloader::load_model('NotExistedModel'));
     }
 }

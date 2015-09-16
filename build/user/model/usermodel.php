@@ -16,8 +16,6 @@ class UserModel extends \MysqlModel {
      * @return bool
      */
     public function login($login, $password, $remember = false) {
-        $login = \VarHandler::sanitize_var($login, 'string', '');
-        $password = \VarHandler::sanitize_var($password, 'string', '');
         $result = $this->select()
             ->where([
                 'login' => ['=', $login],

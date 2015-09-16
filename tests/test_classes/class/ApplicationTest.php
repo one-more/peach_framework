@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * Class AnnotationDecorated
+ *
+ * @decorate AnnotationsDecorator
+ */
+class AnnotationDecorated {}
+
+class NotDecorated {}
+
 class ApplicationTest extends PHPUnit_Framework_TestCase {
 
 	public function setUp() {
@@ -20,7 +29,27 @@ class ApplicationTest extends PHPUnit_Framework_TestCase {
 		$this->assertInternalType('object', Application::get_class('User'));
 	}
 
+    /**
+     * @covers Application::extension_exists
+     */
+	public function test_extension_exists() {
+        $this->assertTrue(Application::extension_exists('system'));
 
+        $this->assertTrue(Application::extension_exists('smarty'));
+    }
+
+    /**
+     * @covers Application::handle_annotations
+     */
+    public function test_handle_annotations() {
+        $obj = new AnnotationDecorated();
+        $annotations = ReflectionHelper::get_class_annotations($obj);
+        $method = new ReflectionMethod('Application', 'handle_annotations');
+        $method->setAccessible(true);
+        $this->assertTrue($method->invoke(null, $obj, $annotations) instanceof AnnotationsDecorator);
+
+        $this->assertTrue($method->invoke(null, new NotDecorated(), $annotations) instanceof NotDecorated);
+    }
 
 	/**
 	 * @expectedException InvalidArgumentException
@@ -47,4 +76,11 @@ class ApplicationTest extends PHPUnit_Framework_TestCase {
 		$_SERVER['HTTP_HOST'] = 'dev.pfm.my';
 		$this->assertTrue(Application::is_dev());
 	}
+
+    /**
+     * @covers Application::init_validator
+     */
+    public function test_init_validator() {
+        Application::init_validator();
+    }
 }

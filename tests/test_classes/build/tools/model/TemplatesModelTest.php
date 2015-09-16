@@ -33,22 +33,8 @@ class TemplatesModelTest extends \PHPUnit_Framework_TestCase {
          * @var $ext Tools
          */
         $ext = Application::get_class('Tools');
-        $this->assertEquals($ext->get_path().DS.'resource'.DS.'templates_list.json', $this->model->get_file());
-    }
-
-    /**
-     * @covers \Tools\model\TemplatesModel::get_list
-     */
-    public function test_get_list() {
-        $this->assertInternalType('array', $this->model->get_list());
-    }
-
-    /**
-     * @covers \Tools\model\TemplatesModel::get_one
-     */
-    public function test_get_one() {
-        $this->assertGreaterThan(0, count($this->model->get_one(1)));
-
-        $this->assertCount(0, $this->model->get_one(0));
+        $file = $ext->get_path().DS.'resource'.DS.'templates_model.json';
+        $this->assertEquals($file, $this->model->get_file());
+        $this->assertTrue(file_exists($file));
     }
 }

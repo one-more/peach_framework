@@ -6,31 +6,35 @@ class Autoloader {
         if(!Application::extension_exists($name)) {
             return false;
         }
+
         $extension_class = $name;
         $name = strtolower($name);
-        $extension_dir = ROOT_PATH.DS.'extensions'.DS.$name;
+        $extension_file = ROOT_PATH.DS.'extensions'.DS.$name;
         $extension_build_dir = ROOT_PATH.DS.'build'.DS.$name;
-        $extension_path = "{$extension_dir}.tar";
-        $extension_path_gz = "{$extension_dir}.tar.gz";
+        $extension_file_tar = "{$extension_file}.tar";
+        $extension_file_gz = "{$extension_file}.tar.gz";
 
+        /*
+         * build extension if it has changed or has not built yet
+         */
         if(file_exists($extension_build_dir)) {
-            if(static::is_extension_changed($name) || !file_exists($extension_path_gz)) {
-                if(file_exists($extension_path_gz)) {
-                    Phar::unlinkArchive($extension_path_gz);
+            if(self::is_extension_changed($name) || !file_exists($extension_file_gz)) {
+                if(file_exists($extension_file_gz)) {
+                    Phar::unlinkArchive($extension_file_gz);
                 }
-                $phar = new PharData($extension_path);
+                $phar = new PharData($extension_file_tar);
                 $phar->buildFromDirectory($extension_build_dir);
                 $phar->compress(Phar::GZ);
-                if(file_exists($extension_path)) {
-                    unlink($extension_path);
+                if(file_exists($extension_file_tar)) {
+                    unlink($extension_file_tar);
                 }
             }
-        } elseif(!file_exists($extension_path_gz)) {
-            return false;
         }
+
         if(!class_exists($extension_class)) {
-            require_once "phar://{$extension_path_gz}/{$name}.php";
+            require_once "pfmextension://{$name}/{$name}.php";
         }
+
         return true;
     }
 

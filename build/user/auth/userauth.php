@@ -20,6 +20,8 @@ class UserAuth {
     }
 
     public function login($login, $password, $remember = false) {
+        $login = \VarHandler::sanitize_var($login, 'string', '');
+        $password = \VarHandler::sanitize_var($password, 'string', '');
         $password = trim($password);
         if($password) {
             $password = $this->crypt_password($login, $password);
@@ -39,7 +41,7 @@ class UserAuth {
     }
 
     public function crypt_password($login, $password) {
-        return crypt(trim($password), md5($password).md5($login));
+        return crypt(trim($password), sha1($password).sha1($login).uniqid('password', true));
     }
 
     public function log_out() {
