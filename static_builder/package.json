@@ -17,6 +17,8 @@
         "gulp-watch": "*",
         "imagemin-pngquant": "*",
         "opn": "*",
-        "try-thread-sleep": "^1.0.0"
+        "try-thread-sleep": "^1.0.0",
+        "gulp-babel": "*",
+        "gulp-cssnext": "*"
     }
 }

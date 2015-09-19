@@ -25,7 +25,9 @@ var gulp = require('gulp'),
     sourcemaps = require('gulp-sourcemaps'),
     rigger = require('gulp-rigger'),
     imagemin = require('gulp-imagemin'),
-    pngquant = require('imagemin-pngquant');
+    pngquant = require('imagemin-pngquant'),
+    babel = require('gulp-babel'),
+    cssnext = require('gulp-cssnext');
 
 var path = {
     build: { //Тут мы укажем куда складывать готовые после сборки файлы
@@ -49,6 +51,7 @@ gulp.task('js:build', function () {
     get_dirs_list('src').forEach(function(dir) {
         gulp.src('src/'+dir+'/js/*.js')
             .pipe(rigger())
+            .pipe(babel())
             .on('error', console.log)
             .pipe(uglify())
             .pipe(gulp.dest('../www/'+dir+'/js'));
@@ -65,6 +68,9 @@ gulp.task('style:build', function () {
             .pipe(rigger())
             .on('error', console.log)
             .pipe(prefixer())
+            .pipe(cssnext({
+                compress: true
+            }))
             .pipe(cssmin())
             .pipe(gulp.dest('../www/'+dir+'/css'));
     });
