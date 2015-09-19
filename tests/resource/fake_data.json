@@ -1,5 +1,6 @@
 {
-    "1": {
-        "field": "value"
-    }
+	"1"	: {
+		"id"	: "1",
+		"field"	: "value"
+	}
 }

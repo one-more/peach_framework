@@ -36,6 +36,7 @@ class User implements Extension {
      * Returns current user in system. If user is not logged in, identity will have id = 0
      *
      * @return \User\identity\UserIdentity
+     * @throws InvalidArgumentException
      */
     public function get_current() {
         return new \User\identity\UserIdentity($this->model->get_fields());

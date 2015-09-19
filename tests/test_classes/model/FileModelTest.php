@@ -31,7 +31,7 @@ class FileModelTest extends PHPUnit_Framework_TestCase {
      * @covers FileModel::insert
      */
     public function test_insert() {
-        $this->assertInternalType($this->model->insert([
+        $this->assertInternalType('int', $this->model->insert([
             'field' => uniqid('value', true)
         ]));
     }

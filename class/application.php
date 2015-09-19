@@ -59,6 +59,7 @@ class Application {
 
 	public static function initialize() {
 		require_once ROOT_PATH.DS.'class'.DS.'autoloader.php';
+
         Autoloader::init_autoload();
 
 		FileSystemHelper::init_dirs();

@@ -1,5 +1,6 @@
 {
-    "1" : {
+    "0" : {
+        "id": 1,
         "name" : "Starter",
         "can_delete" : false
     }

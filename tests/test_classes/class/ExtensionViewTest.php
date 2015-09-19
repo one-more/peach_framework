@@ -25,6 +25,12 @@ class ExtensionViewTest extends PHPUnit_Framework_TestCase {
         new FakeExtensionView();
     }
 
+    public function setUp() {
+        if(empty($this->view)) {
+            $this->view = new FakeExtensionView();
+        }
+    }
+
     /**
      * @covers ExtensionView::get_lang_vars_base_dir
      */

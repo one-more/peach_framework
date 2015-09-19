@@ -19,10 +19,11 @@ class SessionTest extends PHPUnit_Framework_TestCase {
      */
 	private $session_obj;
 
-	private $session_id = 1;
+	private $session_id;
 
 	public function setUp() {
 		$this->session_obj = Application::get_class('Session');
+        $this->session_id = $this->session_obj->start();
 		$_COOKIE['pfm_session_id'] = $this->session_id;
 	}
 

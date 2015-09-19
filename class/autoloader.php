@@ -32,7 +32,7 @@ class Autoloader {
         }
 
         if(!class_exists($extension_class)) {
-            require_once "pfmextension://{$name}/{$name}.php";
+            require_once "phar://{$extension_file_gz}/{$name}.php";
         }
 
         return true;

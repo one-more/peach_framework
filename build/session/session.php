@@ -9,8 +9,8 @@ class Session implements Extension {
     private $model;
 
 	public function __construct() {
+        $this->register_autoload();
         $this->model = \Application::get_class('\Session\model\SessionModel');
-		$this->register_autoload();
 	}
 
     /**
@@ -49,7 +49,11 @@ class Session implements Extension {
     public function get_var($name, $default = false) {
         return $this->model->select()->where(function($record) use($name) {
             return !empty($record['variables'][$name]);
-        })->firstOrDefault($default);
+        })->firstOrDefault([
+            'variables' => [
+                "{$name}" => $default
+            ]
+        ])['variables'][$name];
     }
 
     /**

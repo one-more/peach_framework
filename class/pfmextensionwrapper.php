@@ -25,7 +25,9 @@ class PFMExtensionWrapper {
 			array_pop($parts);
 			$this->phar_dir = DS.implode('/', $parts);
 		}
-		$this->extension .= '.tar.gz';
+		if(!empty($this->extension)) {
+            $this->extension .= '.tar.gz';
+        }
 	}
 
 	private function create_phar_data() {
