@@ -31,8 +31,12 @@ class PFMExtensionWrapper {
 	}
 
 	private function create_phar_data() {
-		$extension_path = $this->extensions_path.DS.$this->extension;
-		return new PharData($extension_path, 0, null, $this->phar_type);
+        $extension_path = $this->extensions_path.DS.$this->extension;
+		if(file_exists($extension_path) && is_file($extension_path)) {
+            return new PharData($extension_path, 0, null, $this->phar_type);
+        } else {
+            throw new NotexistedExtensionException();
+        }
 	}
 
 	public function stream_open($path, $mode, $options, &$opened_path) {

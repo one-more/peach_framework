@@ -5,7 +5,7 @@ namespace Session\model;
 class SessionModel extends \FileModel {
 
     public function get_file() {
-        return 'pfmextension://'.DS.'resource'.DS.'session_model.json';
+        return 'pfmextension://session'.DS.'resource'.DS.'session_model.json';
     }
 
     public function __construct() {

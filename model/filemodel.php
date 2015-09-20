@@ -62,7 +62,7 @@ abstract class FileModel {
     }
 
 	protected function save() {
-		file_put_contents($this->get_file(), $this->array_to_json_string($this->data));
+		file_put_contents($this->get_file(), $this->array_to_json_string((array)$this->data));
 	}
 
 	public abstract function get_file();
