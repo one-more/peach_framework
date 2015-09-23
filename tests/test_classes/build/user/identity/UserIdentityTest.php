@@ -14,6 +14,9 @@ class UserIdentityTest extends PHPUnit_Framework_TestCase {
         if(!empty($_COOKIE['user'])) {
             unset($_COOKIE['user']);
         }
+        if(!empty($_COOKIE['pfm_session_id'])) {
+            unset($_COOKIE['pfm_session_id']);
+        }
     }
 
     /**
@@ -28,27 +31,31 @@ class UserIdentityTest extends PHPUnit_Framework_TestCase {
      */
     public function test_is_guest() {
         /**
+         * @var $ext User
+         */
+        $ext = Application::get_class('User');
+        /**
          * @var $user \User\identity\UserIdentity
          */
-        $user = Application::get_class('User')->get_current();
+        $user = $ext->get_current();
         $this->assertTrue($user->is_guest());
 
-        $user = Application::get_class('User')->get_identity(1);
+        $user = $ext->get_identity(1);
         $_COOKIE['user'] = $user->remember_hash;
         $this->assertFalse($user->is_guest());
         unset($_COOKIE['user']);
 
         $_COOKIE['user'] = 123;
-        $user = Application::get_class('User')->get_current();
+        $user = $ext->get_current();
         $this->assertTrue($user->is_guest());
         unset($_COOKIE['user']);
 
         $_COOKIE['user'] = null;
-        $user = Application::get_class('User')->get_current();
+        $user = $ext->get_current();
         $this->assertTrue($user->is_guest());
         unset($_COOKIE['user']);
 
-        $user = Application::get_class('User')->get_identity(1);
+        $user = $ext->get_identity(1);
         /**
          * @var $session_obj Session
          */

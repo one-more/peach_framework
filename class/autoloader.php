@@ -31,7 +31,7 @@ class Autoloader {
             }
         }
 
-        if(!class_exists($extension_class)) {
+        if(!class_exists($extension_class, false)) {
             require_once "phar://{$extension_file_gz}/{$name}.php";
         }
 

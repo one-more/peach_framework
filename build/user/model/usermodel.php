@@ -165,7 +165,7 @@ class UserModel extends \MysqlModel {
 			$session = \Application::get_class('Session');
 			$remember_hash = $session->get_var('user');
 		}
-		if($remember_hash) {
+		if(trim($remember_hash)) {
 			$where = [
 				'remember_hash' => ['=', $remember_hash]
 			];

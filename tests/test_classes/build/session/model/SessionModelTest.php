@@ -28,7 +28,7 @@ class SessionModelTest extends \PHPUnit_Framework_TestCase {
      * @covers SessionModel::get_file
      */
 	public function test_get_file() {
-        $file = 'pfmextension://resource/session_model.json';
+        $file = 'pfmextension://session/resource/session_model.json';
         $this->assertTrue(file_exists($file));
 
         $method = new ReflectionMethod($this->model, 'get_file');

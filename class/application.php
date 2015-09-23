@@ -35,7 +35,7 @@ class Application {
         $name = strtolower($name);
         $file = ROOT_PATH.DS.'extensions'.DS.$name.'.tar.gz';
         $build_dir = ROOT_PATH.DS.'build'.DS.$name;
-        return file_exists($file) || file_exists($build_dir);
+        return trim($name) && (is_file($file) || is_dir($build_dir));
     }
 
     /**

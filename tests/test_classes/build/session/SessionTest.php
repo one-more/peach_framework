@@ -53,13 +53,15 @@ class SessionTest extends PHPUnit_Framework_TestCase {
 	 */
 	public function test_set_var() {
 		$this->session_obj->set_var('test', 'test');
+        $this->assertEquals('test', $this->session_obj->get_var('test'));
 	}
 
 	/**
 	 * @covers Session::get_var
-	 * @depends test_set_var
 	 */
 	public function test_get_var() {
+        $this->assertFalse($this->session_obj->get_var('test'));
+        $this->session_obj->set_var('test', 'test');
 		$this->assertEquals('test', $this->session_obj->get_var('test'));
 	}
 

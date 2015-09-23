@@ -38,7 +38,7 @@ abstract class FileModel {
         $record = array_filter($this->data, function($record) use($id) {
             return $record['id'] == $id;
         });
-        $new_record = array_merge_recursive((array)reset($record), $data);
+        $new_record = array_replace_recursive((array)reset($record), $data);
         foreach($this->data as &$el) {
             if($el['id'] == $id) {
                 $el = $new_record;

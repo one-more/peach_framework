@@ -48,7 +48,7 @@ class Session implements Extension {
      */
     public function get_var($name, $default = false) {
         return $this->model->select()->where(function($record) use($name) {
-            return !empty($record['variables'][$name]);
+            return $record['id'] == $this->get_id() && !empty($record['variables'][$name]);
         })->firstOrDefault([
             'variables' => [
                 "{$name}" => $default
@@ -72,7 +72,9 @@ class Session implements Extension {
      * @param $name
      */
     public function unset_var($name) {
-        $record = (array)$this->model->select()->where('$id == '.$this->get_id());
+        $record = $this->model->select()->where(function($record) {
+            return $record['id'] == $this->get_id();
+        })->toArray();
         if(!empty($record['variables'][$name])) {
             unset($record['variables'][$name]);
             $this->model->update($this->get_id(), $record);
