@@ -8,8 +8,8 @@ class StaticClassDecorator {
     }
 
     public function __call($name, $arguments) {
-        $method = new ReflectionMethod($this->class_name, $name);
         if(is_callable([$this->class_name, $name])) {
+            $method = new ReflectionMethod($this->class_name, $name);
             return $method->invokeArgs(null, $arguments);
         } else {
             $msg = "{$this->class_name} has no method {$name}";

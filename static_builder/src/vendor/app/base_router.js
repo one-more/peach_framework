@@ -31,26 +31,22 @@
         },
 
         load_positions: function() {
-            var $this = this;
-            return $.post(location.pathname, {}, function(response) {
-                var blocks = response.blocks;
-                for(var name in blocks) {
-                    if(blocks.hasOwnProperty(name)) {
-                        $('[data-block="'+name+'"]').html(blocks[name]);
-                    }
+            return $.post(location.pathname, {}, response => {
+                var blocks = response['blocks'];
+                for(let name of blocks) {
+                    $(`[data-block="${name}"]`).html(blocks[name]);
                 }
 
-                var views = response.views;
-                for(name in views) {
-                    if(views.hasOwnProperty(name)) {
-                        $('[data-view="'+name+'"]').replaceWith(views[name]);
-                    }
+                var views = response['views'];
+                for(let name of views) {
+                    $(`[data-view="${name}"]`).replaceWith(views[name]);
                 }
+
                 App.trigger('Page:loaded', {
                     page: location.pathname.split('/').slice(-1)[0],
                     response: response
                 });
-                $this.init_views();
+                this.init_views();
             }, 'json');
         },
 
@@ -60,6 +56,10 @@
 
         extend: function (obj) {
             return $.extend(true, this, obj);
+        },
+
+        go_to: function(url, options = {trigger : true}) {
+            Router.navigate(url, options);
         }
     };
 })();

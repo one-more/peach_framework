@@ -1,12 +1,11 @@
 (function () {
     'use strict';
 
-    window.SiteRouter = Backbone.Router.extend($.extend(true, BaseRouter, {
+    let SiteRouter = Backbone.Router.extend(BaseRouter.extend({
         routes: {},
 
         init_views: function () {}
     }));
 
-    App.router = new SiteRouter;
-    Backbone.history.start({pushState: true, silent: true});
+    window.Router = new SiteRouter;
 })();

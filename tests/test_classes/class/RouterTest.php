@@ -94,7 +94,7 @@ class RouterTest extends PHPUnit_Framework_TestCase {
 
 		$_SERVER['REQUEST_URI'] = '/team/dynamo';
 		$callback = $method->invoke($this->router);
-		$this->assertEquals($callback, ['FakeRouter', 'team']);
+		$this->assertEquals($callback, ['FakeRouter', 'team', 'no check']);
 
 		$_SERVER['REQUEST_URI'] = '/not_existed_page';
 		$callback = $method->invoke($this->router);

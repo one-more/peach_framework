@@ -47,13 +47,6 @@ class SiteRouterTest extends PHPUnit_Framework_TestCase {
         $this->assertNull(error_get_last());
     }
 
-    public function test_language_model() {
-        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHTTPRequest';
-
-        $this->router->language_model();
-        $this->assertNull(error_get_last());
-    }
-
     /**
      * @covers \Starter\router\SiteRouter::logout
      */

@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    window.AdminPanelRouter = Backbone.Router.extend($.extend(true, BaseRouter, {
+    let AdminPanelRouter = Backbone.Router.extend(BaseRouter.extend({
 
         routes: {
             'admin_panel/edit_user/:id': 'edit_user',
@@ -49,6 +49,5 @@
         }
     }));
 
-    App.router = new AdminPanelRouter;
-    Backbone.history.start({pushState: true, silent: true});
+    window.Router = new AdminPanelRouter;
 })();

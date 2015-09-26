@@ -18,7 +18,7 @@ abstract class FileModel {
      * @return int
      */
     public function insert(array $record) {
-        $record['id'] = count($this->data);
+        $record['id'] = count($this->data)+1;
         $this->data[] = $record;
         return $record['id'];
     }

@@ -5,12 +5,16 @@ class FakeFileModel extends FileModel {
     public function get_file() {
         return ROOT_PATH.DS.'tests'.DS.'resource'.DS.'fake_data.json';
     }
+
+    public function save() {
+        parent::save();
+    }
 }
 
 class FileModelTest extends PHPUnit_Framework_TestCase {
 
     /**
-     * @var $model FileModel
+     * @var $model FakeFileModel
      */
     private $model;
 
@@ -31,9 +35,12 @@ class FileModelTest extends PHPUnit_Framework_TestCase {
      * @covers FileModel::insert
      */
     public function test_insert() {
-        $this->assertInternalType('int', $this->model->insert([
-            'field' => uniqid('value', true)
-        ]));
+        foreach([1,2,3] as $i) {
+            $this->assertInternalType('int', $this->model->insert([
+                'field' => uniqid('value', true)
+            ]));
+        }
+        $this->model->save();
     }
 
     /**

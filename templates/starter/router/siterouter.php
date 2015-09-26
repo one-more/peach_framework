@@ -51,19 +51,6 @@ class SiteRouter extends \Router {
      * @requestMethod Ajax
      * @throws \InvalidArgumentException
      */
-	public function language_model() {
-        /**
-         * @var $template \Template
-         */
-        $template = \Application::get_class('Starter');
-        $this->response_type = 'Json';
-		$this->response = new \LanguageFile('model'.DS.'languagemodel.json', $template->get_lang_path());
-	}
-
-    /**
-     * @requestMethod Ajax
-     * @throws \InvalidArgumentException
-     */
 	public function logout() {
         \Application::get_class('User')->get_auth()->log_out();
         $this->response->set_attribute('status', 'success');

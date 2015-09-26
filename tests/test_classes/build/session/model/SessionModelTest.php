@@ -25,7 +25,7 @@ class SessionModelTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers SessionModel::get_file
+     * @covers \Session\model\SessionModel::get_file
      */
 	public function test_get_file() {
         $file = 'pfmextension://session/resource/session_model.json';

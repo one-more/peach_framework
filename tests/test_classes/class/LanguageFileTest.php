@@ -1,6 +1,7 @@
 <?php
 
 class LanguageFileTest extends PHPUnit_Framework_TestCase {
+    use TraitJSON;
 
     /**
      * @var $obj LanguageFile
@@ -38,7 +39,6 @@ class LanguageFileTest extends PHPUnit_Framework_TestCase {
      * @covers LanguageFile::__toString
      */
     public function test_to_string() {
-        $this->assertEquals(json_decode(file_get_contents($this->base_path.DS.$this->file), true),
-            $this->obj);
+        $this->assertInternalType('string', (string)$this->obj);
     }
 }
