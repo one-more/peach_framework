@@ -32,7 +32,8 @@ var vendor_js = [
     './src/vendor/modernizr.custom.js',
     './src/vendor/classie.js',
     './src/vendor/bootstrap/bootstrap.js',
-    './src/vendor/crypto/md5.js'
+    './src/vendor/crypto/md5.js',
+    './src/vendor/es6-shim.js'
 ];
 
 var vendor_css = [

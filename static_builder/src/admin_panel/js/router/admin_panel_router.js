@@ -11,7 +11,8 @@
         },
 
         init_views: function () {
-            let views = ['LeftMenuView', 'NavbarView', 'EditUserView', 'AddUserView', 'LoginFormView'];
+            let views = ['LeftMenuView', 'NavbarView', 'UserFormView', 'EditUserView',
+                'AddUserView', 'LoginFormView'];
             Helpers.objects_loaded(views).then(() => {
                 if(this.current().route != 'login') {
                     this.views = [

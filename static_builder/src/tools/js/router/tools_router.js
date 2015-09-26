@@ -1,16 +1,18 @@
 (function () {
     'use strict';
 
-    window.ToolsRouter = Backbone.Router.extend($.extend(true, window.BaseRouter, {
+    window.ToolsRouter = Backbone.Router.extend(BaseRouter.extend({
         routes: {},
 
         init_views: function () {
-            this.views = [
-                new ToolsMenuView
-            ];
+            let views = ['ToolsMenuView'];
+            Helpers.objects_loaded(views).then(() => {
+                this.views = [
+                    new ToolsMenuView
+                ];
+            })
         }
     }));
 
-    App.router = new ToolsRouter;
-    Backbone.history.start({pushState: true, silent: true});
+    window.Router = new ToolsRouter;
 })();
