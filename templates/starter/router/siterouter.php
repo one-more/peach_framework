@@ -38,11 +38,21 @@ class SiteRouter extends \Router {
          * @var $auth UserAuth
          */
         $auth = $ext->get_auth();
+        /**
+         * @var $template \Starter
+         */
+        $template = \Application::get_class('Starter');
+        $lang_vars = new \LanguageFile('router'.DS.'siterouter.json', $template->get_lang_path());
         if($auth->login_by_ajax()) {
             $user = $ext->get_current();
-            $this->response->set_attribute('user', $user);
-            $this->response->set_attribute('status', 'success');
+            if($user->is_admin()) {
+                $this->response->set_attribute('status', 'success');
+            } else {
+                $this->response->set_attribute('errors', $lang_vars['errors']['credentials_error']);
+                $this->response->set_attribute('status', 'error');
+            }
         } else {
+            $this->response->set_attribute('errors', $lang_vars['errors']['login_error']);
             $this->response->set_attribute('status', 'error');
         }
 	}

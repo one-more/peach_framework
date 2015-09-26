@@ -1,0 +1,18 @@
+{
+  "starter": {
+    "styles": "<link href='/static/starter-c9b3c62826.css' media='all' rel='stylesheet' type='text/css'/>",
+    "scripts": "<script src='/static/starter-f2d9b79965.js' type='text/javascript'></script>"
+  },
+  "tools": {
+    "styles": "<link href='/static/tools-c9b3c62826.css' media='all' rel='stylesheet' type='text/css'/>",
+    "scripts": "<script src='/static/tools-4018a6eec9.js' type='text/javascript'></script>"
+  },
+  "vendor": {
+    "styles": "<link href='/static/vendor-5998799ce6.css' media='all' rel='stylesheet' type='text/css'/>",
+    "scripts": "<script src='/static/vendor-a71d6a521f.js' type='text/javascript'></script>"
+  },
+  "admin_panel": {
+    "styles": "<link href='/static/admin_panel-24f994af37.css' media='all' rel='stylesheet' type='text/css'/>",
+    "scripts": "<script src='/static/admin_panel-b2ab85f177.js' type='text/javascript'></script>"
+  }
+}

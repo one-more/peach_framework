@@ -7,18 +7,17 @@
     "devDependencies": {
         "gulp": "^3.8.1",
         "gulp-autoprefixer": "*",
-        "gulp-connect": "*",
         "gulp-cssmin": "*",
-        "gulp-imagemin": "*",
         "gulp-stylus": "^2.0.3",
         "nib": "^1.1.0",
-        "gulp-rigger": "*",
         "gulp-uglify": "*",
         "gulp-watch": "*",
-        "imagemin-pngquant": "*",
         "opn": "*",
         "try-thread-sleep": "^1.0.0",
         "gulp-babel": "*",
-        "gulp-cssnext": "*"
+        "gulp-cssnext": "*",
+        "lazypipe": "*",
+        "gulp-bundle-assets": "*",
+        "gulp-rimraf": "*"
     }
 }

@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
+    {$bundle_result.vendor.styles}
+    {$bundle_result.starter.styles}
+
+    <link rel="shortcut icon" href="/images/favicon.ico"/>
     <title>Starter Template</title>
-    <link rel="stylesheet" href="{$css_path}/starter.css"/>
-    <link rel="shortcut icon" href="{$images_path}/favicon.ico"/>
 </head>
 <body>
     <nav class="navbar navbar-inverse border-radius-none">
@@ -21,6 +23,8 @@
             </div>
         </div>
     </div>
-    <script src="{$js_path}/starter.js"></script>
+
+    {$bundle_result.vendor.scripts}
+    {$bundle_result.starter.scripts}
 </body>
 </html>

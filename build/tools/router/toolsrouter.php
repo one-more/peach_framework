@@ -34,13 +34,6 @@ class ToolsRouter extends \Router {
 		if(\Request::is_ajax()) {
 			echo $this->response;
 		} else {
-			$static_path = DS.'tools';
-			$paths = [
-				'css_path' => $static_path.DS.'css',
-				'js_path' => $static_path.DS.'js',
-				'images_path' => $static_path.DS.'images'
-			];
-
             /**
              * @var $view \ExtensionView
              */
@@ -51,7 +44,10 @@ class ToolsRouter extends \Router {
             $this->response['blocks']['top'] = $view->render();
 
             $smarty = new \Smarty();
-			$smarty->assign($paths);
+
+            $bundle_file = ROOT_PATH.DS.'static_builder'.DS.'bundle.result.json';
+			$bundle_result = json_decode(file_get_contents($bundle_file), true);
+			$smarty->assign('bundle_result', $bundle_result);
 			$smarty->assign($this->response['blocks']);
 
             /**

@@ -45,22 +45,20 @@ trait TraitStarterRouter {
              * @var $template \Template
              */
 			$template = \Application::get_class('Starter');
-			$templator = new \Smarty();
-			$static_path = DS.'starter';
-			$static_paths = [
-				'css_path' => $static_path.DS.'css',
-				'images_path' => $static_path.DS.'images',
-				'js_path' => $static_path.DS.'js'
-			];
-			$templator->assign($static_paths);
+			$smarty = new \Smarty();
+
+            $bundle_file = ROOT_PATH.DS.'static_builder'.DS.'bundle.result.json';
+            $bundle_result = json_decode(file_get_contents($bundle_file), true);
+			$smarty->assign('bundle_result', $bundle_result);
+            
             if($this instanceof AdminPanelRouter) {
-                $templator->setTemplateDir($template->get_path().DS.'templates'.DS.'admin_panel');
+                $smarty->setTemplateDir($template->get_path().DS.'templates'.DS.'admin_panel');
             } else {
-                $templator->setTemplateDir($template->get_path().DS.'templates'.DS.'site');
+                $smarty->setTemplateDir($template->get_path().DS.'templates'.DS.'site');
             }
-			$templator->setCompileDir($template->get_path().DS.'templates_c');
-			$templator->assign($response['blocks']);
-			echo $templator->getTemplate('index'.DS.'index.tpl.html');
+			$smarty->setCompileDir($template->get_path().DS.'templates_c');
+			$smarty->assign($response['blocks']);
+			echo $smarty->getTemplate('index'.DS.'index.tpl.html');
 		} else {
 			echo $response;
 		}

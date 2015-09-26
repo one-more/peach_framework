@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
+    {$bundle_result.vendor.styles}
+    {$bundle_result.admin_panel.styles}
+
+    <link rel="shortcut icon" href="/images/favicon.ico"/>
     <title>Admin panel</title>
-    <link rel="stylesheet" href="{$css_path}/starter.css"/>
-    <link rel="shortcut icon" href="{$images_path}/favicon.ico"/>
 </head>
 <body>
     <header data-block="header">
@@ -19,6 +21,8 @@
             </div>
         </div>
     </div>
-    <script src="{$js_path}/admin_panel.js"></script>
+
+    {$bundle_result.vendor.scripts}
+    {$bundle_result.admin_panel.scripts}
 </body>
 </html>

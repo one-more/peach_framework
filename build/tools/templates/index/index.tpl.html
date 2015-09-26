@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <link rel="stylesheet" href="{$css_path}/tools.css"/>
-        <link rel="shortcut icon" href="{$images_path}/favicon.ico"/>
+        {$bundle_result.vendor.styles}
+        {$bundle_result.tools.styles}
+
+        <link rel="shortcut icon" href="/images/favicon.ico"/>
         <title>Peach Framework Tools</title>
     </head>
     <body>
@@ -36,6 +38,8 @@
                 </div>
             </div>
         </div>
-        <script src="{$js_path}/tools.js"></script>
+
+        {$bundle_result.vendor.scripts}
+        {$bundle_result.tools.scripts}
     </body>
 </html>
