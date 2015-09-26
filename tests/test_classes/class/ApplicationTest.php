@@ -35,7 +35,7 @@ class ApplicationTest extends PHPUnit_Framework_TestCase {
 	public function test_extension_exists() {
         $this->assertTrue(Application::extension_exists('system'));
 
-        $this->assertTrue(Application::extension_exists('smarty'));
+        $this->assertFalse(Application::extension_exists('smarty'));
     }
 
     /**
@@ -48,7 +48,9 @@ class ApplicationTest extends PHPUnit_Framework_TestCase {
         $method->setAccessible(true);
         $this->assertTrue($method->invoke(null, $obj, $annotations) instanceof AnnotationsDecorator);
 
-        $this->assertTrue($method->invoke(null, new NotDecorated(), $annotations) instanceof NotDecorated);
+		$obj = new NotDecorated();
+        $annotations = ReflectionHelper::get_class_annotations($obj);
+        $this->assertTrue($method->invoke(null, $obj, $annotations) instanceof NotDecorated);
     }
 
 	/**

@@ -38,7 +38,7 @@ class Session implements Extension {
      * @return int
      */
     public function get_id() {
-        return empty($_COOKIE['pfm_session_id']) ? 0 : $_COOKIE['pfm_session_id'];
+        return empty($_COOKIE['pfm_session_id']) ? null : $_COOKIE['pfm_session_id'];
     }
 
     /**
@@ -47,13 +47,17 @@ class Session implements Extension {
      * @return mixed
      */
     public function get_var($name, $default = false) {
-        return $this->model->select()->where(function($record) use($name) {
-            return $record['id'] == $this->get_id() && !empty($record['variables'][$name]);
-        })->firstOrDefault([
-            'variables' => [
-                "{$name}" => $default
-            ]
-        ])['variables'][$name];
+        if($this->get_id()) {
+            return $this->model->select()->where(function($record) use($name) {
+                return $record['id'] == $this->get_id() && !empty($record['variables'][$name]);
+            })->firstOrDefault([
+                'variables' => [
+                    "{$name}" => $default
+                ]
+            ])['variables'][$name];
+        } else {
+            return $default;
+        }
     }
 
     /**
@@ -61,32 +65,38 @@ class Session implements Extension {
      * @param $value
      */
     public function set_var($name, $value) {
-        $this->model->update($this->get_id(), [
-            'variables' => [
-                "{$name}" => $value
-            ]
-        ]);
+        if($this->get_id()) {
+            $this->model->update($this->get_id(), [
+                'variables' => [
+                    "{$name}" => $value
+                ]
+            ]);
+        }
     }
 
     /**
      * @param $name
      */
     public function unset_var($name) {
-        $record = $this->model->select()->where(function($record) {
-            return $record['id'] == $this->get_id();
-        })->toArray();
-        if(!empty($record['variables'][$name])) {
-            unset($record['variables'][$name]);
-            $this->model->update($this->get_id(), $record);
-        }
+       if($this->get_id()) {
+           $record = $this->model->select()->where(function($record) {
+               return $record['id'] == $this->get_id();
+           })->toArray();
+           if(!empty($record['variables'][$name])) {
+               unset($record['variables'][$name]);
+               $this->model->update($this->get_id(), $record);
+           }
+       }
     }
 
     /**
      * @param $uid
      */
     public function set_uid($uid) {
-        $this->model->update($this->get_id(), [
-            'uid' => $uid
-        ]);
+        if($this->get_id()) {
+            $this->model->update($this->get_id(), [
+                'uid' => $uid
+            ]);
+        }
     }
 }
