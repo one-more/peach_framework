@@ -12,64 +12,49 @@ require_once ROOT_PATH.DS.'build'.DS.'user'.DS.'auth'.DS.'userauth.php';
 class UserAuthTest extends PHPUnit_Framework_TestCase {
 
     /**
-     * @var $obj \User\auth\UserAuth
+     * @var $auth \User\auth\UserAuth
      */
-    private $obj;
+    private $auth;
 
     public function setUp() {
-        if(empty($this->obj)) {
-            $this->obj = Application::get_class('User')->get_auth();
-        }
+        /**
+         * @var $user User
+         */
+        $user = Application::get_class('User');
+        $this->auth = $user->get_auth();
     }
 
     /**
      * @covers \User\auth\UserAuth::login
      */
     public function test_login() {
-        $this->assertFalse($this->obj->login(null,null,null));
+        $this->assertFalse($this->auth->login(null,null,null));
 
         /**
-         * @var $ext User
+         * @var $user User
          */
-        $ext = Application::get_class('User');
+        $user = Application::get_class('User');
+        $mapper = $user->get_mapper();
         /**
-         * @var $test_user \User\identity\UserIdentity
+         * @var $model \User\model\UserModel
          */
-        $test_user = $ext->get_identity_by_field('credentials', User::credentials_user);
-        $login = $test_user->login;
-        $password = $test_user->password;
-        $this->assertTrue($this->obj->login($login, $password));
+        $model = $mapper->find_where([
+            'credentials' => ['=', User::credentials_user]
+        ])->one();
+        $this->assertTrue($this->auth->login($model->login, $model->password, true));
 
-        $fields = [
-            'login' => uniqid('test_', true),
-            'password' => uniqid('', true)
-        ];
-        $ext->add($fields);
-        $this->assertTrue($this->obj->login($fields['login'], $fields['password']));
-    }
+        $model = Application::get_class('\User\model\UserModel');
+        $model->login = uniqid('test_', true);
+        $model->password =  uniqid('', true);
+        $mapper->save($model);
 
-    /**
-     *  @covers \User\auth\UserAuth::login_by_ajax
-     */
-    public function test_login_by_ajax() {
-        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHTTPRequest';
-
-        $this->assertFalse($this->obj->login_by_ajax());
-
-        /**
-         * @var $ext User
-         */
-        $ext = Application::get_class('User');
-        $user = $ext->get_identity_by_field('password', '');
-        $_REQUEST['login'] = $user->login;
-        $_REQUEST['password'] = $user->password;
-        $this->assertTrue($this->obj->login_by_ajax());
+        $this->assertTrue($this->auth->login($model->login, $model->password));
     }
 
     /**
      * @covers \User\auth\UserAuth::log_out
      */
     public function test_log_out() {
-        $this->assertTrue($this->obj->log_out());
+        $this->assertTrue($this->auth->log_out());
     }
 }

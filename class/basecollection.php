@@ -42,8 +42,11 @@ class BaseCollection implements Collection {
         $this->models[] = $model;
     }
 
-    public function get_count() {
+    public function count() {
         return count($this->models);
+    }
+    public function one() {
+        return $this[0];
     }
 
     public function rewind() {

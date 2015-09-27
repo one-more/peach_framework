@@ -8,5 +8,7 @@ interface Collection extends Iterator, ArrayAccess {
 
     public function add(Model $model);
 
-    public function get_count();
+    public function count();
+
+    public function one();
 }

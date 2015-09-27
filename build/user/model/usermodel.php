@@ -22,6 +22,21 @@ class UserModel extends \BaseModel {
         'remember_hash' => null
     ];
 
+    public function is_guest() {
+        if(!empty($_COOKIE['user'])) {
+            return $_COOKIE['user'] == $this->remember_hash;
+        } else {
+            /**
+             * @var $session \Session
+             */
+            $session = \Application::get_class('Session');
+            if($remember_hash = $session->get_var('user')) {
+                return $remember_hash == $this->remember_hash;
+            }
+            return false;
+        }
+    }
+
     public function is_admin() {
         return in_array($this->credentials, [
             \User::credentials_admin,

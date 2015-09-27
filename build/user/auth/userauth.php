@@ -10,41 +10,61 @@ use User\model\UserModel;
  */
 class UserAuth {
 
-    /**
-     * @var $model UserModel
-     */
-    private $model;
-
-    public function __construct() {
-        $this->model = \Application::get_class('User\model\UserModel');
-    }
-
     public function login($login, $password, $remember = false) {
+        /**
+         * @var $user \User
+         */
+        $user = \Application::get_class('User');
+        $mapper = $user->get_mapper();
+
         $login = \VarHandler::sanitize_var($login, 'string', '');
         $password = \VarHandler::sanitize_var($password, 'string', '');
         $password = trim($password);
         if($password) {
-            $password = $this->crypt_password($login, $password);
+            $password = $mapper->crypt_password($login, $password);
         }
-        return $this->model->login($login, $password, $remember);
-    }
 
-    /**
-     * @requestMethod Ajax
-     */
-    public function login_by_ajax() {
-        $login = \Request::get_var('login', 'string');
-        $password = \Request::get_var('password', 'string');
-        $remember = \Request::get_var('remember', 'string', false);
-
-        return $this->login($login, $password, (bool)$remember);
-    }
-
-    public function crypt_password($login, $password) {
-        return crypt(trim($password), sha1($password).sha1($login).uniqid('password', true));
+        $collection = $mapper->find_where([
+            'login' => ['=', $login],
+            'and' => [
+                'password' => ['=', $password]
+            ]
+        ]);
+        if($collection->count()) {
+            /**
+             * @var $identity UserModel
+             */
+            $identity = $collection->one();
+            if($remember) {
+                setcookie('user', $identity->remember_hash, strtotime('+10 years'), '/');
+                $_COOKIE['user'] = $identity->remember_hash;
+            } else {
+                /**
+                 * @var $session \Session
+                 */
+                $session = \Application::get_class('Session');
+                $session->set_var('user', $identity->remember_hash);
+            }
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public function log_out() {
-        return $this->model->log_out();
+        if(!empty($_COOKIE['user'])) {
+            unset($_COOKIE['user']);
+            return true;
+        } else {
+            /**
+             * @var $session \Session
+             */
+            $session = \Application::get_class('Session');
+            if($session->get_var('user')) {
+                $session->unset_var('user');
+                return true;
+            }
+            return false;
+        }
     }
 }
