@@ -1,0 +1,12 @@
+<?php
+
+interface Collection extends Iterator, ArrayAccess {
+
+    public function load(array $models);
+
+    public function get($id);
+
+    public function add(Model $model);
+
+    public function get_count();
+}
