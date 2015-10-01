@@ -80,7 +80,7 @@ class UserMapper extends \BaseMapper {
         $validator->registerRules(['hash_password' => function() use($fields) {
             return function($value, $undef, &$output_arr) use($fields) {
                 if(trim($value)) {
-                    $output_arr = $this->crypt_password($fields['login'], $value);
+                    $output_arr = password_hash($value, PASSWORD_BCRYPT);
                     return;
                 }
                 return null;
@@ -96,10 +96,6 @@ class UserMapper extends \BaseMapper {
         return $validator->validate($fields);
     }
 
-    public function crypt_password($login, $password) {
-        return crypt(trim($password), sha1($password).sha1($login).uniqid('password', true));
-    }
-
     private function insert(array $fields) {
         $fields['remember_hash'] = password_hash($fields['password'].$fields['login'], PASSWORD_DEFAULT);
         if(!empty($fields['id'])) {
@@ -109,6 +105,9 @@ class UserMapper extends \BaseMapper {
     }
 
     private function update(array $fields, $id) {
+        if(!empty($fields['id'])) {
+            unset($fields['id']);
+        }
         $this->adapter->update($fields)
             ->where([
                 'id' => ['=', $id]
@@ -134,7 +133,10 @@ class UserMapper extends \BaseMapper {
      */
     public function find_by_sql($sql) {
         $collection = new \BaseCollection(UserModel::class);
-        $collection->load($this->adapter->execute($sql)->get_arrays());
+        $records = array_filter($this->adapter->execute($sql)->get_arrays(), function($record) {
+            return $record['deleted'] == 0;
+        });
+        $collection->load($records);
         return $collection;
     }
 
@@ -144,10 +146,16 @@ class UserMapper extends \BaseMapper {
      */
     public function find_where(array $where_statement) {
         $collection = new \BaseCollection(UserModel::class);
-        $collection->load($this->adapter->select()->where($where_statement)->execute()->get_arrays());
+        $records = array_filter($this->adapter->select()->where($where_statement)->execute()->get_arrays(), function($record) {
+            return $record['deleted'] == 0;
+        });
+        $collection->load($records);
         return $collection;
     }
 
+    /**
+     * @param UserModel $model
+     */
     public function delete(UserModel $model) {
         $this->adapter->update([
             'deleted' => 1
@@ -156,11 +164,17 @@ class UserMapper extends \BaseMapper {
         ])->execute();
     }
 
+    /**
+     * @param $number
+     * @param $per_page
+     * @return mixed
+     */
     public function get_page($number, $per_page) {
-        if($number < 0) {
-            $number = 0;
-        }
-        yield $this->adapter->select()->limit($per_page)
+        $number < 0 && $number = 0;
+        $records = $this->adapter->select()->limit($per_page)
             ->offset(($number-1)*$per_page)->execute()->get_arrays();
+        $collection = new \BaseCollection(UserModel::class);
+        $collection->load($records);
+        return $collection;
     }
 }

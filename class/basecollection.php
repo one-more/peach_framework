@@ -1,9 +1,6 @@
 <?php
 
 class BaseCollection implements Collection {
-    use TraitArrayAccess {
-        TraitArrayAccess::__construct as trait_construct;
-    };
 
     /**
      * @var $model_class Model
@@ -23,7 +20,6 @@ class BaseCollection implements Collection {
     }
 
     public function load(array $models) {
-        $this->trait_construct($models);
         $this->models = $models;
     }
 
@@ -73,5 +69,35 @@ class BaseCollection implements Collection {
 
     public function valid() {
         return isset($this->models[$this->position]);
+    }
+
+    public function offsetSet($offset, $value) {
+        if(!is_array($value) || !$value instanceof \User\model\UserModel) {
+            throw new InvalidArgumentException('value must be an array or \User\model\UserModel');
+        }
+        if (is_null($offset)) {
+            $this->models[] = $value;
+        } else {
+            $this->models[$offset] = $value;
+        }
+    }
+
+    public function offsetExists($offset) {
+        return isset($this->models[$offset]);
+    }
+
+    public function offsetUnset($offset) {
+        unset($this->models[$offset]);
+    }
+
+    public function offsetGet($offset) {
+        if(isset($this->models[$offset])) {
+            if(is_array($this->models[$offset])) {
+                $this->models[$offset] = new $this->model_class($this->models[$offset]);
+            }
+            return $this->models[$offset];
+        } else {
+            return null;
+        }
     }
 }
