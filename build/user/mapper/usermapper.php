@@ -169,7 +169,7 @@ class UserMapper extends \BaseMapper {
      * @param $per_page
      * @return mixed
      */
-    public function get_page($number, $per_page) {
+    public function get_page($number = 1, $per_page = 30) {
         $number < 0 && $number = 0;
         $records = $this->adapter->select()->limit($per_page)
             ->offset(($number-1)*$per_page)->execute()->get_arrays();

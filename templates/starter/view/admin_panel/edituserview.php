@@ -10,10 +10,11 @@ class EditUserView extends \TemplateView {
 		$path = $this->template->get_path();
 		$this->setTemplateDir($path.DS.'templates'.DS.'admin_panel'.DS.'edit_user');
 
-        /**
-         * @var $user \UserIdentity
-         */
-		$user = \Application::get_class('User')->get_current();
+		/**
+		 * @var $ext \User
+		 */
+		$ext = \Application::get_class('User');
+		$user = $ext->get_identity();
 		$this->assign('user', $user);
 	}
 

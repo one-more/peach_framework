@@ -2,8 +2,6 @@
 
 namespace Starter\router;
 
-use User\identity\UserIdentity;
-
 class AdminPanelRouter extends \Router {
 	use TraitStarterRouter;
 
@@ -54,9 +52,10 @@ class AdminPanelRouter extends \Router {
 
     private function add_blocks_for_logined() {
         /**
-         * @var $user UserIdentity
+         * @var $ext \User
          */
-        $user = \Application::get_class('User')->get_current();
+        $ext = \Application::get_class('User');
+        $user = $ext->get_identity();
         /*
          * User can be logged in only if he is administrator
          */

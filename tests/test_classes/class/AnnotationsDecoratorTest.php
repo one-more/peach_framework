@@ -47,9 +47,12 @@ class AnnotationsDecoratorTest extends PHPUnit_Framework_TestCase {
          * @var $ext User
          */
         $ext = Application::get_class('User');
-        $user = $ext->get_identity_by_field('credentials', User::credentials_admin);
-        if(empty($user)) {
-            $user = $ext->get_identity_by_field('credentials', User::credentials_super_admin);
+        $mapper = $ext->get_mapper();
+        $user = $mapper->find_where([
+            'credentials' => ['=', User::credentials_admin]
+        ])->one();
+        if(!empty($user)) {
+            $user = $mapper->find_where(['credentials' => ['=', User::credentials_super_admin]])->one();
         }
         $_COOKIE['user'] = $user->remember_hash;
         $this->assertEquals('test', $this->obj->get_test());
@@ -84,9 +87,12 @@ class AnnotationsDecoratorTest extends PHPUnit_Framework_TestCase {
          * @var $ext User
          */
         $ext = Application::get_class('User');
-        $user = $ext->get_identity_by_field('credentials', User::credentials_admin);
-        if(empty($user)) {
-            $user = $ext->get_identity_by_field('credentials', User::credentials_super_admin);
+        $mapper = $ext->get_mapper();
+        $user = $mapper->find_where([
+            'credentials' => ['=', User::credentials_admin]
+        ])->one();
+        if(!empty($user)) {
+            $user = $mapper->find_where(['credentials' => ['=', User::credentials_super_admin]])->one();
         }
         $_COOKIE['user'] = $user->remember_hash;
         $_SERVER['HTTP_X_REQUESTED_WITH']  = 'xmlhttprequest';
@@ -119,9 +125,12 @@ class AnnotationsDecoratorTest extends PHPUnit_Framework_TestCase {
          * @var $ext User
          */
         $ext = Application::get_class('User');
-        $user = $ext->get_identity_by_field('credentials', User::credentials_admin);
-        if(empty($user)) {
-            $user = $ext->get_identity_by_field('credentials', User::credentials_super_admin);
+        $mapper = $ext->get_mapper();
+        $user = $mapper->find_where([
+            'credentials' => ['=', User::credentials_admin]
+        ])->one();
+        if(!empty($user)) {
+            $user = $mapper->find_where(['credentials' => ['=', User::credentials_super_admin]])->one();
         }
         $_COOKIE['user'] = $user->remember_hash;
         $method->invoke($this->obj, $annotations);
@@ -135,7 +144,8 @@ class AnnotationsDecoratorTest extends PHPUnit_Framework_TestCase {
          * @var $ext User
          */
         $ext = Application::get_class('User');
-        $user = $ext->get_identity_by_field('credentials', User::credentials_super_admin);
+        $mapper = $ext->get_mapper();
+        $user = $mapper->find_where(['credentials' => ['=', User::credentials_super_admin]])->one();
         $_COOKIE['user'] = $user->remember_hash;
 
         $method = new ReflectionMethod($this->obj, 'check_credentials');

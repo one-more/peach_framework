@@ -64,11 +64,16 @@ class SiteRouterTest extends PHPUnit_Framework_TestCase {
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHTTPRequest';
 
         $_REQUEST['id'] = 1;
+
         /**
-         * @var $user \User\identity\UserIdentity
+         * @var $user User
          */
-        $user = Application::get_class('User')->get_identity(1);
-        $_COOKIE['user'] = $user->remember_hash;
+        $user = Application::get_class('User');
+        $mapper = $user->get_mapper();
+        $identity = $mapper->find_where([
+            'id' => ['=',1]
+        ])->one();
+        $_COOKIE['user'] = $identity->remember_hash;
 
         $this->router->edit_user();
         $this->assertNull(error_get_last());
@@ -89,11 +94,16 @@ class SiteRouterTest extends PHPUnit_Framework_TestCase {
      */
     public function test_edit_user_wrong_request() {
         $_REQUEST['id'] = 1;
+
         /**
-         * @var $user \User\identity\UserIdentity
+         * @var $user User
          */
-        $user = Application::get_class('User')->get_identity(1);
-        $_COOKIE['user'] = $user->remember_hash;
+        $user = Application::get_class('User');
+        $mapper = $user->get_mapper();
+        $identity = $mapper->find_where([
+            'id' => ['=',1]
+        ])->one();
+        $_COOKIE['user'] = $identity->remember_hash;
 
         $this->router->edit_user();
         $this->assertNull(error_get_last());
@@ -106,10 +116,14 @@ class SiteRouterTest extends PHPUnit_Framework_TestCase {
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHTTPRequest';
 
         /**
-         * @var $user \User\identity\UserIdentity
+         * @var $user User
          */
-        $user = Application::get_class('User')->get_identity(1);
-        $_COOKIE['user'] = $user->remember_hash;
+        $user = Application::get_class('User');
+        $mapper = $user->get_mapper();
+        $identity = $mapper->find_where([
+            'id' => ['=',1]
+        ])->one();
+        $_COOKIE['user'] = $identity->remember_hash;
 
         $this->router->add_user();
         $this->assertNull(error_get_last());
@@ -121,10 +135,14 @@ class SiteRouterTest extends PHPUnit_Framework_TestCase {
      */
     public function test_add_user_wrong_request() {
         /**
-         * @var $user \User\identity\UserIdentity
+         * @var $user User
          */
-        $user = Application::get_class('User')->get_identity_by_field('credentials', User::credentials_super_admin);
-        $_COOKIE['user'] = $user->remember_hash;
+        $user = Application::get_class('User');
+        $mapper = $user->get_mapper();
+        $identity = $mapper->find_where([
+            'credentials' => ['=', User::credentials_super_admin]
+        ])->one();
+        $_COOKIE['user'] = $identity->remember_hash;
 
         $this->router->add_user();
         $this->assertNull(error_get_last());

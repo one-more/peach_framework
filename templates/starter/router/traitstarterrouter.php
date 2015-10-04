@@ -2,8 +2,6 @@
 
 namespace Starter\router;
 
-use User\identity\UserIdentity;
-
 trait TraitStarterRouter {
 
     private $response_type = 'AjaxResponse';
@@ -14,10 +12,11 @@ trait TraitStarterRouter {
      * @throws \InvalidArgumentException
      */
 	public function route() {
-        /**
-         * @var $user UserIdentity
-         */
-		$user = \Application::get_class('User')->get_current();
+		/**
+		 * @var $ext \User
+		 */
+		$ext = \Application::get_class('User');
+		$user = $ext->get_identity();
         $callback = $this->get_callback();
         if(is_array($callback) && $this instanceof AdminPanelRouter && !$user->is_admin()) {
             $method = $callback[1];

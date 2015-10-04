@@ -1,8 +1,6 @@
 <?php
 namespace Starter\view\AdminPanel;
 
-use User\identity\UserIdentity;
-
 class UsersTableView extends \TemplateView {
 	public function __construct() {
 		parent::__construct();
@@ -16,11 +14,10 @@ class UsersTableView extends \TemplateView {
          * @var $ext \User
          */
         $ext = \Application::get_class('User');
-        /**
-         * @var $user UserIdentity
-         */
-		$user = $ext->get_current();
-		$users = $ext->get_list();
+        $user = $ext->get_identity();
+        $mapper = $ext->get_mapper();
+
+		$users = $mapper->get_page();
 		$this->assign('users', $users);
 		$this->assign('my_id', $user->id);
 		$is_super_admin = $user->is_super_admin();

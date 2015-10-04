@@ -2,8 +2,12 @@
 
 namespace Tools\view;
 
-use Tools\controller\TemplatesController;
+use Tools\mapper\TemplatesMapper;
 
+/**
+ * Class TemplatesTableView
+ * @package Tools\view
+ */
 class TemplatesTableView extends \ExtensionView {
 
 	public function get_extension() {
@@ -18,12 +22,9 @@ class TemplatesTableView extends \ExtensionView {
 	}
 
 	public function render() {
-        /**
-         * @var $controller TemplatesController
-         */
-		$controller = \Application::get_class('Tools\controller\TemplatesController');
-		$templates_list = $controller->get_templates_list();
-		$this->assign('templates_list', $templates_list);
+        $mapper = new TemplatesMapper();
+		$templates = $mapper->get_page();
+		$this->assign('templates_list', $templates);
 		return $this->get_template('templates_table.tpl.html');
 	}
 }
