@@ -133,7 +133,7 @@ class UserMapperTest extends PHPUnit_Framework_TestCase {
      * @covers User\Mapper\UserMapper::find_by_sql
      */
     public function test_find_by_sql() {
-        $this->assertTrue($this->mapper->find_by_sql('SELECT * FROM users ORDER BY id DESC LIMIT 1 AND deleted = 0')->one()->get_id() > 0);
+        $this->assertTrue($this->mapper->find_by_sql('SELECT * FROM users WHERE deleted = 0 ORDER BY id DESC LIMIT 1')->one()->get_id() > 0);
     }
 
     /**
@@ -150,7 +150,7 @@ class UserMapperTest extends PHPUnit_Framework_TestCase {
         /**
          * @var $model \User\model\UserModel
          */
-        $model = $this->mapper->find_by_sql('SELECT * FROM users ORDER BY id DESC LIMIT 1 AND deleted = 0')->one();
+        $model = $this->mapper->find_by_sql('SELECT * FROM users WHERE deleted = 0 ORDER BY id DESC LIMIT 1')->one();
         $this->mapper->delete($model);
         $this->assertFalse($this->mapper->find_by_id($model->id)->id > 0);
     }

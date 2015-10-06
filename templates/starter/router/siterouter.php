@@ -42,9 +42,12 @@ class SiteRouter extends \Router {
          * @var $template \Starter
          */
         $template = \Application::get_class('Starter');
+        /**
+         * @var $lang_vars \ArrayAccess
+         */
         $lang_vars = new \LanguageFile('router'.DS.'siterouter.json', $template->get_lang_path());
         if($auth->login_by_ajax()) {
-            $user = $ext->get_current();
+            $user = $ext->get_identity();
             if($user->is_admin()) {
                 $this->response->set_attribute('status', 'success');
             } else {

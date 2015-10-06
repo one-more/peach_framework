@@ -22,7 +22,10 @@ class TemplatesTableView extends \ExtensionView {
 	}
 
 	public function render() {
-        $mapper = new TemplatesMapper();
+		/**
+		 * @var $mapper TemplatesMapper
+		 */
+        $mapper = \Application::get_class('TemplatesMapper');
 		$templates = $mapper->get_page();
 		$this->assign('templates_list', $templates);
 		return $this->get_template('templates_table.tpl.html');

@@ -20,7 +20,7 @@ class BaseCollection implements Collection {
     }
 
     public function load(array $models) {
-        $this->models = $models;
+        $this->models = array_values($models);
     }
 
     public function get($id) {

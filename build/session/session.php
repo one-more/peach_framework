@@ -23,7 +23,7 @@ class Session implements Extension {
              * @var $ext User
              */
             $ext = Application::get_class('User');
-            $user = $ext->get_current();
+            $user = $ext->get_identity();
             return $this->model->insert([
                 'date' => date('Y-m-d'),
                 'uid' => $user->id,

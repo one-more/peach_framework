@@ -4,7 +4,7 @@ namespace Tools\model;
 
 /**
  * Class TemplateModel
- * @package Tools\record
+ * @package Tools\model
  *
  * @property string name
  * @property bool can_delete

@@ -8,6 +8,7 @@ class FileAdapter {
 
 	public function __construct($file) {
 		if(is_file($file)) {
+            $this->file = $file;
             $this->data = (array)json_decode(file_get_contents($file), true);
         } else {
             throw new InvalidArgumentException("{$file} does not exists");
@@ -63,6 +64,6 @@ class FileAdapter {
     }
 
 	protected function save() {
-		file_put_contents($this->get_file(), $this->array_to_json_string((array)$this->data));
+		file_put_contents($this->file, $this->array_to_json_string((array)$this->data));
 	}
 }

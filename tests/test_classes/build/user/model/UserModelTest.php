@@ -69,6 +69,11 @@ class UserModelTest extends \PHPUnit_Framework_TestCase {
         $model = $mapper->find_where([
             'credentials' => ['=', User::credentials_admin]
         ])->one();
+        if(!$model) {
+            $model = $mapper->find_where([
+                'credentials' => ['=', User::credentials_super_admin]
+            ])->one();
+        }
         $this->assertTrue($model->is_admin());
     }
 
