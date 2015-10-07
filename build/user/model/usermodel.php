@@ -17,9 +17,9 @@ class UserModel extends \BaseModel {
     protected $fields = [
         'id' => null,
         'login' => null,
-        'password' => null,
-        'credentials' => null,
-        'remember_hash' => null
+        'password' => '',
+        'credentials' => '',
+        'remember_hash' => ''
     ];
 
     public function is_guest() {

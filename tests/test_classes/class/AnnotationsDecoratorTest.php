@@ -51,7 +51,7 @@ class AnnotationsDecoratorTest extends PHPUnit_Framework_TestCase {
         $user = $mapper->find_where([
             'credentials' => ['=', User::credentials_admin]
         ])->one();
-        if(!empty($user)) {
+        if(empty($user)) {
             $user = $mapper->find_where(['credentials' => ['=', User::credentials_super_admin]])->one();
         }
         $_COOKIE['user'] = $user->remember_hash;
@@ -91,7 +91,7 @@ class AnnotationsDecoratorTest extends PHPUnit_Framework_TestCase {
         $user = $mapper->find_where([
             'credentials' => ['=', User::credentials_admin]
         ])->one();
-        if(!empty($user)) {
+        if(empty($user)) {
             $user = $mapper->find_where(['credentials' => ['=', User::credentials_super_admin]])->one();
         }
         $_COOKIE['user'] = $user->remember_hash;
@@ -129,7 +129,7 @@ class AnnotationsDecoratorTest extends PHPUnit_Framework_TestCase {
         $user = $mapper->find_where([
             'credentials' => ['=', User::credentials_admin]
         ])->one();
-        if(!empty($user)) {
+        if(empty($user)) {
             $user = $mapper->find_where(['credentials' => ['=', User::credentials_super_admin]])->one();
         }
         $_COOKIE['user'] = $user->remember_hash;

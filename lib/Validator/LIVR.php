@@ -166,8 +166,8 @@ class LIVR {
     }
 
 
-    public function getErrors($user_descriptions = null) {
-        if($user_descriptions && (is_array($user_descriptions) || $user_descriptions instanceof \Traversable)) {
+    public function getErrors(array $user_descriptions = null) {
+        if(is_array($this->errors)) {
             $keys = array_keys($this->errors);
             foreach($keys as $key) {
                 $el = $this->errors[$key];

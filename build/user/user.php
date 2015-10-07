@@ -37,7 +37,7 @@ class User implements Extension {
          */
         $mapper = Application::get_class('\User\Mapper\UserMapper');
         $collection = $mapper->find_where([
-            'remember_hash' => $remember_hash
+            'remember_hash' => ['=', empty($remember_hash) ? '' : $remember_hash]
         ]);
         if($collection->count()) {
             return $collection->one();

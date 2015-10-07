@@ -69,7 +69,7 @@ class UserMapper extends \BaseMapper {
                 return function ($value) {
                     $user = $this->adapter->select()->where([
                         'login' => ['=', $value]
-                    ])->excute()->get_result();
+                    ])->execute()->get_result();
                     if($user) {
                         return 'LOGIN_EXISTS';
                     }

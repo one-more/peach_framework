@@ -10,7 +10,7 @@
 
         login: function(event) {
             var form = event.currentTarget;
-            $.post('/login', $(form).serializeArray(), response => {
+            $.post(form.action, $(form).serializeArray(), response => {
                 if(response.status == 'error') {
                     NotificationView.display(response.errors, 'error')
                 } else {

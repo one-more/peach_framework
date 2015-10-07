@@ -2,8 +2,6 @@
 
 namespace Tools\view;
 
-use Tools\mapper\TemplatesMapper;
-
 /**
  * Class TemplatesTableView
  * @package Tools\view
@@ -23,9 +21,9 @@ class TemplatesTableView extends \ExtensionView {
 
 	public function render() {
 		/**
-		 * @var $mapper TemplatesMapper
+		 * @var $mapper \Tools\mapper\TemplatesMapper
 		 */
-        $mapper = \Application::get_class('TemplatesMapper');
+        $mapper = \Application::get_class('Tools\mapper\TemplatesMapper');
 		$templates = $mapper->get_page();
 		$this->assign('templates_list', $templates);
 		return $this->get_template('templates_table.tpl.html');

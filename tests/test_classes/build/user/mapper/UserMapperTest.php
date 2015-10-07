@@ -71,13 +71,13 @@ class UserMapperTest extends PHPUnit_Framework_TestCase {
         $method->setAccessible(true);
 
         $model = new \User\model\UserModel();
-        $this->assertFalse($method->invoke($this->mapper, $model));
+        $this->assertFalse($method->invoke($this->mapper, $model->to_array()));
 
         $model->login = uniqid('test', true);
-        $this->assertTrue($method->invoke($this->mapper, $model));
+        $this->assertTrue($method->invoke($this->mapper, $model->to_array()));
 
         $model->login = uniqid('test', true);
-        $this->assertTrue($method->invoke($this->mapper, $model));
+        $this->assertTrue($method->invoke($this->mapper, $model->to_array()));
 
         /**
          * @var $exited_model \User\model\UserModel
@@ -86,7 +86,7 @@ class UserMapperTest extends PHPUnit_Framework_TestCase {
             'credentials' => ['=', User::credentials_user]
         ])->one();
         $model->login = $exited_model->login;
-        $this->assertFalse($method->invoke($this->mapper, $model));
+        $this->assertFalse($method->invoke($this->mapper, $model->to_array()));
     }
 
     /**
@@ -111,7 +111,7 @@ class UserMapperTest extends PHPUnit_Framework_TestCase {
          * @var $model \User\model\UserModel
          */
         $model = $this->mapper->find_where([
-            'credentials' => User::credentials_user
+            'credentials' => ['=', User::credentials_user]
         ])->one();
         $model->login = uniqid('test', true);
 

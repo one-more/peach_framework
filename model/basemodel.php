@@ -2,22 +2,33 @@
 
 class BaseModel implements Model {
 
-    protected $fields = [];
-
     /**
      * @param null|array $fields
      */
-    public function __construct($fields = null) {
-       if(is_array($fields) && count($fields)) {
+    public function __construct(array $fields = null) {
+       if(count($fields)) {
            $this->fields = $fields;
        }
-        $this->set_fields();
     }
 
-    protected function set_fields() {
-        foreach($this->fields as $name=>$val) {
-            $this->{$name} = $val;
+    public function __set($field, $value) {
+        if(array_key_exists($field, $this->fields)) {
+            $this->fields[$field] = $value;
+        } else {
+            throw new NotExistedFieldAccessException(get_class($this)." has no field {$field}");
         }
+    }
+
+    public function __get($field) {
+        if(array_key_exists($field, $this->fields)) {
+            return $this->fields[$field];
+        } else {
+            throw new NotExistedFieldAccessException(__CLASS__." has no field {$field}");
+        }
+    }
+
+    public function set_field($name, $value) {
+        $this->fields[$name] = $value;
     }
 
     public function get_id() {
@@ -29,7 +40,6 @@ class BaseModel implements Model {
      */
     public function load(array $data) {
         $this->fields = $data;
-        $this->set_fields();
     }
 
     /**
