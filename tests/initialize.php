@@ -46,7 +46,6 @@ class TestsEnv {
         ];
         file_put_contents($sessions_file, (new JSON())->array_to_json_string($sessions));
         $_COOKIE['pfm_session_id'] = count($sessions);
-        Error::log($_COOKIE['pfm_session_id']);
 	}
 
 	private static function init_test_tables() {

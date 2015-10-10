@@ -4,6 +4,7 @@ class FakeFileAdapter extends FileAdapter {
 
     public function __construct() {
         parent::__construct(ROOT_PATH.DS.'tests'.DS.'resource'.DS.'fake_data.json');
+        $this->data = array_slice($this->data, 0, 2);
     }
 
     public function save() {

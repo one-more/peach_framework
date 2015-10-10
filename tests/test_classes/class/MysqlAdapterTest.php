@@ -134,6 +134,14 @@ class MysqlAdapterTestImpl extends MysqlAdapter {
 	}
 }
 
+/**
+ * Class MysqlAdapterTest
+ *
+ * @method bool assertInternalType($a, $b)
+ * @method bool assertEquals($a, $b)
+ * @method bool assertTrue($var)
+ * @method bool assertFalse($var)
+ */
 class MysqlAdapterTest extends PHPUnit_Framework_TestCase {
 
 	/**
@@ -142,16 +150,14 @@ class MysqlAdapterTest extends PHPUnit_Framework_TestCase {
 	private $model;
 
 	public function setUp() {
-		if(is_null($this->model)) {
-			$this->model = new MysqlAdapterTestImpl();
-		}
+		$this->model = new MysqlAdapterTestImpl();
 	}
 
 	/**
 	 * @covers MysqlAdapter::__construct
 	 */
 	public function test_create_model() {
-		$this->assertInternalType('object', new MysqlAdapterTestImpl);
+		$this->assertInternalType('object', new MysqlAdapterTestImpl());
 	}
 
 	/**
