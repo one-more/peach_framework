@@ -64,6 +64,7 @@ class FileAdapter {
     }
 
 	protected function save() {
+        Error::log(print_r($this->data, 1));
 		file_put_contents($this->file, $this->array_to_json_string((array)$this->data));
 	}
 }

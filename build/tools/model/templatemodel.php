@@ -10,8 +10,10 @@ namespace Tools\model;
  * @property bool can_delete
  */
 class TemplateModel extends \BaseModel {
+
     protected $fields = [
+        'id' => null,
         'name' => null,
-        'can_delelete' => false
+        'can_delete' => false
     ];
 }

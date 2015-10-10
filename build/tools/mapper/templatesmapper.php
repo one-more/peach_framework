@@ -8,6 +8,7 @@ class TemplatesMapper extends \BaseMapper {
 
     /**
      * @return \FileAdapter
+     * @throws \InvalidArgumentException
      */
     public function get_adapter() {
         /**

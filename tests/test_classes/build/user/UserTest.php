@@ -30,6 +30,7 @@ class UserTest extends PHPUnit_Framework_TestCase {
 
     /**
      * @covers User::get_identity
+     * @expectedException PHPUnit_Framework_Error
      */
     public function test_get_identity() {
         $identity = $this->user->get_identity();
@@ -40,7 +41,7 @@ class UserTest extends PHPUnit_Framework_TestCase {
          * @var $model \User\model\UserModel
          */
         $model = $mapper->find_where([
-            'credentials' => ['', User::credentials_user]
+            'credentials' => ['=', User::credentials_user]
         ])->one();
         $auth = $this->user->get_auth();
         $this->assertTrue($auth->login($model->login, $model->password));
@@ -57,7 +58,7 @@ class UserTest extends PHPUnit_Framework_TestCase {
      * @covers User::get_auth
      */
     public function test_get_auth() {
-        $this->assertTrue($this->user->get_auth() instanceof \User\auth\UserAuth);
+        $this->user->get_auth();
     }
 
     /**

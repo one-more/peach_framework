@@ -31,6 +31,7 @@ class UserModelTest extends \PHPUnit_Framework_TestCase {
 
     /**
      * @covers \User\model\UserModel::is_guest
+     * @expectedException PHPUnit_Framework_Error
      */
     public function test_is_guest() {
         /**

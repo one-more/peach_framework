@@ -2,7 +2,7 @@
 
 trait TraitJSON {
 
-	protected function array_to_json_string($array, $tabs = "\t") {
+	public function array_to_json_string($array, $tabs = "\t") {
 		$json_str   = "{\n";
 		$json_chunks    = [];
 		foreach($array as $k=>$el) {

@@ -1,9 +1,9 @@
 <?php
 
-class FakeFileModel extends FileModel {
+class FakeFileAdapter extends FileAdapter {
 
-    public function get_file() {
-        return ROOT_PATH.DS.'tests'.DS.'resource'.DS.'fake_data.json';
+    public function __construct() {
+        parent::__construct(ROOT_PATH.DS.'tests'.DS.'resource'.DS.'fake_data.json');
     }
 
     public function save() {
@@ -11,28 +11,26 @@ class FakeFileModel extends FileModel {
     }
 }
 
-class FileModelTest extends PHPUnit_Framework_TestCase {
+class FileAdapterTest extends PHPUnit_Framework_TestCase {
 
     /**
-     * @var $model FakeFileModel
+     * @var $model FakeFileAdapter
      */
     private $model;
 
     public function setUp() {
-        if(empty($this->model)) {
-            $this->model = new FakeFileModel();
-        }
+        $this->model = new FakeFileAdapter();
     }
 
     /**
-     * @covers FileModel::__construct
+     * @covers FileAdapter::__construct
      */
     public function test_construct() {
-        new FakeFileModel();
+        new FakeFileAdapter();
     }
 
     /**
-     * @covers FileModel::insert
+     * @covers FileAdapter::insert
      */
     public function test_insert() {
         foreach([1,2,3] as $i) {
@@ -44,7 +42,7 @@ class FileModelTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     *  @covers FileModel::select
+     *  @covers FileAdapter::select
      */
     public function test_select() {
         $this->assertTrue($this->model->select() instanceof \YaLinqo\Enumerable);
@@ -63,7 +61,7 @@ class FileModelTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers FileModel::save
+     * @covers FileAdapter::save
      */
     public function test_save() {
         $method = new ReflectionMethod($this->model, 'save');

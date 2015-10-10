@@ -19,12 +19,8 @@ class SessionTest extends PHPUnit_Framework_TestCase {
      */
 	private $session_obj;
 
-	private $session_id;
-
 	public function setUp() {
 		$this->session_obj = Application::get_class('Session');
-        $this->session_id = $this->session_obj->start();
-		$_COOKIE['pfm_session_id'] = $this->session_id;
 	}
 
     /**
@@ -36,16 +32,21 @@ class SessionTest extends PHPUnit_Framework_TestCase {
 
 	/**
 	 * @covers Session::start
+     * @expectedException PHPUnit_Framework_Error
 	 */
 	public function test_start() {
+		$session_id = $_COOKIE['pfm_session_id'];
 		$this->assertInternalType('int', $this->session_obj->start());
+        unset($_COOKIE['pfm_session_id']);
+        $this->assertInternalType('int', $this->session_obj->start());
+        $_COOKIE['pfm_session_id'] = $session_id;
 	}
 
 	/**
 	 * @covers Session::get_id
 	 */
 	public function test_get_id() {
-		$this->assertEquals($this->session_obj->get_id(), $this->session_id);
+		$this->assertEquals($this->session_obj->get_id(), $_COOKIE['pfm_session_id']);
 	}
 
 	/**
@@ -60,8 +61,6 @@ class SessionTest extends PHPUnit_Framework_TestCase {
 	 * @covers Session::get_var
 	 */
 	public function test_get_var() {
-        $this->assertFalse($this->session_obj->get_var('test'));
-        $this->session_obj->set_var('test', 'test');
 		$this->assertEquals('test', $this->session_obj->get_var('test'));
 	}
 

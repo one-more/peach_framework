@@ -7,7 +7,7 @@ class BaseModel implements Model {
      */
     public function __construct(array $fields = null) {
        if(count($fields)) {
-           $this->fields = $fields;
+           $this->load($fields);
        }
     }
 
@@ -19,7 +19,7 @@ class BaseModel implements Model {
         }
     }
 
-    public function __get($field) {
+    public function &__get($field) {
         if(array_key_exists($field, $this->fields)) {
             return $this->fields[$field];
         } else {
@@ -32,14 +32,14 @@ class BaseModel implements Model {
     }
 
     public function get_id() {
-        return empty($this->id) ? null : $this->id;
+        return $this->id;
     }
 
     /**
      * @param array $data
      */
     public function load(array $data) {
-        $this->fields = $data;
+        $this->fields = array_replace_recursive($this->fields, $data);
     }
 
     /**

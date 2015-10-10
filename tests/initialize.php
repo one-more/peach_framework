@@ -4,8 +4,13 @@ error_reporting(E_ALL);
 
 require_once realpath(dirname(__DIR__.'../')).'/resource/defines.php';
 require_once ROOT_PATH.DS.'class'.DS.'application.php';
+require_once ROOT_PATH.DS.'trait'.DS.'traitjson.php';
 require_once ROOT_PATH.DS.'lib/Smarty/Smarty.class.php';
 require_once ROOT_PATH.DS.'lib'.DS.'vendor'.DS.'autoload.php';
+
+class JSON {
+    use TraitJSON;
+}
 
 class TestsEnv {
 	public static function initialize() {
@@ -29,6 +34,19 @@ class TestsEnv {
         $starter_autoload = new ReflectionMethod('Starter', 'register_autoload');
         $starter_autoload->setAccessible(true);
         $starter_autoload->invoke(new Starter());
+
+        $sessions_file = 'pfmextension://session'.DS.'resource'.DS.'session_model.json';
+        $sessions_json = file_get_contents($sessions_file);
+        $sessions = json_decode($sessions_json, true);
+        $sessions[] = [
+            'id' => count($sessions)+1,
+            'date' => date('Y-m-d'),
+            'uid' => 0,
+            'variables' => []
+        ];
+        file_put_contents($sessions_file, (new JSON())->array_to_json_string($sessions));
+        $_COOKIE['pfm_session_id'] = count($sessions);
+        Error::log($_COOKIE['pfm_session_id']);
 	}
 
 	private static function init_test_tables() {

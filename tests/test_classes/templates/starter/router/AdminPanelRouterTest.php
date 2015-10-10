@@ -2,8 +2,12 @@
 
 class SilentAdminPanelRouter extends \Starter\router\AdminPanelRouter {
 
+    public function __destruct() {}
+
     protected function show_result(AjaxResponse $response) {}
 }
+
+\Starter::$current_router = \Starter\router\AdminPanelRouter::class;
 
 /**
  * Class AdminPanelRouterTest
@@ -18,9 +22,7 @@ class AdminPanelRouterTest extends PHPUnit_Framework_TestCase {
     private $router;
 
     public function setUp() {
-        if(empty($this->router)) {
-            $this->router = new SilentAdminPanelRouter();
-        }
+        $this->router = new SilentAdminPanelRouter();
     }
 
     /**

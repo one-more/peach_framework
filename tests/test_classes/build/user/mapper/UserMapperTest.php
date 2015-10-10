@@ -74,10 +74,10 @@ class UserMapperTest extends PHPUnit_Framework_TestCase {
         $this->assertFalse($method->invoke($this->mapper, $model->to_array()));
 
         $model->login = uniqid('test', true);
-        $this->assertTrue($method->invoke($this->mapper, $model->to_array()));
+        $this->assertTrue((bool)$method->invoke($this->mapper, $model->to_array()));
 
         $model->login = uniqid('test', true);
-        $this->assertTrue($method->invoke($this->mapper, $model->to_array()));
+        $this->assertTrue((bool)$method->invoke($this->mapper, $model->to_array()));
 
         /**
          * @var $exited_model \User\model\UserModel
@@ -100,7 +100,9 @@ class UserMapperTest extends PHPUnit_Framework_TestCase {
         $method->setAccessible(true);
         $method->invoke($this->mapper, $model->to_array());
 
-        $this->assertTrue($this->mapper->find_where(['login' => ['=', $model->login]])->one()->get_id() > 0);
+        $this->assertTrue($this->mapper->find_where([
+                'login' => ['=', $model->login]
+            ])->one()->get_id() > 0);
     }
 
     /**
@@ -133,24 +135,28 @@ class UserMapperTest extends PHPUnit_Framework_TestCase {
      * @covers User\Mapper\UserMapper::find_by_sql
      */
     public function test_find_by_sql() {
-        $this->assertTrue($this->mapper->find_by_sql('SELECT * FROM users WHERE deleted = 0 ORDER BY id DESC LIMIT 1')->one()->get_id() > 0);
+        $sql = 'SELECT * FROM users WHERE deleted = 0 ORDER BY id DESC LIMIT 1';
+        $this->assertTrue($this->mapper->find_by_sql($sql)->one()->get_id() > 0);
     }
 
     /**
      * @covers User\Mapper\UserMapper::find_where
      */
     public function test_find_where() {
-        $this->assertTrue($this->mapper->find_where(['credentials' => ['=', User::credentials_user]])->one()->get_id() > 0);
+        $this->assertTrue($this->mapper->find_where([
+                'credentials' => ['=', User::credentials_user]
+            ])->one()->get_id() > 0);
     }
 
     /**
      * @covers User\Mapper\UserMapper::delete
      */
     public function test_delete() {
+        $sql = 'SELECT * FROM users WHERE deleted = 0 ORDER BY id DESC LIMIT 1';
         /**
          * @var $model \User\model\UserModel
          */
-        $model = $this->mapper->find_by_sql('SELECT * FROM users WHERE deleted = 0 ORDER BY id DESC LIMIT 1')->one();
+        $model = $this->mapper->find_by_sql($sql)->one();
         $this->mapper->delete($model);
         $this->assertFalse($this->mapper->find_by_id($model->id)->id > 0);
     }

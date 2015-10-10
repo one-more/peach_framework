@@ -18,22 +18,22 @@ class UserModel extends \BaseModel {
         'id' => null,
         'login' => null,
         'password' => '',
-        'credentials' => '',
+        'credentials' => \User::credentials_user,
         'remember_hash' => ''
     ];
 
     public function is_guest() {
         if(!empty($_COOKIE['user'])) {
-            return $_COOKIE['user'] == $this->remember_hash;
+            return $_COOKIE['user'] != $this->remember_hash;
         } else {
             /**
              * @var $session \Session
              */
             $session = \Application::get_class('Session');
             if($remember_hash = $session->get_var('user')) {
-                return $remember_hash == $this->remember_hash;
+                return $remember_hash != $this->remember_hash;
             }
-            return false;
+            return true;
         }
     }
 

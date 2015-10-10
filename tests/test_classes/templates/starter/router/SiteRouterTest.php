@@ -7,10 +7,12 @@ class SilentSiteRouter extends \Starter\router\SiteRouter {
     protected function show_result(AjaxResponse $response) {}
 }
 
+\Starter::$current_router = \Starter\router\SiteRouter::class;
+
 /**
  * Class SiteRouterTest
  *
- * @method assertNull($var)
+ * @method bool assertNull($var)
  */
 class SiteRouterTest extends PHPUnit_Framework_TestCase {
 
@@ -20,140 +22,38 @@ class SiteRouterTest extends PHPUnit_Framework_TestCase {
     private $router;
 
     public function setUp() {
-        if(empty($this->router)) {
-            $this->router = new SilentSiteRouter();
-        }
-        if(!empty($_SERVER['HTTP_X_REQUESTED_WITH'])) {
-            unset($_SERVER['HTTP_X_REQUESTED_WITH']);
-        }
+        $this->router = new SilentSiteRouter();
     }
 
     /**
-     * @covers \Starter\router\SiteRouter::login
+     * @covers \Starter\router\SiteRouter::__construct
      */
-    public function test_login() {
-        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHTTPRequest';
-
-        $this->router->login();
-        $this->assertNull(error_get_last());
+    public function __construct() {
+        new SilentSiteRouter();
     }
 
     /**
-     * @covers \Starter\router\SiteRouter::login
-     * @expectedException WrongRequestMethodException
+     * @covers \Starter\router\SiteRouter::action_edit_user
      */
-    public function test_login_wrong_request() {
-        $this->router->login();
-        $this->assertNull(error_get_last());
-    }
-
-    /**
-     * @covers \Starter\router\SiteRouter::logout
-     */
-    public function test_logout() {
-        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHTTPRequest';
-
-        $this->router->logout();
-        $this->assertNull(error_get_last());
-    }
-
-    /**
-     * @covers \Starter\router\SiteRouter::edit_user
-     */
-    public function test_edit_user() {
-        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHTTPRequest';
-
-        $_REQUEST['id'] = 1;
-
+    public function test_action_edit_user() {
         /**
-         * @var $user User
+         * @var $user \User
          */
         $user = Application::get_class('User');
         $mapper = $user->get_mapper();
-        $identity = $mapper->find_where([
-            'id' => ['=',1]
-        ])->one();
-        $_COOKIE['user'] = $identity->remember_hash;
-
-        $this->router->edit_user();
-        $this->assertNull(error_get_last());
-    }
-
-    /**
-     * @covers \Starter\router\SiteRouter::edit_user
-     * @expectedException WrongRightsException
-     */
-    public function test_edit_user_wrong_rights() {
-        $this->router->edit_user();
-        $this->assertNull(error_get_last());
-    }
-
-    /**
-     * @covers \Starter\router\SiteRouter::edit_user
-     * @expectedException WrongRequestMethodException
-     */
-    public function test_edit_user_wrong_request() {
-        $_REQUEST['id'] = 1;
-
+        $sql = 'SELECT * FROM users WHERE deleted = 0 ORDER BY id DESC LIMIT 1';
         /**
-         * @var $user User
+         * @var $model \User\model\UserModel
          */
-        $user = Application::get_class('User');
-        $mapper = $user->get_mapper();
-        $identity = $mapper->find_where([
-            'id' => ['=',1]
-        ])->one();
-        $_COOKIE['user'] = $identity->remember_hash;
+        $model = $mapper->find_by_sql($sql)->one();
+        $_COOKIE['user'] = $model->remember_hash;
+        $_POST['id'] = $model->get_id();
+        $_POST['login'] = uniqid('test', true);
+        $this->router->action_edit_user();
 
-        $this->router->edit_user();
-        $this->assertNull(error_get_last());
-    }
+        $_POST['id'] = $model->get_id() + 100;
+        $this->router->action_edit_user();
 
-    /**
-     * @covers \Starter\router\SiteRouter::add_user
-     */
-    public function test_add_user() {
-        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHTTPRequest';
-
-        /**
-         * @var $user User
-         */
-        $user = Application::get_class('User');
-        $mapper = $user->get_mapper();
-        $identity = $mapper->find_where([
-            'id' => ['=',1]
-        ])->one();
-        $_COOKIE['user'] = $identity->remember_hash;
-
-        $this->router->add_user();
-        $this->assertNull(error_get_last());
-    }
-
-    /**
-     * @covers \Starter\router\SiteRouter::add_user
-     * @expectedException WrongRequestMethodException
-     */
-    public function test_add_user_wrong_request() {
-        /**
-         * @var $user User
-         */
-        $user = Application::get_class('User');
-        $mapper = $user->get_mapper();
-        $identity = $mapper->find_where([
-            'credentials' => ['=', User::credentials_super_admin]
-        ])->one();
-        $_COOKIE['user'] = $identity->remember_hash;
-
-        $this->router->add_user();
-        $this->assertNull(error_get_last());
-    }
-
-    /**
-     * @covers \Starter\router\SiteRouter::add_user
-     * @expectedException WrongRightsException
-     */
-    public function test_add_user_wrong_rights() {
-        $this->router->add_user();
         $this->assertNull(error_get_last());
     }
 }

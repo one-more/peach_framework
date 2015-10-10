@@ -26,6 +26,7 @@ class UserAuthTest extends PHPUnit_Framework_TestCase {
 
     /**
      * @covers \User\auth\UserAuth::login
+     * @expectedException PHPUnit_Framework_Error
      */
     public function test_login() {
         $this->assertFalse($this->auth->login(null,null,null));

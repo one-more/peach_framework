@@ -19,19 +19,21 @@ class UserMapper extends \BaseMapper {
     }
 
     public function save(UserModel $model) {
-        $record = $this->adapter->select()->where([
-            'login' => ['=', $model->login]
-        ])->execute()->get_result();
-        if(empty($record)) {
+        $record = null;
+        if($model->id) {
+            $record = $this->find_by_id($model->id);
+        }
+        if(is_null($record)) {
             if($fields = $this->validate($model->to_array())) {
                 $this->insert((array)$fields);
+                $model->id = $this->adapter->get_insert_id();
                 return true;
             } else {
                 return false;
             }
         } else {
-            if($fields = $this->validate($model->to_array(), $record)) {
-                $this->update((array)$fields, $record['id']);
+            if($fields = $this->validate($model->to_array(), $record->to_array())) {
+                $this->update((array)$fields, $record->id);
                 return true;
             } else {
                 return false;
@@ -58,7 +60,7 @@ class UserMapper extends \BaseMapper {
                 return function ($value) use($is_login_changed) {
                     if($is_login_changed && !empty($this->adapter->select()->where([
                             'login' => ['=', $value]
-                        ])->excute()->get_result())) {
+                        ])->execute()->get_result())) {
                         return 'LOGIN_EXISTS';
                     }
                     return null;
@@ -96,6 +98,9 @@ class UserMapper extends \BaseMapper {
         return $validator->validate($fields);
     }
 
+    /**
+     * @param array $fields
+     */
     private function insert(array $fields) {
         $fields['remember_hash'] = password_hash($fields['password'].$fields['login'], PASSWORD_DEFAULT);
         if(!empty($fields['id'])) {
@@ -104,6 +109,10 @@ class UserMapper extends \BaseMapper {
         $this->adapter->insert($fields)->execute();
     }
 
+    /**
+     * @param array $fields
+     * @param $id
+     */
     private function update(array $fields, $id) {
         if(!empty($fields['id'])) {
             unset($fields['id']);

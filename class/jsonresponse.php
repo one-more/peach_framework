@@ -6,6 +6,7 @@ class JsonResponse implements AjaxResponse {
     public $views = [];
     public $title = '';
     public $status;
+    public $errors;
     public $message;
 
     public function set_attribute($name, $value) {

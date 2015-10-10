@@ -1,7 +1,6 @@
 <?php
 
-class LanguageFile implements ArrayAccess {
-    use TraitArrayAccess;
+class LanguageFile extends ArrayIterator {
 
     private $base_path;
 
@@ -12,6 +11,9 @@ class LanguageFile implements ArrayAccess {
         $file_path = $this->base_path.DS.$file;
         if(file_exists($file_path)) {
             $this->values = json_decode(file_get_contents($file_path), true);
+            parent::__construct($this->values);
+        } else {
+            throw new InvalidArgumentException("file {$file} does not exists");
         }
     }
 

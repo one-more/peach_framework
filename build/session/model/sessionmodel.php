@@ -2,27 +2,22 @@
 
 namespace Session\model;
 
-class SessionModel extends \FileModel {
+/**
+ * Class SessionModel
+ * @package Session\model
+ *
+ * @property int id
+ * @property string date
+ * @property int uid
+ * @property array variables
+ *
+ */
+class SessionModel extends \BaseModel {
 
-    /**
-     * @return string
-     */
-    public function get_file() {
-        return 'pfmextension://session'.DS.'resource'.DS.'session_model.json';
-    }
-
-    public function __construct() {
-        parent::__construct();
-
-        $this->clear_old_records();
-    }
-
-    /**
-     * deletes records older than 1 day
-     */
-    private function clear_old_records() {
-        $this->data = $this->select()->where(function($record) {
-            return $record['date'] == date('Y-m-d');
-        })->toArray();
-    }
+    protected $fields = [
+        'id' => null,
+        'date' => null,
+        'uid' => null,
+        'variables' => []
+    ];
 }

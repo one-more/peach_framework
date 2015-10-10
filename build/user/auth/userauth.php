@@ -24,29 +24,37 @@ class UserAuth {
         $collection = $mapper->find_where([
             'login' => ['=', $login]
         ]);
+        $result = false;
+        $identity = null;
         if($collection->count()) {
             /**
              * @var $identity UserModel
              */
             $identity = $collection->one();
-            if($password && password_verify($password, $identity->password)) {
-                if($remember) {
-                    setcookie('user', $identity->remember_hash, strtotime('+10 years'), '/');
-                    $_COOKIE['user'] = $identity->remember_hash;
-                } else {
-                    /**
-                     * @var $session \Session
-                     */
-                    $session = \Application::get_class('Session');
-                    $session->set_var('user', $identity->remember_hash);
+            if($password || trim($identity->password)) {
+                if(password_verify($password, trim($identity->password))) {
+                    $result = true;
                 }
-                return true;
             } else {
-                return false;
+                $result = true;
             }
-        } else {
-            return false;
         }
+        if($result && $identity) {
+            if($remember) {
+                setcookie('user', $identity->remember_hash, strtotime('+10 years'), '/');
+                /*
+                 * for tests
+                 */
+                $_COOKIE['user'] = $identity->remember_hash;
+            } else {
+                /**
+                 * @var $session \Session
+                 */
+                $session = \Application::get_class('Session');
+                $session->set_var('user', $identity->remember_hash);
+            }
+        }
+        return $result;
     }
 
     public function log_out() {

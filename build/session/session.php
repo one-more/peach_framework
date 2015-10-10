@@ -10,7 +10,6 @@ class Session implements Extension {
 
 	public function __construct() {
         $this->register_autoload();
-        $this->model = \Application::get_class('\Session\model\SessionModel');
 	}
 
     /**
@@ -18,18 +17,23 @@ class Session implements Extension {
      * @throws InvalidArgumentException
      */
     public function start() {
+        /**
+         * @var $mapper \Session\mapper\SessionMapper
+         */
+        $mapper = Application::get_class('\Session\mapper\SessionMapper');
         if(!$this->get_id()) {
-            /**
-             * @var $ext User
-             */
-            $ext = Application::get_class('User');
-            $user = $ext->get_identity();
-            return $this->model->insert([
+            $this->model = new \Session\model\SessionModel([
                 'date' => date('Y-m-d'),
-                'uid' => $user->id,
+                'uid' => 0,
                 'variables' => []
             ]);
+            $mapper->save($this->model);
+            setcookie('pfm_session_id', $this->model->id, '/');
+            return $_COOKIE['pfm_session_id'] = $this->model->id;
         } else {
+            if(!$this->model) {
+                $this->model = $mapper->find_by_id($this->get_id());
+            }
             return $this->get_id();
         }
     }
@@ -44,59 +48,58 @@ class Session implements Extension {
     /**
      * @param $name
      * @param bool|false $default
-     * @return mixed
+     * @return bool
+     * @throws ErrorException
      */
     public function get_var($name, $default = false) {
-        if($this->get_id()) {
-            return $this->model->select()->where(function($record) use($name) {
-                return $record['id'] == $this->get_id() && !empty($record['variables'][$name]);
-            })->firstOrDefault([
-                'variables' => [
-                    "{$name}" => $default
-                ]
-            ])['variables'][$name];
-        } else {
-            return $default;
+        if(!$this->get_id()) {
+            throw new ErrorException('Session was not start');
         }
+        return !empty($this->model->variables[$name]) ?
+            $this->model->variables[$name] : $default;
     }
 
     /**
      * @param $name
      * @param $value
+     * @throws ErrorException
      */
     public function set_var($name, $value) {
-        if($this->get_id()) {
-            $this->model->update($this->get_id(), [
-                'variables' => [
-                    "{$name}" => $value
-                ]
-            ]);
+        if(!$this->get_id()) {
+            throw new ErrorException('Session was not start');
         }
+        $this->model->variables[$name] = $value;
     }
 
     /**
      * @param $name
+     * @throws ErrorException
      */
     public function unset_var($name) {
-       if($this->get_id()) {
-           $record = $this->model->select()->where(function($record) {
-               return $record['id'] == $this->get_id();
-           })->toArray();
-           if(!empty($record['variables'][$name])) {
-               unset($record['variables'][$name]);
-               $this->model->update($this->get_id(), $record);
-           }
-       }
+        if(!$this->get_id()) {
+            throw new ErrorException('Session was not start');
+        }
+       unset($this->model->variables[$name]);
     }
 
     /**
      * @param $uid
+     * @throws ErrorException
      */
     public function set_uid($uid) {
-        if($this->get_id()) {
-            $this->model->update($this->get_id(), [
-                'uid' => $uid
-            ]);
+        if(!$this->get_id()) {
+            throw new ErrorException('Session was not start');
+        }
+        $this->model->uid = $uid;
+    }
+
+    public function __destruct() {
+        if($this->model) {
+            /**
+             * @var $mapper \Session\mapper\SessionMapper
+             */
+            $mapper = Application::get_class('\Session\mapper\SessionMapper');
+            $mapper->save($this->model);
         }
     }
 }

@@ -23,6 +23,7 @@ class User implements Extension {
      * @throws InvalidArgumentException
      */
     public function get_identity() {
+        $remember_hash = null;
         if(!empty($_COOKIE['user'])) {
             $remember_hash = $_COOKIE['user'];
         } else {
@@ -32,12 +33,13 @@ class User implements Extension {
             $session = Application::get_class('Session');
             $remember_hash = $session->get_var('user');
         }
+
         /**
          * @var $mapper \User\Mapper\UserMapper
          */
         $mapper = Application::get_class('\User\Mapper\UserMapper');
         $collection = $mapper->find_where([
-            'remember_hash' => ['=', empty($remember_hash) ? '' : $remember_hash]
+            'remember_hash' => ['=', $remember_hash]
         ]);
         if($collection->count()) {
             return $collection->one();
