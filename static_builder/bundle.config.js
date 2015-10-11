@@ -33,7 +33,8 @@ var vendor_js = [
     './src/vendor/classie.js',
     './src/vendor/bootstrap/bootstrap.js',
     './src/vendor/crypto/md5.js',
-    './src/vendor/es6-shim.js'
+    './src/vendor/es6-shim.js',
+    './src/vendor/smart.core.min.js'
 ];
 
 var vendor_css = [

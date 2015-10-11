@@ -1,5 +1,6 @@
-<table class="table table-striped users-table">
-    <thead>
+<div class="users">
+    <table class="table table-striped users__table">
+        <thead>
         <tr>
             <th>#</th>
             <th>{$lang_vars.login}</th>
@@ -7,23 +8,24 @@
             <th>{$lang_vars.credentials}</th>
             <th></th>
         </tr>
-    </thead>
-    <tbody>
+        </thead>
+        <tbody>
         {foreach $users as $index=>$user}
-            <tr>
-                <td>{$index+1}</td>
-                <td>{$user->login}</td>
-                <td>{$user->password}</td>
-                <td>{$lang_vars.credentials_labels[$user->credentials]}</td>
-                <td width="30">
-                    {if $is_super_admin}
-                        <a href="/admin_panel/edit_user/{$user->id}">{$lang_vars.edit}</a>
-                    {/if}
-                </td>
-            </tr>
+        <tr>
+            <td>{$index+1}</td>
+            <td>{$user.login}</td>
+            <td>{$user.password}</td>
+            <td>{$lang_vars.credentials_labels[$user.credentials]}</td>
+            <td width="30">
+                {if $is_super_admin}
+                <a href="/admin_panel/edit_user/{$user.id}">{$lang_vars.edit}</a>
+                {/if}
+            </td>
+        </tr>
         {/foreach}
-    </tbody>
-</table>
-{if $is_super_admin}
+        </tbody>
+    </table>
+    {if $is_super_admin}
     <a class="btn btn-primary" href="/admin_panel/add_user">{$lang_vars.add_user}</a>
-{/if}
+    {/if}
+</div>

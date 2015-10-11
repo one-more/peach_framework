@@ -3,6 +3,6 @@ _.defer(() => {
 
     window.TemplatesCollection = Backbone.Collection.extend({
         model: TemplateModel,
-        url: () => '/rest/templates/'+(location.pathname.split('/')[2] || '')
+        url: () => '/rest/templates'+location.pathname
     })
 });

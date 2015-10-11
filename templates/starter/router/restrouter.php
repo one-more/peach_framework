@@ -2,28 +2,19 @@
 
 namespace Starter\router;
 
+use Starter\view\AdminPanel\UsersTableView;
+
 class RestRouter extends \Router {
 
     public function __construct() {
         $this->routes = [
-            '/rest/users' => [$this, 'users'],
-            '/rest/templates' => [$this, 'templates']
+            '/rest/templates/admin_panel' => [$this, 'admin_panel_index_templates']
         ];
     }
 
-    public function users() {
-        /**
-         * @var $user \User
-         */
-        $user = \Application::get_class('User');
-        $mapper = $user->get_mapper();
-        $collection = $mapper->get_page();
+    public function admin_panel_index_templates() {
         echo json_encode([
-            'users' => $collection->to_array()
+            (new UsersTableView())->get_template_model()->to_array()
         ]);
-    }
-
-    public function templates() {
-
     }
 }

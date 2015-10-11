@@ -45,10 +45,9 @@
         },
 
         index: function () {
-            (window.templates = new TemplatesCollection(), templates.fetch());
-            let collection = new UsersCollection;
-            new UsersTableView({collection: collection});
-            collection.fetch()
+            (window.templates = new TemplatesCollection(), templates.on('sync', () => {
+                new UsersTableView().render();
+            }), templates.fetch());
         },
 
         login: function () {

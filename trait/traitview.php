@@ -31,4 +31,11 @@ trait TraitView {
         $lang_file = new LanguageFile($file, $this->get_lang_vars_base_dir());
         $this->assign('lang_vars', $lang_file->get_data());
     }
+
+    /**
+     * @return array
+     */
+    public function get_lang_vars_array() {
+        return (new LanguageFile($this->get_lang_file(), $this->get_lang_vars_base_dir()))->get_data();
+    }
 }

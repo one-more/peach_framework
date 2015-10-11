@@ -2,14 +2,14 @@
     "use strict";
 
     window.UsersTableView = Backbone.View.extend({
-        className: 'users-table',
-
-        initialize: function () {
-            this.listenTo(this.collection, 'sync', this.render)
-        },
 
         render: function () {
-            $('[data-block="main"]').html(this.collection.template)
+            let template = templates.findWhere({
+                name: 'UsersTableView'
+            });
+            let data = template.get('data');
+            let tpl = new jSmart(template.get('html'));
+            $('[data-block="main"]').html(tpl.fetch(data));
         }
     });
 })();
