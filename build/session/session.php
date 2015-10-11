@@ -8,8 +8,14 @@ class Session implements Extension {
      */
     private $model;
 
+    /**
+     * @var $mapper \Session\mapper\SessionMapper
+     */
+    private $mapper;
+
 	public function __construct() {
         $this->register_autoload();
+        $this->mapper = Application::get_class('\Session\mapper\SessionMapper');
 	}
 
     /**
@@ -17,22 +23,18 @@ class Session implements Extension {
      * @throws InvalidArgumentException
      */
     public function start() {
-        /**
-         * @var $mapper \Session\mapper\SessionMapper
-         */
-        $mapper = Application::get_class('\Session\mapper\SessionMapper');
         if(!$this->get_id()) {
             $this->model = new \Session\model\SessionModel([
                 'date' => date('Y-m-d'),
                 'uid' => 0,
                 'variables' => []
             ]);
-            $mapper->save($this->model);
+            $this->mapper->save($this->model);
             setcookie('pfm_session_id', $this->model->id, '/');
             return $_COOKIE['pfm_session_id'] = $this->model->id;
         } else {
             if(!$this->model) {
-                $this->model = $mapper->find_by_id($this->get_id());
+                $this->model = $this->mapper->find_by_id($this->get_id());
             }
             return $this->get_id();
         }
@@ -69,6 +71,7 @@ class Session implements Extension {
             throw new ErrorException('Session was not start');
         }
         $this->model->variables[$name] = $value;
+        $this->mapper->save($this->model);
     }
 
     /**
@@ -79,7 +82,8 @@ class Session implements Extension {
         if(!$this->get_id()) {
             throw new ErrorException('Session was not start');
         }
-       unset($this->model->variables[$name]);
+        unset($this->model->variables[$name]);
+        $this->mapper->save($this->model);
     }
 
     /**
@@ -91,15 +95,6 @@ class Session implements Extension {
             throw new ErrorException('Session was not start');
         }
         $this->model->uid = $uid;
-    }
-
-    public function __destruct() {
-        if($this->model) {
-            /**
-             * @var $mapper \Session\mapper\SessionMapper
-             */
-            $mapper = Application::get_class('\Session\mapper\SessionMapper');
-            $mapper->save($this->model);
-        }
+        $this->mapper->save($this->model);
     }
 }

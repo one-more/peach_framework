@@ -45,7 +45,10 @@
         },
 
         index: function () {
-            this.load_positions();
+            (window.templates = new TemplatesCollection(), templates.fetch());
+            let collection = new UsersCollection;
+            new UsersTableView({collection: collection});
+            collection.fetch()
         },
 
         login: function () {

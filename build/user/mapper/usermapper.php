@@ -176,7 +176,7 @@ class UserMapper extends \BaseMapper {
     /**
      * @param $number
      * @param $per_page
-     * @return mixed
+     * @return \BaseCollection
      */
     public function get_page($number = 1, $per_page = 30) {
         $number < 0 && $number = 0;

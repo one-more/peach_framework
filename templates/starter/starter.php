@@ -13,16 +13,19 @@ class Starter implements Template {
     }
 
 	public function route() {
-        /**
-         * @var $router Router
-         */
-		if(strpos(Request::uri(), 'admin_panel') === false) {
-			$router = Application::get_class('Starter\router\SiteRouter');
-            self::$current_router = Starter\router\SiteRouter::class;
-        } else {
-            self::$current_router = Starter\router\AdminPanelRouter::class;
-			$router = Application::get_class('Starter\router\AdminPanelRouter');
-		}
+        switch(array_replace_recursive([''], Request::uri_parts())[0]) {
+            case 'admin_panel':
+                self::$current_router = Starter\router\AdminPanelRouter::class;
+			    $router = Application::get_class('Starter\router\AdminPanelRouter');
+                break;
+            case 'rest':
+                self::$current_router = Starter\router\RestRouter::class;
+			    $router = Application::get_class('Starter\router\RestRouter');
+                break;
+            default:
+                $router = Application::get_class('Starter\router\SiteRouter');
+                self::$current_router = Starter\router\SiteRouter::class;
+        }
         $router->route();
 	}
 }

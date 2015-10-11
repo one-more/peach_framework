@@ -41,6 +41,7 @@ class BaseCollection implements Collection {
     public function count() {
         return count($this->models);
     }
+
     public function one() {
         return $this[0];
     }
@@ -99,5 +100,19 @@ class BaseCollection implements Collection {
         } else {
             return null;
         }
+    }
+
+    public function to_array() {
+        /**
+         * @var $model BaseModel
+         */
+        $model = new $this->model_class;
+        return array_map(function($item) use($model) {
+            if($item instanceof $model) {
+                return $model->to_array();
+            } else {
+                return $item;
+            }
+        }, $this->models);
     }
 }
