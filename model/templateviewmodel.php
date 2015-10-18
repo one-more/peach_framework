@@ -1,7 +1,5 @@
 <?php
 
-namespace Starter\model;
-
 class TemplateViewModel extends \BaseModel {
 
     protected $fields = [

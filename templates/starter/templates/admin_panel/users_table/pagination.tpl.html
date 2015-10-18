@@ -1,0 +1,27 @@
+{$current = $paging_model->current}
+{$pages = $paging_model->pages}
+{if $current > 2}
+{$start = $current - 2}
+{$limit = $current + 2}
+{else}
+{$start = 1}
+{$limit = $start + 4}
+{/if}
+{if $limit > $pages}
+{$limit = $pages}
+{/if}
+
+{function 'is_active' index=0 current=1}
+{if $index == $current}
+active
+{/if}
+{/function}
+<nav class="text-center">
+    <ul class="pagination">
+        {for $i=$start to $limit}
+            <li class="{is_active index=$i current=$current}">
+                <a href="/admin_panel/page{$i}">{$i}</a>
+            </li>
+        {/for}
+    </ul>
+</nav>

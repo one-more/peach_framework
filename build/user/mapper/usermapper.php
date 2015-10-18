@@ -155,7 +155,10 @@ class UserMapper extends \BaseMapper {
      */
     public function find_where(array $where_statement) {
         $collection = new \BaseCollection(UserModel::class);
-        $records = array_filter($this->adapter->select()->where($where_statement)->execute()->get_arrays(), function($record) {
+        $records = array_filter($this->adapter->select()
+            ->where($where_statement)
+            ->execute()
+            ->get_arrays(), function($record) {
             return $record['deleted'] == 0;
         });
         $collection->load($records);
@@ -185,5 +188,18 @@ class UserMapper extends \BaseMapper {
         $collection = new \BaseCollection(UserModel::class);
         $collection->load($records);
         return $collection;
+    }
+
+    /**
+     * @param int $number
+     * @param int $per_page
+     * @return \PagingModel
+     */
+    public function getPaging($number = 1, $per_page = 30) {
+        $sql = "SELECT CEIL(COUNT(*)/{$per_page}) as pages FROM users";
+        return new \PagingModel([
+            'current' => $number,
+            'pages' => $this->adapter->execute($sql)->get_result()
+        ]);
     }
 }

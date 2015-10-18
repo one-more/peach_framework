@@ -9,7 +9,7 @@
             });
             let data = template.get('data');
             let tpl = new jSmart(template.get('html'));
-            $('[data-block="main"]').html(tpl.fetch(data));
+            return tpl.fetch(data);
         }
     });
 })();

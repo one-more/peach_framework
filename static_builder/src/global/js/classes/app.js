@@ -22,6 +22,10 @@
                 }
             });
 
+            jSmart.prototype.getTemplate = function (name) {
+                return this.data['inclusions'][name];
+            };
+
             Backbone.history.start({pushState: true, silent: true});
         }
     });

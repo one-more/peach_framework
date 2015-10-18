@@ -1,11 +1,11 @@
 {
-  "starter": {
-    "styles": "<link href='/static/starter-c9b3c62826.css' media='all' rel='stylesheet' type='text/css'/>",
-    "scripts": "<script src='/static/starter-acbf571f51.js' type='text/javascript'></script>"
-  },
   "tools": {
     "styles": "<link href='/static/tools-c9b3c62826.css' media='all' rel='stylesheet' type='text/css'/>",
-    "scripts": "<script src='/static/tools-102b78973e.js' type='text/javascript'></script>"
+    "scripts": "<script src='/static/tools-02ec5ffc12.js' type='text/javascript'></script>"
+  },
+  "starter": {
+    "styles": "<link href='/static/starter-c9b3c62826.css' media='all' rel='stylesheet' type='text/css'/>",
+    "scripts": "<script src='/static/starter-8ed558f9f5.js' type='text/javascript'></script>"
   },
   "vendor": {
     "styles": "<link href='/static/vendor-5998799ce6.css' media='all' rel='stylesheet' type='text/css'/>",
@@ -13,6 +13,6 @@
   },
   "admin_panel": {
     "styles": "<link href='/static/admin_panel-24f994af37.css' media='all' rel='stylesheet' type='text/css'/>",
-    "scripts": "<script src='/static/admin_panel-1656b3abb0.js' type='text/javascript'></script>"
+    "scripts": "<script src='/static/admin_panel-7e113753fe.js' type='text/javascript'></script>"
   }
 }

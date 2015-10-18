@@ -1,8 +1,6 @@
 <?php
 namespace Starter\view\AdminPanel;
 
-use Starter\model\TemplateViewModel;
-
 class UsersTableView extends \TemplateView {
 
     private $template_name = 'users_table.tpl.html';
@@ -26,23 +24,28 @@ class UsersTableView extends \TemplateView {
         $ext = \Application::get_class('User');
         $user = $ext->get_identity();
         $mapper = $ext->get_mapper();
-        $users = $mapper->get_page()->to_array();
+        $users = $mapper->get_page();
         $is_super_admin = $user->is_super_admin();
 
         return [
             'users' => $users,
             'my_id' => $user->id,
-            'is_super_admin' => $is_super_admin
+            'is_super_admin' => $is_super_admin,
+            'paging_model' => $mapper->getPaging()
         ];
     }
 
     public function get_template_model() {
+        $template_dir = $this->getTemplateDir(0);
         $data = $this->get_data();
         $data['lang_vars'] = $this->get_lang_vars_array();
-        return new TemplateViewModel([
+        $data['inclusions'] = [
+            'pagination.tpl.html' => file_get_contents($template_dir.DS.'pagination.tpl.html')
+        ];
+        return new \TemplateViewModel([
             'name' => 'UsersTableView',
             'data' => $data,
-            'html' => file_get_contents($this->getTemplateDir(0).DS.$this->template_name)
+            'html' => file_get_contents($template_dir.DS.$this->template_name)
         ]);
     }
 }

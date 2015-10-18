@@ -46,7 +46,7 @@
 
         index: function () {
             (window.templates = new TemplatesCollection(), templates.on('sync', () => {
-                new UsersTableView().render();
+                $('[data-block="main"]').html(new UsersTableView().render());
             }), templates.fetch());
         },
 
