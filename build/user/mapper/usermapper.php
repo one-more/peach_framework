@@ -94,8 +94,10 @@ class UserMapper extends \BaseMapper {
          */
         $ext = \Application::get_class('User');
         $lang_vars = new \LanguageFile('mapper'.DS.'usermapper.json', $ext->get_lang_path());
-        $this->validation_errors = $validator->getErrors($lang_vars['errors']);
-        return $validator->validate($fields);
+
+        $result = $validator->validate($fields);
+        !$result && $this->validation_errors = $validator->getErrors($lang_vars['errors']);
+        return $result;
     }
 
     /**
@@ -183,8 +185,13 @@ class UserMapper extends \BaseMapper {
      */
     public function get_page($number = 1, $per_page = 30) {
         $number < 0 && $number = 0;
-        $records = $this->adapter->select()->limit($per_page)
-            ->offset(($number-1)*$per_page)->execute()->get_arrays();
+        $records = $this->adapter->select()
+            ->where([
+                'deleted' => ['=', 0]
+            ])->limit($per_page)
+            ->offset(($number-1)*$per_page)
+            ->execute()
+            ->get_arrays();
         $collection = new \BaseCollection(UserModel::class);
         $collection->load($records);
         return $collection;
@@ -196,7 +203,7 @@ class UserMapper extends \BaseMapper {
      * @return \PagingModel
      */
     public function getPaging($number = 1, $per_page = 30) {
-        $sql = "SELECT CEIL(COUNT(*)/{$per_page}) as pages FROM users";
+        $sql = "SELECT CEIL(COUNT(*)/{$per_page}) as pages FROM users WHERE deleted = 0";
         return new \PagingModel([
             'current' => $number,
             'pages' => $this->adapter->execute($sql)->get_result()

@@ -20,21 +20,21 @@ active
 <nav class="text-center">
     <ul class="pagination">
         <li>
-            <a href="/admin_panel">
+            <a href="/admin_panel/users">
                 <span aria-hidden="true">&laquo;</span>
             </a>
         </li>
         {for $i=$start to $limit}
         <li class="{is_active index=$i current=$current}">
             {if $i == 1}
-            <a href="/admin_panel">{$i}</a>
+            <a href="/admin_panel/users">{$i}</a>
             {else}
-            <a href="/admin_panel/page{$i}">{$i}</a>
+            <a href="/admin_panel/users/page{$i}">{$i}</a>
             {/if}
         </li>
         {/for}
         <li>
-            <a href="/admin_panel/page{$pages}">
+            <a href="/admin_panel/users/page{$pages}">
                 <span aria-hidden="true">&raquo;</span>
             </a>
         </li>

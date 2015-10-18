@@ -3,10 +3,12 @@
     "credentials": "Привилегии",
     "password": "Пароль",
     "edit": "редактировать",
+    "delete": "удалить",
     "credentials_labels": {
         "user": "пользователь",
         "administrator": "администратор",
         "super_administrator": "супер администратор"
     },
-    "add_user": "добавить"
+    "add_user": "добавить",
+    "confirm_delete": "удалить пользователя?"
 }

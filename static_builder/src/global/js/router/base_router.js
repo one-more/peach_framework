@@ -61,7 +61,7 @@
         },
 
         extend: function (obj) {
-            return $.extend(true, this, obj);
+            return $.extend(true, {}, this, obj);
         },
 
         go_to: function(url, options = {trigger : true}) {

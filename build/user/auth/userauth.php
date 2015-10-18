@@ -60,6 +60,7 @@ class UserAuth {
     public function log_out() {
         if(!empty($_COOKIE['user'])) {
             unset($_COOKIE['user']);
+            setcookie('user', null, -1, '/');
             return true;
         } else {
             /**

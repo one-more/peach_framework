@@ -22,6 +22,10 @@ class Starter implements Template {
                 self::$current_router = Starter\router\RestRouter::class;
 			    $router = Application::get_class('Starter\router\RestRouter');
                 break;
+            case 'action':
+                self::$current_router = Starter\router\ActionRouter::class;
+			    $router = Application::get_class('Starter\router\ActionRouter');
+                break;
             default:
                 $router = Application::get_class('Starter\router\SiteRouter');
                 self::$current_router = Starter\router\SiteRouter::class;

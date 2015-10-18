@@ -45,7 +45,7 @@ class UsersTableView extends \TemplateView {
             'pagination.tpl.html' => file_get_contents($template_dir.DS.'pagination.tpl.html')
         ];
         return new \TemplateViewModel([
-            'name' => 'UsersTableView',
+            'name' => basename(str_replace('\\', '/', get_class($this))),
             'data' => $data,
             'html' => file_get_contents($template_dir.DS.$this->template_name)
         ]);

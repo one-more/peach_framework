@@ -1,31 +1,28 @@
 (function () {
     'use strict';
 
-    window.UserFormView = {
+    window.UserFormView = BaseView.extend({
         events: {
             'submit': 'save',
             'click button': 'cancel'
         },
+
         save: function (event) {
-            var table = event.currentTarget;
+            var table = event.target;
             $.post(table.action, $(table).serializeArray(), function(json) {
                 if(json.status == 'success') {
-                    Router.go_to('/admin_panel');
+                    Router.go_to('/admin_panel/users');
+                    NotificationView.display(json.message, json.status);
                 } else {
                     json.message = '';
-                    $.each(json.errors, function (i, error) {
-                        json.message += error+'\n';
-                    })
+                    NotificationView.display(_.values(json['errors']).join('\n'), json.status);
                 }
-                NotificationView.display(json.message, json.status);
             }, 'json');
         },
+
         cancel: function (event) {
             event.preventDefault();
-            Router.go_to('/admin_panel');
-        },
-        extend: function (obj) {
-            return $.extend(true, this, obj);
+            Router.go_to('/admin_panel/users');
         }
-    };
+    });
 })();

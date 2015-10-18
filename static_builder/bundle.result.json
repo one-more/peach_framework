@@ -1,18 +1,18 @@
 {
   "tools": {
-    "styles": "<link href='/static/tools-c9b3c62826.css' media='all' rel='stylesheet' type='text/css'/>",
-    "scripts": "<script src='/static/tools-c44be04f11.js' type='text/javascript'></script>"
+    "styles": "<link href='/static/tools-a6f3f01868.css' media='all' rel='stylesheet' type='text/css'/>",
+    "scripts": "<script src='/static/tools-caaf60cfc0.js' type='text/javascript'></script>"
   },
   "starter": {
     "styles": "<link href='/static/starter-c9b3c62826.css' media='all' rel='stylesheet' type='text/css'/>",
-    "scripts": "<script src='/static/starter-f1b4877add.js' type='text/javascript'></script>"
+    "scripts": "<script src='/static/starter-ba929866db.js' type='text/javascript'></script>"
   },
   "vendor": {
     "styles": "<link href='/static/vendor-5998799ce6.css' media='all' rel='stylesheet' type='text/css'/>",
     "scripts": "<script src='/static/vendor-203c064600.js' type='text/javascript'></script>"
   },
   "admin_panel": {
-    "styles": "<link href='/static/admin_panel-24f994af37.css' media='all' rel='stylesheet' type='text/css'/>",
-    "scripts": "<script src='/static/admin_panel-edfce93ef5.js' type='text/javascript'></script>"
+    "styles": "<link href='/static/admin_panel-a99b3d2d7a.css' media='all' rel='stylesheet' type='text/css'/>",
+    "scripts": "<script src='/static/admin_panel-c64f212d65.js' type='text/javascript'></script>"
   }
 }

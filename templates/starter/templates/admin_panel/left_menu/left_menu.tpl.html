@@ -1,10 +1,12 @@
-<ul id="left-menu" class="nav nav-pills nav-stacked">
-    {if $url == '/admin_panel'}
-        {$class = 'active'}
-    {else}
-        {$class = null}
+{function 'is_users_active' url=''}
+    {if $url|strpos:'users'}
+        active
+    {elseif $url == '/admin_panel'}
+        active
     {/if}
-    {$HTML->begin_tag('li', ['class' => $class])}
-        <a href="/admin_panel">{$lang_vars.users}</a>
-    {$HTML->end_tag('li')}
+{/function}
+<ul id="left-menu" class="nav nav-pills nav-stacked">
+    <li class="{is_users_active url=$url}">
+        <a href="/admin_panel/users">{$lang_vars.users}</a>
+    </li>
 </ul>

@@ -25,8 +25,7 @@
             jSmart.prototype.registerPlugin(
                 'function',
                 'include',
-                function(params, data)
-                {
+                function(params, data) {
                     var file = params.__get('file',null,0);
                     if(!data['inclusions']) {
                         throw new Error('data must contain inclusions section');
@@ -37,13 +36,21 @@
                 }
             );
 
+            jSmart.prototype.registerPlugin(
+                'modifier',
+                'strpos',
+                function(str, needle) {
+                    str.indexOf(needle)
+                }
+            );
+
             Backbone.history.start({pushState: true, silent: true});
         }
     });
 
     Object.defineProperty(App, 'register_events', {
         value: function () {
-            $(document).on('click', 'a[href]:not(.link_external)', function(e) {
+            $(document).on('click', 'a[href]:not(.link--external)', function(e) {
                 var href = this.getAttribute('href');
                 if(href.slice(-1) == '/') {
                     href = href.slice(0,-1);
