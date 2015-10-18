@@ -1,6 +1,7 @@
 <?php
 
 namespace Starter\router;
+use Starter\view\AdminPanel\UsersTableView;
 
 /**
  * Class AdminPanelRouter
@@ -16,6 +17,7 @@ class AdminPanelRouter extends \Router {
 	public function __construct() {
 		$this->routes = [
 			'/admin_panel' => [$this, 'index', 'no check'],
+			'/admin_panel/page:number' => [$this, 'index', 'no check'],
 			'/admin_panel/login' => [$this, 'login', 'no check'],
 			'/admin_panel/edit_user/:number' => [$this, 'edit_user_page', 'no check'],
 			'/admin_panel/add_user' => [$this, 'add_user_page', 'no check'],
@@ -30,11 +32,11 @@ class AdminPanelRouter extends \Router {
         $this->response['blocks']['main'] = '';
 	}
 
-	public function index() {
+	public function index($page = 1) {
         /**
          * @var $view \TemplateView
          */
-        $view = \Application::get_class('Starter\view\AdminPanel\UsersTableView');
+        $view = new UsersTableView($page);
         $this->response['blocks']['main'] = $view->render();
 	}
 

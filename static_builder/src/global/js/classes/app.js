@@ -22,9 +22,20 @@
                 }
             });
 
-            jSmart.prototype.getTemplate = function (name) {
-                return this.data['inclusions'][name];
-            };
+            jSmart.prototype.registerPlugin(
+                'function',
+                'include',
+                function(params, data)
+                {
+                    var file = params.__get('file',null,0);
+                    if(!data['inclusions']) {
+                        throw new Error('data must contain inclusions section');
+                    }
+                    let template = data['inclusions'][file] || '';
+                    let tpl = new jSmart(template);
+                    return tpl.fetch(data);
+                }
+            );
 
             Backbone.history.start({pushState: true, silent: true});
         }

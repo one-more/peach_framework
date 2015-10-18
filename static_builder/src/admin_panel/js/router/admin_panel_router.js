@@ -6,6 +6,7 @@
         routes: {
             'admin_panel/edit_user/:id': 'edit_user',
             'admin_panel': 'index',
+            'admin_panel/page:number': 'index',
             'admin_panel/login': 'login',
             'admin_panel/add_user': 'add_user'
         },
@@ -47,6 +48,8 @@
         index: function () {
             (window.templates = new TemplatesCollection(), templates.on('sync', () => {
                 $('[data-block="main"]').html(new UsersTableView().render());
+                $(document).scrollTop(0);
+                App.trigger('Page:loaded');
             }), templates.fetch());
         },
 

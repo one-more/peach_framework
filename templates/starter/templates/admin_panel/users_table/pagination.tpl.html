@@ -1,5 +1,6 @@
-{$current = $paging_model->current}
-{$pages = $paging_model->pages}
+{$current = $paging_model.current}
+{$pages = $paging_model.pages}
+
 {if $current > 2}
 {$start = $current - 2}
 {$limit = $current + 2}
@@ -18,10 +19,24 @@ active
 {/function}
 <nav class="text-center">
     <ul class="pagination">
+        <li>
+            <a href="/admin_panel">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
         {for $i=$start to $limit}
-            <li class="{is_active index=$i current=$current}">
-                <a href="/admin_panel/page{$i}">{$i}</a>
-            </li>
+        <li class="{is_active index=$i current=$current}">
+            {if $i == 1}
+            <a href="/admin_panel">{$i}</a>
+            {else}
+            <a href="/admin_panel/page{$i}">{$i}</a>
+            {/if}
+        </li>
         {/for}
+        <li>
+            <a href="/admin_panel/page{$pages}">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
     </ul>
 </nav>
