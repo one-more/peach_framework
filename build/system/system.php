@@ -49,11 +49,12 @@ class System implements Extension {
     private function init_db() {
         $params = $this->get_configuration();
         if($params['use_db'] && empty($this->get_params()['db_initialized'])) {
-            /**
-             * @var $model \System\model\SystemInitModel
-             */
-            $model = Application::get_class('\System\model\SystemInitModel');
-            $model->initialize();
+            $adapter = new MysqlAdapter('');
+            $sql = file_get_contents(ROOT_PATH.DS.'resource'.DS.'initialize.sql');
+            $sql_chunks = explode("\n\n", $sql);
+            foreach($sql_chunks as $el) {
+                $adapter->execute($el);
+            }
             $this->set_params(['db_initialized'=>true]);
         }
     }
