@@ -6,6 +6,23 @@
         <testsuite name="classes">
             <directory>test_classes/class</directory>
         </testsuite>
+
+        <testsuite name="SessionExtension">
+            <directory>test_classes/build/session</directory>
+        </testsuite>
+
+        <testsuite name="SystemExtension">
+            <directory>test_classes/build/system</directory>
+        </testsuite>
+
+        <testsuite name="ToolsExtension">
+            <directory>test_classes/build/tools</directory>
+        </testsuite>
+
+        <testsuite name="UserExtension">
+            <directory>test_classes/build/user</directory>
+        </testsuite>
+
         <testsuite name="extensions">
             <directory>test_classes/build</directory>
         </testsuite>

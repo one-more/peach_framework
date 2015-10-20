@@ -31,7 +31,7 @@ class AnnotationsDecoratorTest extends PHPUnit_Framework_TestCase {
     private $obj;
 
     /**
-     * @covers AnnotationsDecorator::__construct
+     * @covers common\decorators\AnnotationsDecorator::__construct
      */
     public function test__construct() {
         new AnnotationsDecorator(new ObjToTestAnnotations());
@@ -42,7 +42,7 @@ class AnnotationsDecoratorTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers AnnotationsDecorator::__call
+     * @covers common\decorators\AnnotationsDecorator::__call
      */
     public function test_call() {
         /**
@@ -61,7 +61,7 @@ class AnnotationsDecoratorTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers AnnotationsDecorator::__call
+     * @covers common\decorators\AnnotationsDecorator::__call
      * @expectedException \common\exceptions\WrongRightsException
      */
     public function test_call_no_admin() {
@@ -70,7 +70,7 @@ class AnnotationsDecoratorTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers AnnotationsDecorator::__call
+     * @covers common\decorators\AnnotationsDecorator::__call
      * @expectedException \common\exceptions\NotExistedMethodException
      */
     public function test_call_none_existed_method() {
@@ -78,7 +78,7 @@ class AnnotationsDecoratorTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers AnnotationsDecorator::handle_annotations
+     * @covers common\decorators\AnnotationsDecorator::handle_annotations
      */
     public function test_handle_annotations() {
         $method = new ReflectionMethod($this->obj, 'handle_annotations');
@@ -102,7 +102,7 @@ class AnnotationsDecoratorTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers AnnotationsDecorator::handle_annotations
+     * @covers common\decorators\AnnotationsDecorator::handle_annotations
      * @expectedException \common\exceptions\WrongRightsException
      */
     public function test_handle_annotations_no_admin() {
@@ -115,7 +115,7 @@ class AnnotationsDecoratorTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers AnnotationsDecorator::handle_annotations
+     * @covers common\decorators\AnnotationsDecorator::handle_annotations
      * @expectedException \common\exceptions\WrongRequestMethodException
      */
     public function test_handle_annotations_not_ajax() {
@@ -139,7 +139,7 @@ class AnnotationsDecoratorTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers AnnotationsDecorator::check_credentials
+     * @covers common\decorators\AnnotationsDecorator::check_credentials
      */
     public function test_check_credentials() {
         /**
@@ -159,7 +159,7 @@ class AnnotationsDecoratorTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers AnnotationsDecorator::check_request_method
+     * @covers common\decorators\AnnotationsDecorator::check_request_method
      */
     public function test_check_request_method() {
         $method = new ReflectionMethod($this->obj, 'check_request_method');

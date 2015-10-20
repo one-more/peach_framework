@@ -37,32 +37,6 @@ class SystemTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers System::get_use_db_param
-	 */
-	public function test_use_db_param() {
-		$use_db_param = $this->system_obj->get_use_db_param();
-
-		$this->set_params(['use_db' => true], 'configuration');
-		self::assertTrue($this->system_obj->get_use_db_param());
-
-		$this->set_params(['use_db' => false], 'configuration');
-		self::assertFalse($this->system_obj->get_use_db_param());
-
-		$this->set_params(['use_db' => $use_db_param], 'configuration');
-		self::assertEquals($this->configuration['use_db'], $this->system_obj->get_use_db_param());
-	}
-
-    /**
-     * @covers System::set_use_db_param
-     */
-	public function test_set_use_db_param() {
-        $old_value = $this->system_obj->get_use_db_param();
-        $this->system_obj->set_use_db_param(!$old_value);
-        self::assertEquals(!$old_value, $this->system_obj->get_use_db_param());
-        $this->system_obj->set_use_db_param($old_value);
-    }
-
-	/**
 	 * @covers System::init_db
 	 */
 	public function test_init_db() {

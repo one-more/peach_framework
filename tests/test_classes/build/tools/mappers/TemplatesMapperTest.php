@@ -3,7 +3,6 @@
 require_once ROOT_PATH.DS.'build'.DS.'tools'.DS.'mappers'.DS.'templatesmapper.php';
 
 use \common\classes\Application;
-use common\adapters\FileAdapter;
 use Tools\mappers\TemplatesMapper; 
 
 /**
@@ -24,7 +23,7 @@ class TemplatesMapperTest extends PHPUnit_Framework_TestCase {
      * @covers \Tools\mappers\TemplatesMapper::get_adapter
      */
     public function test_get_adapter() {
-        self::assertTrue($this->mapper->get_adapter() instanceof FileAdapter);
+        self::assertTrue($this->mapper->get_adapter() instanceof \common\adapters\MysqlAdapter);
     }
 
     /**

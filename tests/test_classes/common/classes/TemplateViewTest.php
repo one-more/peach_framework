@@ -28,14 +28,14 @@ class TemplateViewTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers TemplateView::__construct
+     * @covers common\views\TemplateView::__construct
      */
     public function test_construct() {
         new FakeTemplateView();
     }
 
     /**
-     * @covers TemplateView::get_lang_vars_base_dir
+     * @covers common\views\TemplateView::get_lang_vars_base_dir
      */
     public function test_get_lang_vars_base_dir() {
         /**

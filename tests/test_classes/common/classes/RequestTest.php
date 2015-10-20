@@ -5,7 +5,7 @@ use common\classes\Request;
 class RequestTest extends PHPUnit_Framework_TestCase {
 
 	/**
-	 * @covers Request::is_ajax
+	 * @covers common\classes\Request::is_ajax
 	 */
 	public function test_is_ajax() {
 		$_SERVER['HTTP_X_REQUESTED_WITH'] = 'xmlhttprequest';
@@ -13,7 +13,7 @@ class RequestTest extends PHPUnit_Framework_TestCase {
 	}
 
     /**
-     * @covers Request::is_post
+     * @covers common\classes\Request::is_post
      */
 	public function test_is_post() {
         $_SERVER['REQUEST_METHOD'] = 'post';
@@ -21,7 +21,7 @@ class RequestTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers Request::is_get
+     * @covers common\classes\Request::is_get
      */
     public function test_is_get() {
         $_SERVER['REQUEST_METHOD'] = 'get';
@@ -88,7 +88,7 @@ class RequestTest extends PHPUnit_Framework_TestCase {
 	 * @param string $filter
 	 * @param string $default
 	 * @param string $expected
-	 * @covers Request::get_var
+	 * @covers common\classes\Request::get_var
 	 * @dataProvider get_var_provider
 	 */
 	public function test_get_var($name, $filter, $default, $expected) {
@@ -96,7 +96,7 @@ class RequestTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers Request::uri
+	 * @covers common\classes\Request::uri
 	 */
 	public function test_uri() {
 		self::assertEquals('', Request::uri());
@@ -105,7 +105,7 @@ class RequestTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers Request::uri_parts
+	 * @covers common\classes\Request::uri_parts
 	 */
 	public function test_uri_parts() {
 		$_SERVER['REQUEST_URI'] = '/test.com/test1?asd=dsa';
@@ -113,7 +113,7 @@ class RequestTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers Request::search_params
+	 * @covers common\classes\Request::search_params
 	 */
 	public function test_search_params() {
 		$_SERVER['REQUEST_URI'] = '/test.com/test1';

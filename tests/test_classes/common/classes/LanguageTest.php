@@ -18,7 +18,7 @@ class languageTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers Language::get_language
+	 * @covers common\classes\Language::get_language
 	 */
 	public function test_get_language() {
 		self::assertEquals($this->default_language, $this->lang_obj->get_language());
@@ -28,7 +28,7 @@ class languageTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers Language::set_language
+	 * @covers common\classes\Language::set_language
 	 * @expectedException PHPUnit_Framework_Error
 	 */
 	public function test_set_language() {

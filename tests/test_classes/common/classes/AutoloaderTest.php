@@ -9,7 +9,7 @@ use common\classes\AutoLoader;
 class AutoLoaderTest extends PHPUnit_Framework_TestCase {
     
     /**
-     * @covers AutoLoader::load_extension
+     * @covers common\classes\AutoLoader::load_extension
      */
     public function test_load_extension() {
         $extensions = glob(ROOT_PATH.DS.'extensions'.DS.'*');
@@ -39,7 +39,7 @@ class AutoLoaderTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers AutoLoader::load_extension
+     * @covers common\classes\AutoLoader::load_extension
      */
     public function test_build_extension() {
         $extension_file = ROOT_PATH.DS.'extensions'.DS.'tools.tar.gz';
@@ -50,7 +50,7 @@ class AutoLoaderTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers AutoLoader::load_extension
+     * @covers common\classes\AutoLoader::load_extension
      */
     public function test_changed_extension() {
         $test_file = ROOT_PATH.DS.'build'.DS.'tools'.DS.'test.php';
@@ -60,7 +60,7 @@ class AutoLoaderTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers AutoLoader::is_extension_changed
+     * @covers common\classes\AutoLoader::is_extension_changed
      */
     public function test_is_extension_changed() {
         $method = new ReflectionMethod(AutoLoader::class, 'is_extension_changed');
@@ -94,7 +94,7 @@ class AutoLoaderTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers AutoLoader::load_class
+     * @covers common\classes\AutoLoader::load_class
      */
     public function test_load_class() {
         $base_dir = ROOT_PATH.DS.'common';

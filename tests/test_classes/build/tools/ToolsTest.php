@@ -21,6 +21,6 @@ class ToolsTest extends \PHPUnit_Framework_TestCase {
      * @covers Tools::__construct
      */
     public function test_construct() {
-        self::assertInternalType('object', new Tools());
+        new Tools();
     }
 }

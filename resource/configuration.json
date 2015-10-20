@@ -3,7 +3,6 @@
 	"warning_block_class"	: "peach-framework-warning",
 	"info_block_class"	: "peach-framework-info",
 	"show_errors"	: "1",
-	"use_db"	: "1",
 	"db_params"	: {
 		"name"	: "peach_framework",
 		"login"	: "peach_framework",

@@ -27,7 +27,7 @@ class PFMExtensionWrapperTest extends PHPUnit_Framework_TestCase {
 	}
 
     /**
-     * @covers PFMExtensionWrapper::create_phar_data
+     * @covers common\classes\PFMExtensionWrapper::create_phar_data
      */
     public function test_create_phar_data() {
         $wrapper = new PFMExtensionWrapper;
@@ -41,7 +41,7 @@ class PFMExtensionWrapperTest extends PHPUnit_Framework_TestCase {
     }
 
 	/**
-	 * @covers PFMExtensionWrapper::stream_write
+	 * @covers common\classes\PFMExtensionWrapper::stream_write
 	 */
 	public function test_write() {
 		$bytes = file_put_contents($this->test_file, $this->test_text);
@@ -49,7 +49,7 @@ class PFMExtensionWrapperTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers PFMExtensionWrapper::stream_read
+	 * @covers common\classes\PFMExtensionWrapper::stream_read
 	 */
 	public function test_read() {
 		$text = file_get_contents($this->test_file);
@@ -58,7 +58,7 @@ class PFMExtensionWrapperTest extends PHPUnit_Framework_TestCase {
 
 	/**
 	 * @return resource
-	 * @covers PFMExtensionWrapper::stream_open
+	 * @covers common\classes\PFMExtensionWrapper::stream_open
 	 */
 	public function test_fopen() {
 		$fp = fopen($this->test_file, 'rb');
@@ -69,7 +69,7 @@ class PFMExtensionWrapperTest extends PHPUnit_Framework_TestCase {
 	/**
 	 * @param $fp
 	 * @depends test_fopen
-	 * @covers PFMExtensionWrapper::stream_tell
+	 * @covers common\classes\PFMExtensionWrapper::stream_tell
 	 */
 	public function test_ftell($fp) {
 		self::assertInternalType('resource', $fp);
@@ -78,7 +78,7 @@ class PFMExtensionWrapperTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers PFMExtensionWrapper::url_stat
+	 * @covers common\classes\PFMExtensionWrapper::url_stat
 	 */
 	public function test_stat() {
 		self::assertInternalType('array', lstat('pfmextension://system/system.php'));
@@ -89,7 +89,7 @@ class PFMExtensionWrapperTest extends PHPUnit_Framework_TestCase {
 	/**
 	 * @param $fp
 	 * @depends test_ftell
-	 * @covers PFMExtensionWrapper::stream_eof
+	 * @covers common\classes\PFMExtensionWrapper::stream_eof
 	 */
 	public function test_eof($fp) {
 		self::assertInternalType('resource', $fp);
@@ -100,7 +100,7 @@ class PFMExtensionWrapperTest extends PHPUnit_Framework_TestCase {
 	/**
 	 * @param $fp
 	 * @depends test_eof
-	 * @covers PFMExtensionWrapper::stream_stat
+	 * @covers common\classes\PFMExtensionWrapper::stream_stat
 	 */
 	public function test_fstat($fp) {
 		self::assertInternalType('resource', $fp);
@@ -118,7 +118,7 @@ class PFMExtensionWrapperTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers PFMExtensionWrapper::rename
+	 * @covers common\classes\PFMExtensionWrapper::rename
 	 */
 	public function test_rename() {
 		self::assertTrue(rename($this->test_file, $this->test_rename_file));
@@ -126,21 +126,21 @@ class PFMExtensionWrapperTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers PFMExtensionWrapper::unlink
+	 * @covers common\classes\PFMExtensionWrapper::unlink
 	 */
 	public function test_unlink() {
 		self::assertTrue(unlink($this->test_file));
 	}
 
 	/**
-	 * @covers PFMExtensionWrapper::stream_metadata
+	 * @covers common\classes\PFMExtensionWrapper::stream_metadata
 	 */
 	public function test_touch() {
 		self::assertTrue(touch($this->test_file));
 	}
 
 	/**
-	 * @covers PFMExtensionWrapper::stream_metadata
+	 * @covers common\classes\PFMExtensionWrapper::stream_metadata
 	 */
 	public function test_chown() {
 		self::assertFalse(chown($this->test_file, 'www-data'));
@@ -148,7 +148,7 @@ class PFMExtensionWrapperTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers PFMExtensionWrapper::stream_metadata
+	 * @covers common\classes\PFMExtensionWrapper::stream_metadata
 	 */
 	public function test_chgrp() {
 		self::assertFalse(chgrp($this->test_file, 'www-data'));
@@ -156,7 +156,7 @@ class PFMExtensionWrapperTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers PFMExtensionWrapper::stream_metadata
+	 * @covers common\classes\PFMExtensionWrapper::stream_metadata
 	 */
 	public function test_chmod() {
 		self::assertTrue(chmod($this->test_file, 0777));
@@ -167,14 +167,14 @@ class PFMExtensionWrapperTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers PFMExtensionWrapper::mkdir
+	 * @covers common\classes\PFMExtensionWrapper::mkdir
 	 */
 	public function test_mkdir() {
 		mkdir('pfmextension://system'.DS.'wrapper_test_dir');
 	}
 
 	/**
-	 * @covers PFMExtensionWrapper::rmdir
+	 * @covers common\classes\PFMExtensionWrapper::rmdir
 	 */
 	public function test_rmdir() {
 		rmdir('pfmextension://system'.DS.'wrapper_test_dir');

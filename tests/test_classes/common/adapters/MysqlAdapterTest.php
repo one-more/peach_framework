@@ -74,14 +74,14 @@ class MysqlAdapterTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers MysqlAdapter::__construct
+	 * @covers common\adapters\MysqlAdapter::__construct
 	 */
 	public function test_create_model() {
 		self::assertInternalType('object', new MysqlAdapterTestImpl());
 	}
 
 	/**
-	 * @covers MysqlAdapter::get_configuration
+	 * @covers common\adapters\MysqlAdapter::get_configuration
 	 */
 	public function test_get_configuration() {
 		self::assertTrue(ArrayHelper::is_assoc_array($this->model->get_configuration()));
@@ -101,7 +101,7 @@ class MysqlAdapterTest extends PHPUnit_Framework_TestCase {
 
 	/**
 	 * @param $fields
-	 * @covers MysqlAdapter::insert
+	 * @covers common\adapters\MysqlAdapter::insert
 	 * @dataProvider values_provider
 	 */
 	public function test_insert($fields) {
@@ -114,7 +114,7 @@ class MysqlAdapterTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers MysqlAdapter::insert
+	 * @covers common\adapters\MysqlAdapter::insert
 	 * @expectedException InvalidArgumentException
 	 */
 	public function test_insert_no_fields() {
@@ -124,7 +124,7 @@ class MysqlAdapterTest extends PHPUnit_Framework_TestCase {
 
 	/**
      * @param array $fields
-	 * @covers MysqlAdapter::update
+	 * @covers common\adapters\MysqlAdapter::update
 	 * @dataProvider values_provider
 	 */
 	public function test_update($fields) {
@@ -135,7 +135,7 @@ class MysqlAdapterTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers MysqlAdapter::update
+	 * @covers common\adapters\MysqlAdapter::update
 	 * @expectedException InvalidArgumentException
 	 */
 	public function test_update_no_fields() {
@@ -145,7 +145,7 @@ class MysqlAdapterTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers MysqlAdapter::select
+	 * @covers common\adapters\MysqlAdapter::select
 	 */
 	public function test_select() {
 		$id = $this->model->select(['id'])
@@ -162,7 +162,7 @@ class MysqlAdapterTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers MysqlAdapter::delete
+	 * @covers common\adapters\MysqlAdapter::delete
 	 */
 	public function test_delete() {
 		$this->model->delete()
@@ -172,7 +172,7 @@ class MysqlAdapterTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers MysqlAdapter::where
+	 * @covers common\adapters\MysqlAdapter::where
 	 */
 	public function test_where() {
 		$id = $this->model->select(['id'])
@@ -190,7 +190,7 @@ class MysqlAdapterTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers MysqlAdapter::limit
+	 * @covers common\adapters\MysqlAdapter::limit
 	 */
 	public function test_limit() {
 		$result = $this->model->select()
@@ -201,7 +201,7 @@ class MysqlAdapterTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers MysqlAdapter::offset
+	 * @covers common\adapters\MysqlAdapter::offset
 	 */
 	public function test_offset() {
 		$result = $this->model->select()
@@ -213,7 +213,7 @@ class MysqlAdapterTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers MysqlAdapter::parse_conditions
+	 * @covers common\adapters\MysqlAdapter::parse_conditions
 	 */
 	public function test_parse_conditions() {
 		$this->model->parse_conditions([
@@ -225,7 +225,7 @@ class MysqlAdapterTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers MysqlAdapter::join
+	 * @covers common\adapters\MysqlAdapter::join
 	 */
 	public function test_join() {
 		$result = $this->model->select()
@@ -239,7 +239,7 @@ class MysqlAdapterTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers MysqlAdapter::group_by
+	 * @covers common\adapters\MysqlAdapter::group_by
 	 */
 	public function test_group_by() {
 		$result = $this->model->select()
@@ -251,7 +251,7 @@ class MysqlAdapterTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers MysqlAdapter::order_by
+	 * @covers common\adapters\MysqlAdapter::order_by
 	 */
 	public function test_order_by() {
 		$result = $this->model->select()
@@ -263,7 +263,7 @@ class MysqlAdapterTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers MysqlAdapter::having
+	 * @covers common\adapters\MysqlAdapter::having
 	 */
 	public function test_having() {
 		$result = $this->model->select()
@@ -282,7 +282,7 @@ class MysqlAdapterTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers MysqlAdapter::execute
+	 * @covers common\adapters\MysqlAdapter::execute
 	 */
 	public function test_execute() {
 		$id = $this->model->execute("select id from {$this->model->table_name} limit 1")
@@ -299,7 +299,7 @@ class MysqlAdapterTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers MysqlAdapter::get_insert_id
+	 * @covers common\adapters\MysqlAdapter::get_insert_id
 	 */
 	public function test_get_insert_id() {
 		$insert_id = $this->model->insert($this->values_provider()[0][0])
@@ -309,7 +309,7 @@ class MysqlAdapterTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers MysqlAdapter::get_arrays_from_statement
+	 * @covers common\adapters\MysqlAdapter::get_arrays_from_statement
 	 */
 	public function test_get_arrays_from_statement() {
 		$sth = $this->model->select()
@@ -320,7 +320,7 @@ class MysqlAdapterTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers MysqlAdapter::get_arrays
+	 * @covers common\adapters\MysqlAdapter::get_arrays
 	 */
 	public function test_get_arrays() {
 		$result = $this->model->select()
@@ -331,7 +331,7 @@ class MysqlAdapterTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers MysqlAdapter::data_to_arrays
+	 * @covers common\adapters\MysqlAdapter::data_to_arrays
 	 */
 	public function test_data_to_arrays() {
 		$data = $this->model->select()
@@ -360,7 +360,7 @@ class MysqlAdapterTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers MysqlAdapter::get_array_from_statement
+	 * @covers common\adapters\MysqlAdapter::get_array_from_statement
 	 */
 	public function test_get_array_from_statement() {
 		$sth = $this->model->select()
@@ -371,7 +371,7 @@ class MysqlAdapterTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers MysqlAdapter::data_to_array
+	 * @covers common\adapters\MysqlAdapter::data_to_array
 	 */
 	public function test_data_to_array() {
 		$data = $this->model->select()
@@ -400,7 +400,7 @@ class MysqlAdapterTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers MysqlAdapter::get_array
+	 * @covers common\adapters\MysqlAdapter::get_array
 	 */
 	public function test_get_array() {
 		$result = $this->model->select()
@@ -423,7 +423,7 @@ class MysqlAdapterTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers MysqlAdapter::return_from_statement
+	 * @covers common\adapters\MysqlAdapter::return_from_statement
 	 */
 	public function test_return_from_statement() {
 		$sth = $this->model->select(['id'])
@@ -463,7 +463,7 @@ class MysqlAdapterTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers MysqlAdapter::get_result
+	 * @covers common\adapters\MysqlAdapter::get_result
 	 */
 	public function test_get_result() {
 		$id = $this->model->select(['id'])

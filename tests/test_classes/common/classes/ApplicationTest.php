@@ -22,7 +22,7 @@ class ApplicationTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers Application::get_class
+	 * @covers common\classes\Application::get_class
 	 */
 	public function test_get_class() {
 		self::assertInternalType('object', Application::get_class('User'));
@@ -34,7 +34,7 @@ class ApplicationTest extends PHPUnit_Framework_TestCase {
 	}
 
     /**
-     * @covers Application::extension_exists
+     * @covers common\classes\Application::extension_exists
      */
 	public function test_extension_exists() {
         self::assertTrue(Application::extension_exists('system'));
@@ -43,7 +43,7 @@ class ApplicationTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers Application::handle_annotations
+     * @covers common\classes\Application::handle_annotations
      */
     public function test_handle_annotations() {
         $obj = new AnnotationDecorated();
@@ -59,14 +59,14 @@ class ApplicationTest extends PHPUnit_Framework_TestCase {
 
 	/**
 	 * @expectedException InvalidArgumentException
-	 * @covers Application::get_class
+	 * @covers common\classes\Application::get_class
 	 */
 	public function test_get_not_existed_class() {
 		self::assertInternalType('object', Application::get_class('NotExistedClass'));
 	}
 
 	/**
-	 * @covers Application::is_dev
+	 * @covers common\classes\Application::is_dev
 	 */
 	public function test_is_dev() {
 		self::assertTrue(Application::is_dev());
@@ -84,7 +84,7 @@ class ApplicationTest extends PHPUnit_Framework_TestCase {
 	}
 
     /**
-     * @covers Application::init_validator
+     * @covers common\classes\Application::init_validator
      */
     public function test_init_validator() {
         Application::init_validator();

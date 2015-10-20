@@ -38,17 +38,8 @@ class System implements \common\interfaces\Extension {
         return $this->get_configuration()['template'];
     }
 
-    public function get_use_db_param() {
-        return (bool)$this->get_configuration()['use_db'];
-    }
-
-    public function set_use_db_param($param) {
-        $this->set_params(['use_db' => (bool)$param], 'configuration');
-    }
-
     private function init_db() {
-        $params = $this->get_configuration();
-        if($params['use_db'] && empty($this->get_params()['db_initialized'])) {
+        if(empty($this->get_params()['db_initialized'])) {
             $adapter = new \common\adapters\MysqlAdapter('');
             $sql = file_get_contents(ROOT_PATH.DS.'resource'.DS.'initialize.sql');
             $sql_chunks = explode("\n\n", $sql);

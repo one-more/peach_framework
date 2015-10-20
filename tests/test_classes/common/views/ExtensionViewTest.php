@@ -30,7 +30,7 @@ class ExtensionViewTest extends PHPUnit_Framework_TestCase {
     private $view;
 
     /**
-     * @covers ExtensionView::__construct
+     * @covers common\views\ExtensionView::__construct
      */
     public function test_construct() {
         new FakeExtensionView();
@@ -41,7 +41,7 @@ class ExtensionViewTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers ExtensionView::get_lang_vars_base_dir
+     * @covers common\views\ExtensionView::get_lang_vars_base_dir
      */
     public function test_get_lang_vars_base_dir() {
         $ext = $this->view->get_extension();

@@ -21,14 +21,14 @@ class LanguageFileTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers LanguageFile::__construct
+     * @covers common\classes\LanguageFile::__construct
      */
     public function test_construct() {
         new LanguageFile($this->file, $this->base_path);
     }
 
     /**
-     * @covers LanguageFile::get_data
+     * @covers common\classes\LanguageFile::get_data
      */
     public function test_get_data() {
         self::assertEquals(json_decode(file_get_contents($this->base_path.DS.$this->file), true),
@@ -36,7 +36,7 @@ class LanguageFileTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers LanguageFile::__toString
+     * @covers common\classes\LanguageFile::__toString
      */
     public function test_to_string() {
         self::assertInternalType('string', (string)$this->obj);

@@ -5,7 +5,7 @@ use common\helpers\StringHelper;
 class StringHelperTest extends PHPUnit_Framework_TestCase {
     
     /**
-     * @covers StringHelper::return_bytes
+     * @covers common\helpers\StringHelper::return_bytes
      */
     public function test_return_bytes() {
         self::assertEquals(StringHelper::return_bytes('10kb'), 10240);

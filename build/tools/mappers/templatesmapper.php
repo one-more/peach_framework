@@ -2,8 +2,7 @@
 
 namespace Tools\mappers;
 
-use common\adapters\FileAdapter;
-use common\classes\Application;
+use common\adapters\MysqlAdapter;
 use common\collections\BaseCollection;
 use common\mappers\BaseMapper;
 use Tools\models\TemplateModel;
@@ -12,27 +11,16 @@ use Tools\models\TemplateModel;
  * Class TemplatesMapper
  * @package Tools\mapper
  *
- * @property FileAdapter $adapter
+ * @property MysqlAdapter $adapter
  */
 class TemplatesMapper extends BaseMapper {
 
     /**
-     * @return FileAdapter
+     * @return MysqlAdapter
      * @throws \InvalidArgumentException
      */
     public function get_adapter() {
-        return new FileAdapter($this->get_file_path());
-    }
-
-    private function get_file_path() {
-        $file = 'resource'.DS.'templates.json';
-        $build_dir = ROOT_PATH.DS.'build'.DS.'tools';
-        if(is_dir($build_dir)) {
-            return $build_dir.DS.$file;
-        } else {
-            $tools = Application::get_class(\Tools::class);
-            return $tools->get_path().DS.$file;
-        }
+        return new MysqlAdapter('templates');
     }
 
     /**
@@ -44,10 +32,12 @@ class TemplatesMapper extends BaseMapper {
         $number < 0 && $number = 0;
         $collection = new BaseCollection(TemplateModel::class);
         $collection->load(
-            $this->adapter->select()
-                ->skip(($number-1)*$per_page)
-                ->take($per_page)
-                ->toArray()
+            $this->adapter
+                ->select()
+                ->limit($per_page)
+                ->offset(($number-1)*$per_page)
+                ->execute()
+                ->get_arrays()
         );
         return $collection;
     }

@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS `templates` (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255) UNIQUE NOT NULL DEFAULT '',
+  is_active TINYINT NOT NULL DEFAULT 0,
+  can_delete TINYINT NOT NULL DEFAULT 0,
+  deleted TINYINT NOT NULL DEFAULT 0
+);
+
+INSERT INTO templates SET name = 'Starter', is_active = 1;

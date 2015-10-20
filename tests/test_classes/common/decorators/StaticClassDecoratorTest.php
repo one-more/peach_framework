@@ -15,14 +15,14 @@ class StaticClassDecoratorTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers StaticClassDecorator::__construct
+     * @covers common\decorators\StaticClassDecorator::__construct
      */
     public function test_construct() {
         new StaticClassDecorator(Application::class);
     }
 
     /**
-     * @covers StaticClassDecorator::__call
+     * @covers common\decorators\StaticClassDecorator::__call
      * @expectedException \common\exceptions\NotExistedMethodException
      */
     public function test_call() {

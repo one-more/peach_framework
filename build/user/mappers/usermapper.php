@@ -15,6 +15,8 @@ use Validator\LIVR;
 /**
  * Class UserMapper
  * @package User\Mappers
+ *
+ * @property MysqlAdapter $adapter
  */
 class UserMapper extends BaseMapper {
 
@@ -163,13 +165,16 @@ class UserMapper extends BaseMapper {
      */
     public function find_where(array $where_statement) {
         $collection = new BaseCollection(UserModel::class);
-        $records = array_filter($this->adapter->select()
-            ->where($where_statement)
-            ->execute()
-            ->get_arrays(), function($record) {
-            return $record['deleted'] == 0;
-        });
-        $collection->load($records);
+        $collection->load(
+            $this->adapter->select()
+                ->where(array_merge($where_statement, [
+                    'and' => [
+                        'deleted' => ['=', 0]
+                    ]
+                ]))
+                ->execute()
+                ->get_arrays()
+        );
         return $collection;
     }
 

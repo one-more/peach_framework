@@ -5,7 +5,7 @@ use common\classes\VarHandler;
 class VarHandlerTest extends PHPUnit_Framework_TestCase {
 
 	/**
-	 * @covers VarHandler::clean_html
+	 * @covers common\classes\VarHandler::clean_html
 	 */
 	public function test_clean_html() {
 		$str = '<a href="#">click me</a>';
@@ -113,7 +113,7 @@ class VarHandlerTest extends PHPUnit_Framework_TestCase {
 	 * @param string $var
 	 * @param string $filter
 	 * @param string $expected
-	 * @covers VarHandler::validate_var
+	 * @covers common\classes\VarHandler::validate_var
 	 * @dataProvider validate_var_provider
 	 */
 	public function test_validate_var($var, $filter, $expected) {
@@ -208,7 +208,7 @@ class VarHandlerTest extends PHPUnit_Framework_TestCase {
 	 * @param string $filter
 	 * @param string $default
 	 * @param string $expected
-	 * @covers VarHandler::sanitize_var
+	 * @covers common\classes\VarHandler::sanitize_var
 	 * @dataProvider sanitize_var_provider
 	 */
 	public function test_sanitize_var($var, $filter, $default, $expected) {

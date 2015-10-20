@@ -11,7 +11,7 @@ trait TraitConfiguration {
 
 	protected function get_params($name = __CLASS__) {
 		$name = strtolower($name);
-		$path   = $this->get_base_path().DS.'resource'.DS."{$name}.json";
+		$path = $this->get_base_path().DS.'resource'.DS."{$name}.json";
 		if(file_exists($path)) {
 			return json_decode(file_get_contents($path), true);
 		} else {

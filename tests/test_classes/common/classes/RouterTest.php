@@ -50,7 +50,7 @@ class RouterTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers Router::set_routes
+	 * @covers common\classes\Router::set_routes
 	 */
 	public function test_set_routes() {
 		$router_routes = $this->router->get_routes();
@@ -63,7 +63,7 @@ class RouterTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers Router::route
+	 * @covers common\classes\Router::route
 	 */
 	public function test_route() {
 		$_SERVER['REQUEST_URI'] = '/users';
@@ -85,7 +85,7 @@ class RouterTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @covers Router::get_callback
+	 * @covers common\classes\Router::get_callback
 	 */
 	public function test_get_callback() {
 		$method = new ReflectionMethod($this->router, 'get_callback');
