@@ -3,8 +3,8 @@
 /**
  * Class System
  */
-class System implements \interfaces\Extension {
-    use \traits\TraitExtension;
+class System implements \common\interfaces\Extension {
+    use \common\traits\TraitExtension;
 
     public function initialize() {
 
@@ -18,7 +18,7 @@ class System implements \interfaces\Extension {
         mb_http_output('UTF-8');
         mb_http_input('UTF-8');
 
-        \classes\Error::initialize();
+        \common\classes\Error::initialize();
         \System\handler\ExceptionHandler::initialize();
 
         $this->init_db();
@@ -26,7 +26,7 @@ class System implements \interfaces\Extension {
         /**
          * @var $session Session
          */
-        $session = \classes\Application::get_class(Session::class);
+        $session = \common\classes\Application::get_class(Session::class);
         $session->start();
     }
 
@@ -49,7 +49,7 @@ class System implements \interfaces\Extension {
     private function init_db() {
         $params = $this->get_configuration();
         if($params['use_db'] && empty($this->get_params()['db_initialized'])) {
-            $adapter = new \adapters\MysqlAdapter('');
+            $adapter = new \common\adapters\MysqlAdapter('');
             $sql = file_get_contents(ROOT_PATH.DS.'resource'.DS.'initialize.sql');
             $sql_chunks = explode("\n\n", $sql);
             foreach($sql_chunks as $el) {

@@ -1,14 +1,14 @@
 <?php
 
 namespace User\auth;
-use classes\Application;
-use classes\VarHandler;
+use common\classes\Application;
+use common\classes\VarHandler;
 use User\models\UserModel;
 
 /**
  * Class UserAuth
  *
- * @decorate AnnotationsDecorator
+ * @decorate \common\decorators\AnnotationsDecorator
  */
 class UserAuth {
 

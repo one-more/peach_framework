@@ -10,23 +10,23 @@ class SessionMapperTest extends PHPUnit_Framework_TestCase {
     private $mapper;
 
     public function setUp() {
-        \classes\Application::get_class(Session::class);
-        $this->mapper = \classes\Application::get_class(SessionMapper::class);
+        \common\classes\Application::get_class(Session::class);
+        $this->mapper = \common\classes\Application::get_class(SessionMapper::class);
     }
 
     /**
      * @covers Session\mappers\SessionMapper::get_adapter
      */
     public function test_get_adapter() {
-        self::assertTrue($this->mapper->get_adapter() instanceof \adapters\MysqlAdapter);
+        self::assertTrue($this->mapper->get_adapter() instanceof \common\adapters\MysqlAdapter);
     }
 
     /**
      * @covers Session\mappers\SessionMapper::find_by_id
      */
     public function test_find_by_id() {
-        \classes\Application::get_class(Session::class);
-        $this->mapper = \classes\Application::get_class(SessionMapper::class);
+        \common\classes\Application::get_class(Session::class);
+        $this->mapper = \common\classes\Application::get_class(SessionMapper::class);
         $adapter = $this->mapper->get_adapter();
         $id = $adapter->execute('SELECT id from session ORDER BY id DESC LIMIT 1')->get_result();
         $record = $this->mapper->find_by_id($id);

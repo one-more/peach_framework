@@ -2,7 +2,7 @@
 
 namespace Starter\views\AdminPanel;
 
-use views\TemplateView;
+use common\views\TemplateView;
 
 class LoginFormView extends TemplateView {
 

@@ -2,8 +2,8 @@
 
 namespace Tools\views;
 
-use classes\Application;
-use views\ExtensionView;
+use common\classes\Application;
+use common\views\ExtensionView;
 
 class TopMenuView extends ExtensionView {
 

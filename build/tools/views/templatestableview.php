@@ -1,9 +1,9 @@
 <?php
 
 namespace Tools\views;
-use classes\Application;
+use common\classes\Application;
 use Tools\mappers\TemplatesMapper;
-use views\ExtensionView;
+use common\views\ExtensionView;
 
 /**
  * Class TemplatesTableView

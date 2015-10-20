@@ -2,8 +2,8 @@
 
 namespace System\handler;
 
-use classes\Application;
-use classes\Error;
+use common\classes\Application;
+use common\classes\Error;
 
 class ExceptionHandler {
 

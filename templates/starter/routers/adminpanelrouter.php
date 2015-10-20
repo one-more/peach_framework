@@ -1,21 +1,21 @@
 <?php
 
 namespace Starter\routers;
-use classes\Application;
-use classes\GetResponse;
-use classes\Router;
+use common\classes\Application;
+use common\classes\GetResponse;
+use common\classes\Router;
 use Starter\views\AdminPanel\AddUserView;
 use Starter\views\AdminPanel\EditUserView;
 use Starter\views\AdminPanel\LeftMenuView;
 use Starter\views\AdminPanel\LoginFormView;
 use Starter\views\AdminPanel\NavbarView;
 use Starter\views\AdminPanel\UsersTableView;
-use views\TemplateView;
+use common\views\TemplateView;
 
 /**
  * Class AdminPanelRouter
  * @package Starter\routers
- * @decorate AnnotationsDecorator
+ * @decorate \common\decorators\AnnotationsDecorator
  */
 class AdminPanelRouter extends Router {
 	use TraitStarterRouter;

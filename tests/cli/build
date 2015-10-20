@@ -1,0 +1,14 @@
+#!/usr/bin/php
+
+<?php
+require_once 'bootstrap.php';
+
+$args = array_slice($argv, 1);
+
+$method = new ReflectionMethod(\common\classes\AutoLoader::class, 'build_extension');
+$method->setAccessible(true);
+$method->invokeArgs(null, $args);
+
+fwrite(STDOUT, 'ok'.PHP_EOL);
+
+exit(0);

@@ -2,8 +2,8 @@
 
 namespace Session\mappers;
 
-use adapters\MysqlAdapter;
-use mappers\BaseMapper;
+use common\adapters\MysqlAdapter;
+use common\mappers\BaseMapper;
 use Session\models\SessionModel;
 
 class SessionMapper extends BaseMapper {
@@ -17,14 +17,14 @@ class SessionMapper extends BaseMapper {
      * @return SessionModel
      */
     public function find_by_id($id) {
-        return new SessionModel(
-            $this->adapter->select()
-                ->where([
-                    'id' => ['=', (int)$id]
-                ])
-                ->execute()
-                ->get_array()
-        );
+        $fields = $this->adapter->select()
+            ->where([
+                'id' => ['=', (int)$id]
+            ])
+            ->execute()
+            ->get_array();
+        $fields['vars'] = json_decode($fields['vars'], true);
+        return new SessionModel($fields);
     }
 
     /**

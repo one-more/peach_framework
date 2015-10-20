@@ -2,11 +2,11 @@
 
 namespace Starter\routers;
 
-use classes\Application;
-use classes\GetResponse;
-use classes\Request;
-use classes\Response;
-use interfaces\Template;
+use common\classes\Application;
+use common\classes\GetResponse;
+use common\classes\Request;
+use common\classes\Response;
+use common\interfaces\Template;
 
 trait TraitStarterRouter {
 

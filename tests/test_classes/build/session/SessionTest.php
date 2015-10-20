@@ -5,7 +5,7 @@
  *
  */
 class SessionTest extends PHPUnit_Framework_TestCase {
-	use \traits\TraitConfiguration;
+	use \common\traits\TraitConfiguration;
 
     /**
      * @var $session_obj Session
@@ -13,7 +13,7 @@ class SessionTest extends PHPUnit_Framework_TestCase {
 	private $session_obj;
 
 	public function setUp() {
-		$this->session_obj = \classes\Application::get_class(Session::class);
+		$this->session_obj = \common\classes\Application::get_class(Session::class);
 	}
 
     /**

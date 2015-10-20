@@ -2,9 +2,9 @@
 
 namespace Tools\views;
 
-use classes\Application;
-use classes\Request;
-use views\ExtensionView;
+use common\classes\Application;
+use common\classes\Request;
+use common\views\ExtensionView;
 
 class LeftMenuView extends ExtensionView {
 

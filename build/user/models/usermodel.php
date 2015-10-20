@@ -1,8 +1,8 @@
 <?php
 
 namespace User\models;
-use classes\Application;
-use models\BaseModel;
+use common\classes\Application;
+use common\models\BaseModel;
 
 /**
  * Class UserModel

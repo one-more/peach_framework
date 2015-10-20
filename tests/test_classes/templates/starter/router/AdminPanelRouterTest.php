@@ -1,5 +1,7 @@
 <?php
 
+use common\classes\GetResponse;
+
 class SilentAdminPanelRouter extends \Starter\routers\AdminPanelRouter {
 
     public function __destruct() {}
@@ -12,7 +14,6 @@ class SilentAdminPanelRouter extends \Starter\routers\AdminPanelRouter {
 /**
  * Class AdminPanelRouterTest
  *
- * @method bool assertNull($var)
  */
 class AdminPanelRouterTest extends PHPUnit_Framework_TestCase {
 
@@ -30,7 +31,7 @@ class AdminPanelRouterTest extends PHPUnit_Framework_TestCase {
      */
     public function test_index() {
         $this->router->index();
-        $this->assertNull(error_get_last());
+        self::assertNull(error_get_last());
     }
 
     /**
@@ -38,7 +39,7 @@ class AdminPanelRouterTest extends PHPUnit_Framework_TestCase {
      */
     public function test_edit_user_page() {
         $this->router->edit_user_page($id = 1);
-        $this->assertNull(error_get_last());
+        self::assertNull(error_get_last());
     }
 
     /**
@@ -46,7 +47,7 @@ class AdminPanelRouterTest extends PHPUnit_Framework_TestCase {
      */
     public function test_add_user_page() {
         $this->router->add_user_page();
-        $this->assertNull(error_get_last());
+        self::assertNull(error_get_last());
     }
 }
  

@@ -1,7 +1,7 @@
 {
-    "0" : {
-        "id": 1,
-        "name" : "Starter",
-        "can_delete" : false
-    }
+	"0"	: {
+		"id"	: "1",
+		"name"	: "Starter",
+		"can_delete"	: ""
+	}
 }

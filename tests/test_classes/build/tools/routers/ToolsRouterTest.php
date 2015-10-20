@@ -9,11 +9,6 @@ class SilentToolsRouter extends Tools\routers\ToolsRouter {
 /**
  * Class ToolsRouterTest
  *
- * @method bool assertInternalType($a,$b)
- * @method bool assertCount($a,$b)
- * @method bool assertEquals($a,$b)
- * @method bool assertNull($var)
- * @method bool assertFalse($var)
  */
 class ToolsRouterTest extends PHPUnit_Framework_TestCase {
 
@@ -22,17 +17,19 @@ class ToolsRouterTest extends PHPUnit_Framework_TestCase {
      */
     private $router;
 
+    public static function setUpBeforeClass() {
+        \common\classes\Application::get_class(Tools::class);
+    }
+
     public function setUp() {
-        if(empty($this->router)) {
-            $this->router = new SilentToolsRouter();
-        }
+        $this->router = new SilentToolsRouter();
     }
 
     /**
      * @covers Tools\router\ToolsRouter::__construct
      */
     public function test_construct() {
-        $this->assertInternalType('object', new SilentToolsRouter());
+        self::assertInternalType('object', new SilentToolsRouter());
     }
 
     /**
@@ -40,6 +37,6 @@ class ToolsRouterTest extends PHPUnit_Framework_TestCase {
      */
     public function test_index() {
         $this->router->index();
-        $this->assertNull(error_get_last());
+        self::assertNull(error_get_last());
     }
 }

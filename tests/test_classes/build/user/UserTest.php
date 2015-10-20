@@ -1,6 +1,8 @@
 <?php
 require_once ROOT_PATH.DS.'build'.DS.'user'.DS.'user.php';
 
+use common\classes\Application;
+
 class UserTest extends PHPUnit_Framework_TestCase {
 
     /**
@@ -9,7 +11,7 @@ class UserTest extends PHPUnit_Framework_TestCase {
     private $user;
 
     public function setUp() {
-        $this->user = Application::get_class('User');
+        $this->user = Application::get_class(User::class);
     }
 
     /**
@@ -25,7 +27,7 @@ class UserTest extends PHPUnit_Framework_TestCase {
      */
     public function test_get_identity() {
         $identity = $this->user->get_identity();
-        $this->assertTrue($identity->is_guest());
+        self::assertTrue($identity->is_guest());
 
         $mapper = $this->user->get_mapper();
         /**
@@ -35,14 +37,14 @@ class UserTest extends PHPUnit_Framework_TestCase {
             'credentials' => ['=', User::credentials_user]
         ])->one();
         $auth = $this->user->get_auth();
-        $this->assertTrue($auth->login($model->login, $model->password));
+        self::assertTrue($auth->login($model->login, $model->password));
 
         $identity = $this->user->get_identity();
-        $this->assertFalse($identity->is_guest());
+        self::assertFalse($identity->is_guest());
 
-        $this->assertTrue($auth->login($model->login, $model->password, true));
+        self::assertTrue($auth->login($model->login, $model->password, true));
         $identity = $this->user->get_identity();
-        $this->assertFalse($identity->is_guest());
+        self::assertFalse($identity->is_guest());
     }
 
     /**
@@ -56,6 +58,6 @@ class UserTest extends PHPUnit_Framework_TestCase {
      * @covers User::get_mapper
      */
     public function test_get_mapper() {
-        $this->assertTrue($this->user->get_mapper() instanceof \User\Mappers\UserMapper);
+        self::assertTrue($this->user->get_mapper() instanceof \User\Mappers\UserMapper);
     }
 }

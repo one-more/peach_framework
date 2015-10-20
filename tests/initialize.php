@@ -3,53 +3,45 @@ ini_set('display_errors', 'on');
 error_reporting(E_ALL);
 
 require_once '../resource/defines.php';
-require_once ROOT_PATH.DS.'classes'.DS.'application.php';
-require_once ROOT_PATH.DS.'traits'.DS.'traitjson.php';
-require_once ROOT_PATH.DS.'lib/Smarty/Smarty.class.php';
+require_once ROOT_PATH.DS.'common'.DS.'classes'.DS.'application.php';
+require_once ROOT_PATH.DS.'common'.DS.'traits'.DS.'traitjson.php';
+require_once ROOT_PATH.DS.'lib'.DS.'Smarty'.DS.'Smarty.class.php';
 require_once ROOT_PATH.DS.'lib'.DS.'vendor'.DS.'autoload.php';
 
 class JSON {
-    use \traits\TraitJSON;
+    use common\traits\TraitJSON;
 }
 
 class TestsEnv {
 	public static function initialize() {
-		require_once ROOT_PATH.DS.'classes'.DS.'autoloader.php';
+		require_once ROOT_PATH.DS.'common'.DS.'classes'.DS.'autoloader.php';
 
-		\classes\AutoLoader::init_autoload();
+		\common\classes\AutoLoader::init_autoload();
 
         require_once ROOT_PATH.DS.'build'.DS.'session'.DS.'session.php';
         require_once ROOT_PATH.DS.'build'.DS.'session'.DS.'mappers'.DS.'sessionmapper.php';
 
         if(!in_array('pfmextension', stream_get_wrappers(), $strict = true)) {
-            stream_wrapper_register('pfmextension', \classes\PFMExtensionWrapper::class);
+            stream_wrapper_register('pfmextension', \common\classes\PFMExtensionWrapper::class);
         }
 
-		$_SESSION = [];
 		static::init_test_tables();
 
         /**
-         * @var $lang_obj \classes\Language
+         * @var $lang_obj \common\classes\Language
          */
-        $lang_obj = \classes\Application::get_class(\classes\Language::class);
+        $lang_obj = \common\classes\Application::get_class(\common\classes\Language::class);
 		$current_lang = $lang_obj->get_language();
 		define('CURRENT_LANG', $current_lang);
 
-        $starter_autoload = new ReflectionMethod('Starter', 'register_autoload');
+        $starter_autoload = new ReflectionMethod(Starter::class, 'register_autoload');
         $starter_autoload->setAccessible(true);
-        $starter_autoload->invoke(new Starter());
+        $starter_autoload->invoke(\common\classes\Application::get_class(Starter::class));
 
-        $method = new ReflectionMethod(\classes\AutoLoader::class, 'is_extension_changed');
-        $method->setAccessible(true);
-        if($method->invoke(null, 'Session')) {
-            $method = new ReflectionMethod(\classes\AutoLoader::class, 'build_extension');
-            $method->setAccessible(true);
-            $method->invoke(null, 'Session');
-        }
         /**
          * @var $session Session
          */
-        $session = \classes\Application::get_class(Session::class);
+        $session = \common\classes\Application::get_class(Session::class);
         $_COOKIE['pfm_session_id'] = $session->start();
 	}
 

@@ -2,8 +2,8 @@
 
 namespace Starter\views\AdminPanel;
 
-use classes\Request;
-use views\TemplateView;
+use common\classes\Request;
+use common\views\TemplateView;
 
 class LeftMenuView extends TemplateView {
 

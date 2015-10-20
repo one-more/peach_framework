@@ -2,8 +2,8 @@
 
 use Session\mappers\SessionMapper;
 
-class Session implements \interfaces\Extension {
-    use \traits\TraitExtension;
+class Session implements \common\interfaces\Extension {
+    use \common\traits\TraitExtension;
 
     /**
      * @var $model \Session\models\SessionModel
@@ -17,7 +17,7 @@ class Session implements \interfaces\Extension {
 
 	public function __construct() {
         $this->register_autoload();
-        $this->mapper = \classes\Application::get_class(SessionMapper::class);
+        $this->mapper = \common\classes\Application::get_class(SessionMapper::class);
 	}
 
     /**
@@ -31,7 +31,7 @@ class Session implements \interfaces\Extension {
                 'vars' => []
             ]);
             $this->mapper->save($this->model);
-            @setcookie('pfm_session_id', $this->model->id, null, '/');
+            setcookie('pfm_session_id', $this->model->id, null, '/');
             return $_COOKIE['pfm_session_id'] = $this->model->id;
         } else {
             if(!$this->model) {
@@ -58,8 +58,8 @@ class Session implements \interfaces\Extension {
         if(!$this->get_id()) {
             throw new ErrorException('Session was not start');
         }
-        return !empty($this->model->variables[$name]) ?
-            $this->model->variables[$name] : $default;
+        return !empty($this->model->vars[$name]) ?
+            $this->model->vars[$name] : $default;
     }
 
     /**
@@ -71,7 +71,7 @@ class Session implements \interfaces\Extension {
         if(!$this->get_id()) {
             throw new ErrorException('Session was not start');
         }
-        $this->model->variables[$name] = $value;
+        $this->model->vars[$name] = $value;
         $this->mapper->save($this->model);
     }
 
@@ -83,7 +83,7 @@ class Session implements \interfaces\Extension {
         if(!$this->get_id()) {
             throw new ErrorException('Session was not start');
         }
-        unset($this->model->variables[$name]);
+        unset($this->model->vars[$name]);
         $this->mapper->save($this->model);
     }
 

@@ -1,7 +1,7 @@
 <?php
 
 namespace Session\models;
-use models\BaseModel;
+use common\models\BaseModel;
 
 /**
  * Class SessionModel

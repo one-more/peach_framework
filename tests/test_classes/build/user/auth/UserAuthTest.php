@@ -2,12 +2,10 @@
 
 require_once ROOT_PATH.DS.'build'.DS.'user'.DS.'auth'.DS.'userauth.php';
 
+use \common\classes\Application;
 /**
  * Class UserAuthTest
  *
- * @method bool assertTrue($condition)
- * @method bool assertFalse($condition)
- * @method bool assertNull($var)
  */
 class UserAuthTest extends PHPUnit_Framework_TestCase {
 
@@ -20,7 +18,7 @@ class UserAuthTest extends PHPUnit_Framework_TestCase {
         /**
          * @var $user User
          */
-        $user = Application::get_class('User');
+        $user = Application::get_class(User::class);
         $this->auth = $user->get_auth();
     }
 
@@ -29,7 +27,7 @@ class UserAuthTest extends PHPUnit_Framework_TestCase {
      * @expectedException PHPUnit_Framework_Error
      */
     public function test_login() {
-        $this->assertFalse($this->auth->login(null,null,null));
+        self::assertFalse($this->auth->login(null,null,null));
 
         /**
          * @var $user User
@@ -42,23 +40,23 @@ class UserAuthTest extends PHPUnit_Framework_TestCase {
         $model = $mapper->find_where([
             'credentials' => ['=', User::credentials_user]
         ])->one();
-        $this->assertTrue($this->auth->login($model->login, $model->password, true));
+        self::assertTrue($this->auth->login($model->login, $model->password, true));
 
         $model = Application::get_class('\User\models\UserModel');
         $model->login = uniqid('test_', true);
         $model->password =  uniqid('', true);
         $mapper->save($model);
 
-        $this->assertTrue($this->auth->login($model->login, $model->password));
+        self::assertTrue($this->auth->login($model->login, $model->password));
 
         $model->password = uniqid('password', true);
-        $this->assertFalse($this->auth->login($model->login, $model->password));
+        self::assertFalse($this->auth->login($model->login, $model->password));
     }
 
     /**
      * @covers \User\auth\UserAuth::log_out
      */
     public function test_log_out() {
-        $this->assertTrue($this->auth->log_out());
+        self::assertTrue($this->auth->log_out());
     }
 }

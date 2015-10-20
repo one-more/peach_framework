@@ -2,12 +2,12 @@
 
 namespace Starter\routers;
 
-use classes\AjaxResponse;
-use classes\Application;
-use classes\LanguageFile;
-use classes\Request;
-use classes\Router;
-use interfaces\Template;
+use common\classes\AjaxResponse;
+use common\classes\Application;
+use common\classes\LanguageFile;
+use common\classes\Request;
+use common\classes\Router;
+use common\interfaces\Template;
 use User\models\UserModel;
 
 /**

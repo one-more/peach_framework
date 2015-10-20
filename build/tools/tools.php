@@ -2,8 +2,8 @@
 
 use Tools\routers\ToolsRouter;
 
-class Tools implements \interfaces\Extension {
-	use \traits\TraitExtension;
+class Tools implements \common\interfaces\Extension {
+	use \common\traits\TraitExtension;
 
 	public function __construct() {
 		$this->register_autoload();
@@ -13,7 +13,7 @@ class Tools implements \interfaces\Extension {
         /**
          * @var $router \Tools\routers\ToolsRouter
          */
-		$router = \classes\Application::get_class(ToolsRouter::class);
+		$router = \common\classes\Application::get_class(ToolsRouter::class);
         $router->route();
 	}
 }

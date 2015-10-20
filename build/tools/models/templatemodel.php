@@ -1,7 +1,7 @@
 <?php
 
 namespace Tools\models;
-use models\BaseModel;
+use common\models\BaseModel;
 
 /**
  * Class TemplateModel

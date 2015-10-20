@@ -1,9 +1,9 @@
 <?php
 namespace Starter\views\AdminPanel;
 
-use classes\Application;
-use models\TemplateViewModel;
-use views\TemplateView;
+use common\classes\Application;
+use common\models\TemplateViewModel;
+use common\views\TemplateView;
 
 class UsersTableView extends TemplateView {
 

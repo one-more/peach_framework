@@ -2,7 +2,7 @@
 
 /**
  * Smarty Internal Plugin Smarty Template Compiler Base
- * This file contains the basic classes and methods for compiling Smarty templates with lexer/parser
+ * This file contains the basic common\classes and methods for compiling Smarty templates with lexer/parser
  *
  * @package    Smarty
  * @subpackage Compiler
@@ -345,7 +345,7 @@ abstract class Smarty_Internal_TemplateCompilerBase
         ) {
             $this->tag_nocache = true;
         }
-        // compile the smarty tag (required compile classes to compile the tag are autoloaded)
+        // compile the smarty tag (required compile common\classes to compile the tag are autoloaded)
         if (($_output = $this->callTagCompiler($tag, $args, $parameter)) === false) {
             if (isset($this->smarty->template_functions[$tag])) {
                 // template defined by {template} tag

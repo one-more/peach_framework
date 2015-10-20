@@ -555,7 +555,7 @@ class Smarty extends Smarty_Internal_TemplateBase
      */
     public $registered_objects = array();
     /**
-     * registered classes
+     * registered common\classes
      *
      * @var array
      */
@@ -1357,7 +1357,7 @@ class Smarty extends Smarty_Internal_TemplateBase
     }
 
     /**
-     * Takes unknown classes and loads plugin files for them
+     * Takes unknown common\classes and loads plugin files for them
      * class name format: Smarty_PluginType_PluginName
      * plugin filename format: plugintype.pluginname.php
      *

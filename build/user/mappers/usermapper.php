@@ -3,12 +3,12 @@
 namespace User\Mappers;
 
 
-use adapters\MysqlAdapter;
-use classes\Application;
-use classes\LanguageFile;
-use collections\BaseCollection;
-use mappers\BaseMapper;
-use models\PagingModel;
+use common\adapters\MysqlAdapter;
+use common\classes\Application;
+use common\classes\LanguageFile;
+use common\collections\BaseCollection;
+use common\mappers\BaseMapper;
+use common\models\PagingModel;
 use User\models\UserModel;
 use Validator\LIVR;
 

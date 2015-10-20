@@ -2,10 +2,10 @@
 
 namespace Tools\mappers;
 
-use adapters\FileAdapter;
-use classes\Application;
-use collections\BaseCollection;
-use mappers\BaseMapper;
+use common\adapters\FileAdapter;
+use common\classes\Application;
+use common\collections\BaseCollection;
+use common\mappers\BaseMapper;
 use Tools\models\TemplateModel;
 
 /**
@@ -21,11 +21,18 @@ class TemplatesMapper extends BaseMapper {
      * @throws \InvalidArgumentException
      */
     public function get_adapter() {
-        /**
-         * @var $ext \Tools
-         */
-        $ext = Application::get_class(\Tools::class);
-        return new FileAdapter($ext->get_path().DS.'resource'.DS.'templates.json');
+        return new FileAdapter($this->get_file_path());
+    }
+
+    private function get_file_path() {
+        $file = 'resource'.DS.'templates.json';
+        $build_dir = ROOT_PATH.DS.'build'.DS.'tools';
+        if(is_dir($build_dir)) {
+            return $build_dir.DS.$file;
+        } else {
+            $tools = Application::get_class(\Tools::class);
+            return $tools->get_path().DS.$file;
+        }
     }
 
     /**
@@ -36,7 +43,12 @@ class TemplatesMapper extends BaseMapper {
     public function get_page($number = 1, $per_page = 30) {
         $number < 0 && $number = 0;
         $collection = new BaseCollection(TemplateModel::class);
-        $collection->load($this->adapter->select()->skip(($number-1)*$per_page)->take($per_page)->toArray());
+        $collection->load(
+            $this->adapter->select()
+                ->skip(($number-1)*$per_page)
+                ->take($per_page)
+                ->toArray()
+        );
         return $collection;
     }
 }

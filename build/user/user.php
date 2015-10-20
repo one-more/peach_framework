@@ -1,16 +1,16 @@
 <?php
 
-use \classes\Application;
+use \common\classes\Application;
 use \User\Mappers\UserMapper;
 use User\auth\UserAuth;
 
 /**
  * Class User
  *
- * @decorate AnnotationsDecorator
+ * @decorate \common\decorators\AnnotationsDecorator
  */
-class User implements \interfaces\Extension {
-    use \traits\TraitExtension;
+class User implements \common\interfaces\Extension {
+    use \common\traits\TraitExtension;
 
     const credentials_user = 'user';
 

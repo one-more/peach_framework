@@ -1,13 +1,13 @@
 <?php
 
 namespace Starter\routers;
-use classes\GetResponse;
-use classes\Router;
+use common\classes\GetResponse;
+use common\classes\Router;
 
 /**
  * Class SiteRouter
  * @package Starter\routers
- * @decorate AnnotationsDecorator
+ * @decorate \common\decorators\AnnotationsDecorator
  */
 class SiteRouter extends Router {
 	use TraitStarterRouter;

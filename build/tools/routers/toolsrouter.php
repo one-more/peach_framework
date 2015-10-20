@@ -2,13 +2,13 @@
 
 namespace Tools\routers;
 
-use classes\Application;
-use classes\GetResponse;
-use classes\Router;
+use common\classes\Application;
+use common\classes\GetResponse;
+use common\classes\Router;
 use Tools\views\LeftMenuView;
 use Tools\views\TemplatesTableView;
 use Tools\views\TopMenuView;
-use views\ExtensionView;
+use common\views\ExtensionView;
 
 class ToolsRouter extends Router {
 

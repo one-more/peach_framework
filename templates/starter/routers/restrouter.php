@@ -2,7 +2,7 @@
 
 namespace Starter\routers;
 
-use classes\Router;
+use common\classes\Router;
 use Starter\views\AdminPanel\AddUserView;
 use Starter\views\AdminPanel\EditUserView;
 use Starter\views\AdminPanel\LeftMenuView;

@@ -55,8 +55,8 @@ class Smarty_Security
      */
     public $trusted_uri = array();
     /**
-     * This is an array of trusted static classes.
-     * If empty access to all static classes is allowed.
+     * This is an array of trusted static common\classes.
+     * If empty access to all static common\classes is allowed.
      * If set to 'none' none is allowed.
      *
      * @var array

@@ -2,8 +2,8 @@
 
 namespace Starter\views\AdminPanel;
 
-use classes\Application;
-use views\TemplateView;
+use common\classes\Application;
+use common\views\TemplateView;
 
 class EditUserView extends TemplateView {
 
