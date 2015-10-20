@@ -14,23 +14,23 @@ require_once ROOT_PATH.DS.'build'.DS.'user'.DS.'model'.DS.'usermodel.php';
 class UserModelTest extends \PHPUnit_Framework_TestCase {
 
     /**
-     * @var $model \User\model\UserModel
+     * @var $model \User\models\UserModel
      */
     private $model;
 
     public function setUp() {
-        $this->model = Application::get_class('\User\model\UserModel');
+        $this->model = Application::get_class('\User\models\UserModel');
     }
 
     /**
-     * @covers \User\model\UserModel::__construct
+     * @covers \User\models\UserModel::__construct
      */
     public function test_construct() {
-        new \User\model\UserModel;
+        new \User\models\UserModel;
     }
 
     /**
-     * @covers \User\model\UserModel::is_guest
+     * @covers \User\models\UserModel::is_guest
      * @expectedException PHPUnit_Framework_Error
      */
     public function test_is_guest() {
@@ -40,7 +40,7 @@ class UserModelTest extends \PHPUnit_Framework_TestCase {
         $user = Application::get_class('User');
         $mapper = $user->get_mapper();
         /**
-         * @var $model \User\model\UserModel
+         * @var $model \User\models\UserModel
          */
         $model = $mapper->find_where([
             'credentials' => ['=', User::credentials_user]
@@ -56,7 +56,7 @@ class UserModelTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers \User\model\UserModel::is_admin
+     * @covers \User\models\UserModel::is_admin
      */
     public function test_is_admin() {
         /**
@@ -65,7 +65,7 @@ class UserModelTest extends \PHPUnit_Framework_TestCase {
         $user = Application::get_class('User');
         $mapper = $user->get_mapper();
         /**
-         * @var $model \User\model\UserModel
+         * @var $model \User\models\UserModel
          */
         $model = $mapper->find_where([
             'credentials' => ['=', User::credentials_admin]
@@ -79,7 +79,7 @@ class UserModelTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers \User\model\UserModel::is_super_admin
+     * @covers \User\models\UserModel::is_super_admin
      */
     public function test_is_super_admin() {
         /**
@@ -88,7 +88,7 @@ class UserModelTest extends \PHPUnit_Framework_TestCase {
         $user = Application::get_class('User');
         $mapper = $user->get_mapper();
         /**
-         * @var $model \User\model\UserModel
+         * @var $model \User\models\UserModel
          */
         $model = $mapper->find_where([
             'credentials' => ['=', User::credentials_super_admin]

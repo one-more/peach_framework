@@ -1,7 +1,9 @@
 <?php
 
 namespace User\auth;
-use User\model\UserModel;
+use classes\Application;
+use classes\VarHandler;
+use User\models\UserModel;
 
 /**
  * Class UserAuth
@@ -14,11 +16,11 @@ class UserAuth {
         /**
          * @var $user \User
          */
-        $user = \Application::get_class('User');
+        $user = Application::get_class(\User::class);
         $mapper = $user->get_mapper();
 
-        $login = \VarHandler::sanitize_var($login, 'string', '');
-        $password = \VarHandler::sanitize_var($password, 'string', '');
+        $login = VarHandler::sanitize_var($login, 'string', '');
+        $password = VarHandler::sanitize_var($password, 'string', '');
         $password = trim($password);
 
         $collection = $mapper->find_where([
@@ -50,7 +52,7 @@ class UserAuth {
                 /**
                  * @var $session \Session
                  */
-                $session = \Application::get_class('Session');
+                $session = Application::get_class(\Session::class);
                 $session->set_var('user', $identity->remember_hash);
             }
         }
@@ -66,7 +68,7 @@ class UserAuth {
             /**
              * @var $session \Session
              */
-            $session = \Application::get_class('Session');
+            $session = Application::get_class(\Session::class);
             if($session->get_var('user')) {
                 $session->unset_var('user');
                 return true;

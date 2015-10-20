@@ -12,7 +12,7 @@ require_once ROOT_PATH.DS.'build'.DS.'user'.DS.'mapper'.DS.'usermapper.php';
 class UserMapperTest extends PHPUnit_Framework_TestCase {
 
     /**
-     * @var $mapper \User\Mapper\UserMapper
+     * @var $mapper \User\Mappers\UserMapper
      */
     private $mapper;
 
@@ -25,14 +25,14 @@ class UserMapperTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers User\Mapper\UserMapper::__construct
+     * @covers User\Mappers\UserMapper::__construct
      */
     public function test_construct() {
-        new \User\Mapper\UserMapper();
+        new \User\Mappers\UserMapper();
     }
 
     /**
-     * @covers User\Mapper\UserMapper::get_adapter
+     * @covers User\Mappers\UserMapper::get_adapter
      */
     public function get_adapter() {
         $method = new ReflectionMethod($this->mapper, 'get_adapter');
@@ -41,10 +41,10 @@ class UserMapperTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers User\Mapper\UserMapper::save
+     * @covers User\Mappers\UserMapper::save
      */
     public function test_save() {
-        $model = new \User\model\UserModel();
+        $model = new \User\models\UserModel();
         $this->assertFalse($this->mapper->save($model));
 
         $model->login = uniqid('test', true);
@@ -54,7 +54,7 @@ class UserMapperTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue($this->mapper->save($model));
 
         /**
-         * @var $exited_model \User\model\UserModel
+         * @var $exited_model \User\models\UserModel
          */
         $exited_model = $this->mapper->find_where([
             'credentials' => ['=', User::credentials_user]
@@ -64,13 +64,13 @@ class UserMapperTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers User\Mapper\UserMapper::validate
+     * @covers User\Mappers\UserMapper::validate
      */
     public function test_validate() {
         $method = new  ReflectionMethod($this->mapper, 'validate');
         $method->setAccessible(true);
 
-        $model = new \User\model\UserModel();
+        $model = new \User\models\UserModel();
         $this->assertFalse($method->invoke($this->mapper, $model->to_array()));
 
         $model->login = uniqid('test', true);
@@ -80,7 +80,7 @@ class UserMapperTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue((bool)$method->invoke($this->mapper, $model->to_array()));
 
         /**
-         * @var $exited_model \User\model\UserModel
+         * @var $exited_model \User\models\UserModel
          */
         $exited_model = $this->mapper->find_where([
             'credentials' => ['=', User::credentials_user]
@@ -90,10 +90,10 @@ class UserMapperTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers User\Mapper\UserMapper::insert
+     * @covers User\Mappers\UserMapper::insert
      */
     public function test_insert() {
-        $model = new \User\model\UserModel();
+        $model = new \User\models\UserModel();
         $model->login = uniqid('test', true);
 
         $method = new ReflectionMethod($this->mapper, 'insert');
@@ -106,11 +106,11 @@ class UserMapperTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers User\Mapper\UserMapper::update
+     * @covers User\Mappers\UserMapper::update
      */
     public function test_update() {
         /**
-         * @var $model \User\model\UserModel
+         * @var $model \User\models\UserModel
          */
         $model = $this->mapper->find_where([
             'credentials' => ['=', User::credentials_user]
@@ -125,14 +125,14 @@ class UserMapperTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers User\Mapper\UserMapper::find_by_id
+     * @covers User\Mappers\UserMapper::find_by_id
      */
     public function test_find_by_id() {
         $this->assertTrue($this->mapper->find_by_id(1)->id > 0);
     }
 
     /**
-     * @covers User\Mapper\UserMapper::find_by_sql
+     * @covers User\Mappers\UserMapper::find_by_sql
      */
     public function test_find_by_sql() {
         $sql = 'SELECT * FROM users WHERE deleted = 0 ORDER BY id DESC LIMIT 1';
@@ -140,7 +140,7 @@ class UserMapperTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers User\Mapper\UserMapper::find_where
+     * @covers User\Mappers\UserMapper::find_where
      */
     public function test_find_where() {
         $this->assertTrue($this->mapper->find_where([
@@ -149,12 +149,12 @@ class UserMapperTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers User\Mapper\UserMapper::delete
+     * @covers User\Mappers\UserMapper::delete
      */
     public function test_delete() {
         $sql = 'SELECT * FROM users WHERE deleted = 0 ORDER BY id DESC LIMIT 1';
         /**
-         * @var $model \User\model\UserModel
+         * @var $model \User\models\UserModel
          */
         $model = $this->mapper->find_by_sql($sql)->one();
         $this->mapper->delete($model);
@@ -162,7 +162,7 @@ class UserMapperTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers User\Mapper\UserMapper::get_page
+     * @covers User\Mappers\UserMapper::get_page
      */
     public function test_get_page() {
         $this->assertCount(5, $this->mapper->get_page(1, 5));

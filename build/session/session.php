@@ -1,21 +1,23 @@
 <?php
 
-class Session implements Extension {
-    use TraitExtension;
+use Session\mappers\SessionMapper;
+
+class Session implements \interfaces\Extension {
+    use \traits\TraitExtension;
 
     /**
-     * @var $model \Session\model\SessionModel
+     * @var $model \Session\models\SessionModel
      */
     private $model;
 
     /**
-     * @var $mapper \Session\mapper\SessionMapper
+     * @var $mapper \Session\mappers\SessionMapper
      */
     private $mapper;
 
 	public function __construct() {
         $this->register_autoload();
-        $this->mapper = Application::get_class('\Session\mapper\SessionMapper');
+        $this->mapper = \classes\Application::get_class(SessionMapper::class);
 	}
 
     /**
@@ -24,13 +26,12 @@ class Session implements Extension {
      */
     public function start() {
         if(!$this->get_id()) {
-            $this->model = new \Session\model\SessionModel([
-                'date' => date('Y-m-d'),
+            $this->model = new \Session\models\SessionModel([
                 'uid' => 0,
-                'variables' => []
+                'vars' => []
             ]);
             $this->mapper->save($this->model);
-            setcookie('pfm_session_id', $this->model->id, '/');
+            @setcookie('pfm_session_id', $this->model->id, null, '/');
             return $_COOKIE['pfm_session_id'] = $this->model->id;
         } else {
             if(!$this->model) {

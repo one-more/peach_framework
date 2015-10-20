@@ -2,32 +2,36 @@
 ini_set('display_errors', 'on');
 error_reporting(E_ALL);
 
-require_once realpath(dirname(__DIR__.'../')).'/resource/defines.php';
-require_once ROOT_PATH.DS.'class'.DS.'application.php';
-require_once ROOT_PATH.DS.'trait'.DS.'traitjson.php';
+require_once '../resource/defines.php';
+require_once ROOT_PATH.DS.'classes'.DS.'application.php';
+require_once ROOT_PATH.DS.'traits'.DS.'traitjson.php';
 require_once ROOT_PATH.DS.'lib/Smarty/Smarty.class.php';
 require_once ROOT_PATH.DS.'lib'.DS.'vendor'.DS.'autoload.php';
 
 class JSON {
-    use TraitJSON;
+    use \traits\TraitJSON;
 }
 
 class TestsEnv {
 	public static function initialize() {
-		require_once ROOT_PATH.DS.'class'.DS.'autoloader.php';
-		Autoloader::init_autoload();
+		require_once ROOT_PATH.DS.'classes'.DS.'autoloader.php';
+
+		\classes\AutoLoader::init_autoload();
+
+        require_once ROOT_PATH.DS.'build'.DS.'session'.DS.'session.php';
+        require_once ROOT_PATH.DS.'build'.DS.'session'.DS.'mappers'.DS.'sessionmapper.php';
 
         if(!in_array('pfmextension', stream_get_wrappers(), $strict = true)) {
-            stream_wrapper_register('pfmextension', 'PFMExtensionWrapper');
+            stream_wrapper_register('pfmextension', \classes\PFMExtensionWrapper::class);
         }
 
 		$_SESSION = [];
 		static::init_test_tables();
 
         /**
-         * @var $lang_obj Language
+         * @var $lang_obj \classes\Language
          */
-        $lang_obj = Application::get_class('Language');
+        $lang_obj = \classes\Application::get_class(\classes\Language::class);
 		$current_lang = $lang_obj->get_language();
 		define('CURRENT_LANG', $current_lang);
 
@@ -35,17 +39,18 @@ class TestsEnv {
         $starter_autoload->setAccessible(true);
         $starter_autoload->invoke(new Starter());
 
-        $sessions_file = 'pfmextension://session'.DS.'resource'.DS.'session_model.json';
-        $sessions_json = file_get_contents($sessions_file);
-        $sessions = json_decode($sessions_json, true);
-        $sessions[] = [
-            'id' => count($sessions)+1,
-            'date' => date('Y-m-d'),
-            'uid' => 0,
-            'variables' => []
-        ];
-        file_put_contents($sessions_file, (new JSON())->array_to_json_string($sessions));
-        $_COOKIE['pfm_session_id'] = count($sessions);
+        $method = new ReflectionMethod(\classes\AutoLoader::class, 'is_extension_changed');
+        $method->setAccessible(true);
+        if($method->invoke(null, 'Session')) {
+            $method = new ReflectionMethod(\classes\AutoLoader::class, 'build_extension');
+            $method->setAccessible(true);
+            $method->invoke(null, 'Session');
+        }
+        /**
+         * @var $session Session
+         */
+        $session = \classes\Application::get_class(Session::class);
+        $_COOKIE['pfm_session_id'] = $session->start();
 	}
 
 	private static function init_test_tables() {
@@ -59,20 +64,24 @@ class TestsEnv {
 		$model->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 		$model->query('SET NAMES utf8');
 
-		$sql = 'create table if not exists tests_table (';
-		$sql .= ' `id` serial primary key';
-		$sql .= ', `field1` varchar(255) not null default ""';
-		$sql .= ', `field2` bigint not null default 0';
-		$sql .= ', `field3` enum("val1", "val2", "val3") default "val1"';
-		$sql .= ')';
+		$sql = '
+            CREATE TABLE IF NOT EXISTS tests_table (
+              `id` serial primary key
+              , `field1` varchar(255) not null default ""
+              , `field2` bigint not null default 0
+              , `field3` enum("val1", "val2", "val3") default "val1"
+            )
+        ';
 		$model->query($sql);
 
-		$sql = 'create table if not exists tests_table2 (';
-		$sql .= ' `id` serial primary key';
-		$sql .= ', `field1` varchar(255) not null default ""';
-		$sql .= ', `field2` bigint not null default 0';
-		$sql .= ', `field3` enum("val1", "val2", "val3") default "val1"';
-		$sql .= ')';
+        $sql = '
+            CREATE TABLE IF NOT EXISTS tests_table2 (
+              `id` serial primary key
+              , `field1` varchar(255) not null default ""
+              , `field2` bigint not null default 0
+              , `field3` enum("val1", "val2", "val3") default "val1"
+            )
+        ';
 		$model->query($sql);
 	}
 }

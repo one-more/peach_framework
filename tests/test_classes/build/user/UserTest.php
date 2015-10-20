@@ -1,15 +1,6 @@
 <?php
 require_once ROOT_PATH.DS.'build'.DS.'user'.DS.'user.php';
 
-/**
- * Class UserTest
- *
- * @method bool assertTrue($cond)
- * @method bool assertFalse($cond)
- * @method bool assertNull($var)
- * @method bool assertEquals($a, $b)
- * @method bool assertInternalType($a, $b)
- */
 class UserTest extends PHPUnit_Framework_TestCase {
 
     /**
@@ -38,7 +29,7 @@ class UserTest extends PHPUnit_Framework_TestCase {
 
         $mapper = $this->user->get_mapper();
         /**
-         * @var $model \User\model\UserModel
+         * @var $model \User\models\UserModel
          */
         $model = $mapper->find_where([
             'credentials' => ['=', User::credentials_user]
@@ -65,6 +56,6 @@ class UserTest extends PHPUnit_Framework_TestCase {
      * @covers User::get_mapper
      */
     public function test_get_mapper() {
-        $this->assertTrue($this->user->get_mapper() instanceof \User\Mapper\UserMapper);
+        $this->assertTrue($this->user->get_mapper() instanceof \User\Mappers\UserMapper);
     }
 }

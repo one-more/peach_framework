@@ -2,6 +2,9 @@
 
 namespace System\handler;
 
+use classes\Application;
+use classes\Error;
+
 class ExceptionHandler {
 
     public static function initialize() {
@@ -16,7 +19,7 @@ class ExceptionHandler {
         /**
          * @var $system \System
          */
-        $system = \Application::get_class('System');
+        $system = Application::get_class(\System::class);
 		$smarty = new \Smarty();
 		$smarty->setTemplateDir($system->get_path().DS.'templates');
 		$smarty->setCompileDir($system->get_path().DS.'templates_c');
@@ -37,7 +40,7 @@ function peach_exception_handler($exception) {
      * @var $exception \Exception
      */
     $message = $exception->getMessage();
-    \Error::log($message);
+    Error::log($message);
 
     ExceptionHandler::show_error('an exception occurred');
 
@@ -47,7 +50,7 @@ function peach_exception_handler($exception) {
 function peach_error_handler($errno, $errstr, $errfile, $errline) {
     $msg = "$errno : $errstr in $errline of $errfile";
 
-    \Error::log($msg);
+    Error::log($msg);
 
     ExceptionHandler::show_error('an error occurred');
 

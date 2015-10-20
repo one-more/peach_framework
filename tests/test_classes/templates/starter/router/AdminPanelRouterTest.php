@@ -1,13 +1,13 @@
 <?php
 
-class SilentAdminPanelRouter extends \Starter\router\AdminPanelRouter {
+class SilentAdminPanelRouter extends \Starter\routers\AdminPanelRouter {
 
     public function __destruct() {}
 
-    protected function show_result(AjaxResponse $response) {}
+    protected function show_result(GetResponse $response) {}
 }
 
-\Starter::$current_router = \Starter\router\AdminPanelRouter::class;
+\Starter::$current_router = \Starter\routers\AdminPanelRouter::class;
 
 /**
  * Class AdminPanelRouterTest
@@ -17,7 +17,7 @@ class SilentAdminPanelRouter extends \Starter\router\AdminPanelRouter {
 class AdminPanelRouterTest extends PHPUnit_Framework_TestCase {
 
     /**
-     * @var $router \Starter\router\AdminPanelRouter
+     * @var $router \Starter\routers\AdminPanelRouter
      */
     private $router;
 
@@ -26,7 +26,7 @@ class AdminPanelRouterTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers \Starter\router\AdminPanelRouter::index
+     * @covers \Starter\routers\AdminPanelRouter::index
      */
     public function test_index() {
         $this->router->index();
@@ -34,7 +34,7 @@ class AdminPanelRouterTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers \Starter\router\AdminPanelRouter::edit_user_page
+     * @covers \Starter\routers\AdminPanelRouter::edit_user_page
      */
     public function test_edit_user_page() {
         $this->router->edit_user_page($id = 1);
@@ -42,7 +42,7 @@ class AdminPanelRouterTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers \Starter\router\AdminPanelRouter::add_user_page
+     * @covers \Starter\routers\AdminPanelRouter::add_user_page
      */
     public function test_add_user_page() {
         $this->router->add_user_page();

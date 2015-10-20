@@ -37,14 +37,14 @@ class UserAuthTest extends PHPUnit_Framework_TestCase {
         $user = Application::get_class('User');
         $mapper = $user->get_mapper();
         /**
-         * @var $model \User\model\UserModel
+         * @var $model \User\models\UserModel
          */
         $model = $mapper->find_where([
             'credentials' => ['=', User::credentials_user]
         ])->one();
         $this->assertTrue($this->auth->login($model->login, $model->password, true));
 
-        $model = Application::get_class('\User\model\UserModel');
+        $model = Application::get_class('\User\models\UserModel');
         $model->login = uniqid('test_', true);
         $model->password =  uniqid('', true);
         $mapper->save($model);
