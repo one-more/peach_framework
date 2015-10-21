@@ -2,6 +2,7 @@
 
 namespace User\auth;
 use common\classes\Application;
+use common\classes\Error;
 use common\classes\VarHandler;
 use User\models\UserModel;
 
@@ -42,6 +43,10 @@ class UserAuth {
             }
         }
         if($result && $identity) {
+            if(trim($identity->remember_hash) === '') {
+                $identity->remember_hash = password_hash($identity->password.$identity->login, PASSWORD_DEFAULT);
+                $mapper->save($identity);
+            }
             if($remember) {
                 setcookie('user', $identity->remember_hash, strtotime('+10 years'), '/');
                 /*

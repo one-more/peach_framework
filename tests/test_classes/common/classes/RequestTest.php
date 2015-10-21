@@ -102,6 +102,9 @@ class RequestTest extends PHPUnit_Framework_TestCase {
 		self::assertEquals('', Request::uri());
 		$_SERVER['REQUEST_URI'] = '/test.com?asd=dsa';
 		self::assertEquals('/test.com', Request::uri());
+
+		$_SERVER['REQUEST_URI'] = '/test.com/';
+		self::assertEquals('/test.com', Request::uri());
 	}
 
 	/**
@@ -121,5 +124,13 @@ class RequestTest extends PHPUnit_Framework_TestCase {
 		$_SERVER['REQUEST_URI'] = '/test.com/test1?asd=dsa';
 		self::assertEquals(['asd'=>'dsa'], Request::search_params());
 	}
+
+    /**
+     * common\classes\Request::is_token_valid
+     */
+    public function test_is_token_valid() {
+        $_GET['token'] = md5(uniqid('token', true));
+        self::assertFalse(Request::is_token_valid());
+    }
 }
  

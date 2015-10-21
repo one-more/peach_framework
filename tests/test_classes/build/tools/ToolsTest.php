@@ -1,7 +1,5 @@
 <?php
 
-require_once ROOT_PATH.DS.'build'.DS.'tools'.DS.'tools.php';
-
 /**
  * Class ToolsTest
  *

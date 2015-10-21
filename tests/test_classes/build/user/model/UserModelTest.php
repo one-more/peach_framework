@@ -1,5 +1,4 @@
 <?php
-require_once ROOT_PATH.DS.'build'.DS.'user'.DS.'models'.DS.'usermodel.php';
 
 use common\classes\Application;
 use \User\models\UserModel;
@@ -27,7 +26,6 @@ class UserModelTest extends \PHPUnit_Framework_TestCase {
 
     /**
      * @covers \User\models\UserModel::is_guest
-     * @expectedException PHPUnit_Framework_Error
      */
     public function test_is_guest() {
         /**
@@ -39,7 +37,7 @@ class UserModelTest extends \PHPUnit_Framework_TestCase {
          * @var $model \User\models\UserModel
          */
         $model = $mapper->find_where([
-            'credentials' => ['=', User::credentials_user]
+            'password' => ['=', '']
         ])->one();
         self::assertTrue($model->is_guest());
         $auth = $user->get_auth();

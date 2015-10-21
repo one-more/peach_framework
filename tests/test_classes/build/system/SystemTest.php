@@ -1,5 +1,4 @@
 <?php
-require_once ROOT_PATH.DS.'build'.DS.'system'.DS.'system.php';
 
 class SystemTest extends PHPUnit_Framework_TestCase {
 	use \common\traits\TraitConfiguration;
@@ -15,6 +14,13 @@ class SystemTest extends PHPUnit_Framework_TestCase {
 		$this->configuration = $this->get_params('configuration');
     }
 
+    /**
+     * @covers System::__construct
+     */
+    public function test_construct() {
+        new System();
+    }
+
 	/**
 	 * @covers System::initialize
 	 */
@@ -22,19 +28,15 @@ class SystemTest extends PHPUnit_Framework_TestCase {
 		$this->system_obj->initialize();
 	}
 
-	/**
-	 * @covers System::get_configuration
-	 */
-	public function test_get_configuration() {
-		self::assertEquals($this->system_obj->get_configuration(), $this->configuration);
-	}
-
-	/**
-	 * @covers System::get_template
-	 */
-	public function test_get_template() {
-		self::assertEquals($this->configuration['template'], $this->system_obj->get_template());
-	}
+    /**
+     * @covers System::set_template
+     */
+    public function test_set_template() {
+        $method = new ReflectionMethod(System::class, 'set_template');
+        $method->setAccessible(true);
+        $method->invoke($this->system_obj);
+        self::assertTrue($this->system_obj->template instanceof \common\interfaces\Template);
+    }
 
 	/**
 	 * @covers System::init_db

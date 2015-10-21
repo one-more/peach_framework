@@ -28,7 +28,7 @@ class SessionMapperTest extends PHPUnit_Framework_TestCase {
         \common\classes\Application::get_class(Session::class);
         $this->mapper = \common\classes\Application::get_class(SessionMapper::class);
         $adapter = $this->mapper->get_adapter();
-        $id = $adapter->execute('SELECT id from session ORDER BY id DESC LIMIT 1')->get_result();
+        $id = $adapter->execute('SELECT id from sessions ORDER BY id DESC LIMIT 1')->get_result();
         $record = $this->mapper->find_by_id($id);
         self::assertEquals($id, $record->id);
         return [[$record]];
@@ -44,7 +44,7 @@ class SessionMapperTest extends PHPUnit_Framework_TestCase {
 
         $model = new \Session\models\SessionModel([
             'uid' => 0,
-            'vars' => []
+            'variables' => []
         ]);
         $this->mapper->save($model);
     }

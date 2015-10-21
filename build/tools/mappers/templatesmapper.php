@@ -24,6 +24,21 @@ class TemplatesMapper extends BaseMapper {
     }
 
     /**
+     * @return TemplateModel
+     */
+    public function get_active() {
+        return new TemplateModel(
+            $this->adapter
+                ->select()
+                ->where([
+                    'is_active' => ['=', 1]
+                ])
+                ->execute()
+                ->get_array()
+        );
+    }
+
+    /**
      * @param int $number
      * @param int $per_page
      * @return BaseCollection

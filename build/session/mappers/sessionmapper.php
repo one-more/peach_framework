@@ -6,10 +6,19 @@ use common\adapters\MysqlAdapter;
 use common\mappers\BaseMapper;
 use Session\models\SessionModel;
 
+/**
+ * Class SessionMapper
+ * @package Session\mappers
+ *
+ * @property MysqlAdapter $adapter
+ */
 class SessionMapper extends BaseMapper {
 
+    /**
+     * @return MysqlAdapter
+     */
     public function get_adapter() {
-        return new MysqlAdapter('session');
+        return new MysqlAdapter('sessions');
     }
 
     /**
@@ -23,7 +32,7 @@ class SessionMapper extends BaseMapper {
             ])
             ->execute()
             ->get_array();
-        $fields['vars'] = json_decode($fields['vars'], true);
+        $fields['variables'] = json_decode($fields['variables'], true);
         return new SessionModel($fields);
     }
 
@@ -32,7 +41,7 @@ class SessionMapper extends BaseMapper {
      */
     public function save(SessionModel $model) {
         $fields = $model->to_array();
-        $fields['vars'] = json_encode($model->vars);
+        $fields['variables'] = json_encode($model->variables);
         if($model->id) {
             unset($fields['id']);
             $this->adapter->update($fields)

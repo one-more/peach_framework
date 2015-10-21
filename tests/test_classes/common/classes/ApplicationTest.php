@@ -11,13 +11,20 @@ use common\helpers\ReflectionHelper;
  */
 class AnnotationDecorated {}
 
+/**
+ * Class NotDecorated
+ *
+ * @dumbAnnotation
+ */
 class NotDecorated {}
+
+use common\classes\PFMExtensionWrapper;
 
 class ApplicationTest extends PHPUnit_Framework_TestCase {
 
-	public function setUp() {
+	public static function setUpBeforeClass() {
 		if(!in_array('pfmextension', stream_get_wrappers())) {
-			stream_wrapper_register('pfmextension', 'PFMExtensionWrapper');
+			stream_wrapper_register('pfmextension', PFMExtensionWrapper::class);
 		}
 	}
 

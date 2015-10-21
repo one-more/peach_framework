@@ -48,14 +48,11 @@ class AnnotationsDecoratorTest extends PHPUnit_Framework_TestCase {
         /**
          * @var $ext User
          */
-        $ext = Application::get_class('User');
+        $ext = Application::get_class(User::class);
         $mapper = $ext->get_mapper();
         $user = $mapper->find_where([
             'credentials' => ['=', User::credentials_admin]
         ])->one();
-        if(empty($user)) {
-            $user = $mapper->find_where(['credentials' => ['=', User::credentials_super_admin]])->one();
-        }
         $_COOKIE['user'] = $user->remember_hash;
         self::assertEquals('test', $this->obj->get_test());
     }

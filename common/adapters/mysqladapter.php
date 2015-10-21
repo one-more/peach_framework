@@ -3,8 +3,9 @@
 namespace common\adapters;
 
 use common\classes\Application;
-use common\classes\Language;
+use common\classes\Error;
 use common\traits\TraitConfiguration;
+use common\classes\Configuration;
 
 class MysqlAdapter {
     use TraitConfiguration;
@@ -20,6 +21,7 @@ class MysqlAdapter {
 
     public function __construct($table_name) {
         $this->table_name = $table_name;
+
         $configuration = $this->get_configuration();
         $db_type = $configuration['db_type'];
         $host = $configuration['host'];
@@ -30,23 +32,18 @@ class MysqlAdapter {
         $this->db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         $this->db->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
         $this->db->query('SET NAMES utf8');
-
-        /**
-         * @var $language Language
-         */
-        $language = Application::get_class(Language::class);
-        $this->current_language = $language->get_language();
     }
 
     protected function get_configuration() {
-        $db_params = $this->get_params('configuration')['db_params'];
-        return [
-            'db_name' => $db_params['name'],
-            'db_user' => $db_params['login'],
-            'db_password' => $db_params['password'],
+        /**
+         * @var $configuration Configuration
+         */
+        $configuration = Application::get_class(Configuration::class);
+        $db_params = $configuration->db_params;
+        return array_merge([
             'db_type' => 'mysql',
             'host' => 'localhost'
-        ];
+        ], $db_params);
     }
 
     /**

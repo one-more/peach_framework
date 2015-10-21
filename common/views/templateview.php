@@ -21,8 +21,8 @@ abstract class TemplateView extends \Smarty implements View {
         /**
 		 * @var $system \System
 		 */
-		$system = Application::get_class('\System');
-		$template = $this->template = Application::get_class($system->get_template());
+		$system = Application::get_class(\System::class);
+		$template = $this->template = $system->template;
 		$compile_dir = $template->get_path().DS.'templates_c';
 		$this->setCompileDir($compile_dir);
 	}

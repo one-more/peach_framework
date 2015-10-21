@@ -1,5 +1,4 @@
 <?php
-require_once ROOT_PATH.DS.'build'.DS.'user'.DS.'user.php';
 
 use common\classes\Application;
 
@@ -23,7 +22,6 @@ class UserTest extends PHPUnit_Framework_TestCase {
 
     /**
      * @covers User::get_identity
-     * @expectedException PHPUnit_Framework_Error
      */
     public function test_get_identity() {
         $identity = $this->user->get_identity();
@@ -34,7 +32,7 @@ class UserTest extends PHPUnit_Framework_TestCase {
          * @var $model \User\models\UserModel
          */
         $model = $mapper->find_where([
-            'credentials' => ['=', User::credentials_user]
+            'password' => ['=', '']
         ])->one();
         $auth = $this->user->get_auth();
         self::assertTrue($auth->login($model->login, $model->password));
@@ -58,6 +56,6 @@ class UserTest extends PHPUnit_Framework_TestCase {
      * @covers User::get_mapper
      */
     public function test_get_mapper() {
-        self::assertTrue($this->user->get_mapper() instanceof \User\Mappers\UserMapper);
+        self::assertTrue($this->user->get_mapper() instanceof \User\mappers\UserMapper);
     }
 }

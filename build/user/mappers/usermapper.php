@@ -1,10 +1,11 @@
 <?php
 
-namespace User\Mappers;
+namespace User\mappers;
 
 
 use common\adapters\MysqlAdapter;
 use common\classes\Application;
+use common\classes\Error;
 use common\classes\LanguageFile;
 use common\collections\BaseCollection;
 use common\mappers\BaseMapper;
@@ -14,7 +15,7 @@ use Validator\LIVR;
 
 /**
  * Class UserMapper
- * @package User\Mappers
+ * @package User\mappers
  *
  * @property MysqlAdapter $adapter
  */
@@ -60,7 +61,8 @@ class UserMapper extends BaseMapper {
         $validator = new LIVR([
             'login' => ['required', 'unique_login'],
             'password' => 'hash_password',
-            'credentials' => 'required'
+            'credentials' => 'required',
+            'remember_hash' => 'trim'
         ]);
         if(is_array($old_fields)) {
             $is_login_changed = $old_fields['login'] != $fields['login'];
@@ -113,9 +115,6 @@ class UserMapper extends BaseMapper {
      */
     private function insert(array $fields) {
         $fields['remember_hash'] = password_hash($fields['password'].$fields['login'], PASSWORD_DEFAULT);
-        if(!empty($fields['id'])) {
-            unset($fields['id']);
-        }
         $this->adapter->insert($fields)->execute();
     }
 
@@ -124,13 +123,12 @@ class UserMapper extends BaseMapper {
      * @param $id
      */
     private function update(array $fields, $id) {
-        if(!empty($fields['id'])) {
-            unset($fields['id']);
-        }
-        $this->adapter->update($fields)
+        $this->adapter
+            ->update($fields)
             ->where([
                 'id' => ['=', $id]
-            ])->execute();
+            ])
+            ->execute();
     }
 
     /**
@@ -213,7 +211,7 @@ class UserMapper extends BaseMapper {
      * @param int $per_page
      * @return PagingModel
      */
-    public function getPaging($number = 1, $per_page = 30) {
+    public function get_paging($number = 1, $per_page = 30) {
         $sql = "SELECT CEIL(COUNT(*)/{$per_page}) as pages FROM users WHERE deleted = 0";
         return new PagingModel([
             'current' => $number,

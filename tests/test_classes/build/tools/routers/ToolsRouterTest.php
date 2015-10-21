@@ -2,7 +2,9 @@
 
 require_once ROOT_PATH.DS.'build'.DS.'tools'.DS.'routers'.DS.'toolsrouter.php';
 
-class SilentToolsRouter extends Tools\routers\ToolsRouter {
+use Tools\routers\ToolsRouter;
+
+class SilentToolsRouter extends ToolsRouter {
 
     public function __destruct() {}
 }

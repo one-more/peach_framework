@@ -1,7 +1,7 @@
 <?php
 
 use \common\classes\Application;
-use \User\Mappers\UserMapper;
+use \User\mappers\UserMapper;
 use User\auth\UserAuth;
 
 /**
@@ -40,7 +40,7 @@ class User implements \common\interfaces\Extension {
         }
 
         /**
-         * @var $mapper \User\Mappers\UserMapper
+         * @var $mapper \User\mappers\UserMapper
          */
         $mapper = Application::get_class(UserMapper::class);
         $collection = $mapper->find_where([
@@ -62,7 +62,7 @@ class User implements \common\interfaces\Extension {
     }
 
     /**
-     * @return \User\Mappers\UserMapper
+     * @return \User\mappers\UserMapper
      * @throws InvalidArgumentException
      */
     public function get_mapper() {

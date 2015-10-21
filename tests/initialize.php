@@ -2,6 +2,11 @@
 ini_set('display_errors', 'on');
 error_reporting(E_ALL);
 
+defined('TESTS_ENV') or define('TESTS_ENV', true);
+
+use common\classes\Application;
+use common\classes\Configuration;
+
 require_once '../resource/defines.php';
 require_once ROOT_PATH.DS.'common'.DS.'classes'.DS.'application.php';
 require_once ROOT_PATH.DS.'common'.DS.'traits'.DS.'traitjson.php';
@@ -18,43 +23,40 @@ class TestsEnv {
 
 		\common\classes\AutoLoader::init_autoload();
 
+        require_once ROOT_PATH.DS.'build'.DS.'system'.DS.'system.php';
+        require_once ROOT_PATH.DS.'build'.DS.'system'.DS.'handler'.DS.'exceptionhandler.php';
+
         require_once ROOT_PATH.DS.'build'.DS.'session'.DS.'session.php';
         require_once ROOT_PATH.DS.'build'.DS.'session'.DS.'mappers'.DS.'sessionmapper.php';
 
-        if(!in_array('pfmextension', stream_get_wrappers(), $strict = true)) {
-            stream_wrapper_register('pfmextension', \common\classes\PFMExtensionWrapper::class);
-        }
+        require_once ROOT_PATH.DS.'build'.DS.'tools'.DS.'tools.php';
+        require_once ROOT_PATH.DS.'build'.DS.'tools'.DS.'mappers'.DS.'templatesmapper.php';
 
-		static::init_test_tables();
+        require_once ROOT_PATH.DS.'build'.DS.'user'.DS.'user.php';
+        require_once ROOT_PATH.DS.'build'.DS.'user'.DS.'mappers'.DS.'usermapper.php';
+        require_once ROOT_PATH.DS.'build'.DS.'user'.DS.'models'.DS.'usermodel.php';
 
         /**
-         * @var $lang_obj \common\classes\Language
+         * @var $system System
          */
-        $lang_obj = \common\classes\Application::get_class(\common\classes\Language::class);
-		$current_lang = $lang_obj->get_language();
-		define('CURRENT_LANG', $current_lang);
+        $system = Application::get_class(System::class);
+        $system->initialize();
+
+        /**
+         * @var $configuration Configuration
+         */
+        $configuration = Application::get_class(Configuration::class);
+		defined('CURRENT_LANG') or define('CURRENT_LANG', $configuration->language);
 
         $starter_autoload = new ReflectionMethod(Starter::class, 'register_autoload');
         $starter_autoload->setAccessible(true);
-        $starter_autoload->invoke(\common\classes\Application::get_class(Starter::class));
+        $starter_autoload->invoke(Application::get_class(Starter::class));
 
-        /**
-         * @var $session Session
-         */
-        $session = \common\classes\Application::get_class(Session::class);
-        $_COOKIE['pfm_session_id'] = $session->start();
+        static::init_test_tables();
 	}
 
 	private static function init_test_tables() {
-		$configuration_file = ROOT_PATH.DS.'resource'.DS.'configuration.json';
-		$params = json_decode(file_get_contents($configuration_file), true)['db_params'];
-
-		$user = $params['login'];
-		$pass = $params['password'];
-		$model = new PDO("mysql:host=localhost;dbname={$params['name']}",$user, $pass);
-		$model->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		$model->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-		$model->query('SET NAMES utf8');
+		$adapter = new \common\adapters\MysqlAdapter('');
 
 		$sql = '
             CREATE TABLE IF NOT EXISTS tests_table (
@@ -64,7 +66,7 @@ class TestsEnv {
               , `field3` enum("val1", "val2", "val3") default "val1"
             )
         ';
-		$model->query($sql);
+		$adapter->execute($sql);
 
         $sql = '
             CREATE TABLE IF NOT EXISTS tests_table2 (
@@ -74,7 +76,27 @@ class TestsEnv {
               , `field3` enum("val1", "val2", "val3") default "val1"
             )
         ';
-		$model->query($sql);
+        $adapter->execute($sql);
+
+        $roles = [
+            User::credentials_admin,
+            User::credentials_user,
+            User::credentials_user,
+            User::credentials_user,
+            User::credentials_admin
+        ];
+
+        /**
+         * @var $user User
+         */
+        $user = Application::get_class(User::class);
+        $mapper = $user->get_mapper();
+        for($i=0; $i<5; $i++) {
+            $mapper->save(new \User\models\UserModel([
+                'login' => uniqid('test', true),
+                'credentials' => $roles[$i]
+            ]));
+        }
 	}
 }
 

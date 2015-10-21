@@ -24,7 +24,6 @@ class UserAuthTest extends PHPUnit_Framework_TestCase {
 
     /**
      * @covers \User\auth\UserAuth::login
-     * @expectedException PHPUnit_Framework_Error
      */
     public function test_login() {
         self::assertFalse($this->auth->login(null,null,null));
@@ -32,13 +31,13 @@ class UserAuthTest extends PHPUnit_Framework_TestCase {
         /**
          * @var $user User
          */
-        $user = Application::get_class('User');
+        $user = Application::get_class(User::class);
         $mapper = $user->get_mapper();
         /**
          * @var $model \User\models\UserModel
          */
         $model = $mapper->find_where([
-            'credentials' => ['=', User::credentials_user]
+            'password' => ['=', '']
         ])->one();
         self::assertTrue($this->auth->login($model->login, $model->password, true));
 
@@ -57,6 +56,23 @@ class UserAuthTest extends PHPUnit_Framework_TestCase {
      * @covers \User\auth\UserAuth::log_out
      */
     public function test_log_out() {
+        /**
+         * @var $user User
+         */
+        $user = Application::get_class(User::class);
+        $mapper = $user->get_mapper();
+        $sql = 'select * from users WHERE deleted = 0 AND password = "" ORDER BY id DESC LIMIT 1';
+        /**
+         * @var $model \User\models\UserModel
+         */
+        $model = $mapper->find_by_sql($sql)->one();
+
+        self::assertTrue($this->auth->login($model->login, $model->password));
         self::assertTrue($this->auth->log_out());
+
+        self::assertTrue($this->auth->login($model->login, $model->password, true));
+        self::assertTrue($this->auth->log_out());
+
+        self::assertFalse($this->auth->log_out());
     }
 }

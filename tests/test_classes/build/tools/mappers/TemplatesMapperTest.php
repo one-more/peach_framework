@@ -1,7 +1,5 @@
 <?php
 
-require_once ROOT_PATH.DS.'build'.DS.'tools'.DS.'mappers'.DS.'templatesmapper.php';
-
 use \common\classes\Application;
 use Tools\mappers\TemplatesMapper; 
 

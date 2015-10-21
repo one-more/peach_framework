@@ -41,12 +41,30 @@ class AutoLoaderTest extends PHPUnit_Framework_TestCase {
     /**
      * @covers common\classes\AutoLoader::load_extension
      */
-    public function test_build_extension() {
+    public function test_build_extension_and_load() {
         $extension_file = ROOT_PATH.DS.'extensions'.DS.'tools.tar.gz';
         Phar::unlinkArchive($extension_file);
         self::assertFalse(file_exists($extension_file));
         self::assertTrue(AutoLoader::load_extension('Tools'));
         self::assertTrue(file_exists($extension_file));
+    }
+
+    /**
+     * @covers common\classes\AutoLoader::build_extension
+     */
+    public function test_build_extension() {
+        $method = new ReflectionMethod(AutoLoader::class, 'build_extension');
+        $method->setAccessible(true);
+        $method->invoke(null, 'system');
+    }
+
+    /**
+     * @covers common\classes\AutoLoader::is_extension_built
+     */
+    public function test_is_extension_built() {
+        $method = new ReflectionMethod(AutoLoader::class, 'is_extension_built');
+        $method->setAccessible(true);
+        self::assertTrue($method->invoke(null, 'system'));
     }
 
     /**
@@ -108,5 +126,21 @@ class AutoLoaderTest extends PHPUnit_Framework_TestCase {
             }
         }
         self::assertFalse(AutoLoader::load_class('NotExistedClass'));
+    }
+
+    /**
+     * @covers common\classes\AutoLoader::load_template
+     */
+    public function test_load_template() {
+        self::assertTrue(AutoLoader::load_template('Starter'));
+
+        self::assertFalse(AutoLoader::load_template('Huyarter'));
+    }
+
+    /**
+     * @covers common\classes\AutoLoader::init_autoload
+     */
+    public function test_init_autoload() {
+        AutoLoader::init_autoload();
     }
 }

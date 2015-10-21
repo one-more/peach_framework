@@ -37,7 +37,7 @@ class UsersTableView extends TemplateView {
             'users' => $users,
             'my_id' => $user->id,
             'is_super_admin' => $is_super_admin,
-            'paging_model' => $mapper->getPaging($this->page)->to_array()
+            'paging_model' => $mapper->get_paging($this->page)->to_array()
         ];
     }
 

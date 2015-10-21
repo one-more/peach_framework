@@ -38,7 +38,7 @@ class AnnotationsDecorator {
                             return $el['name'] == 'credentialsError';
                         }));
                         if(!$error) {
-                            $error['value'] = "you must be {$annotation['name']}";
+                            $error['value'] = "you must be {$annotation['value']}";
                         }
                         throw new WrongRightsException($error['value']);
                     }

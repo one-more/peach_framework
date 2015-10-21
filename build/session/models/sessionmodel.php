@@ -10,7 +10,7 @@ use common\models\BaseModel;
  * @property int id
  * @property string datetime
  * @property int uid
- * @property array vars
+ * @property array variables
  *
  */
 class SessionModel extends BaseModel {
@@ -19,6 +19,6 @@ class SessionModel extends BaseModel {
         'id' => null,
         'datetime' => null,
         'uid' => null,
-        'vars' => []
+        'variables' => []
     ];
 }

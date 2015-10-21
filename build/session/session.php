@@ -28,7 +28,7 @@ class Session implements \common\interfaces\Extension {
         if(!$this->get_id()) {
             $this->model = new \Session\models\SessionModel([
                 'uid' => 0,
-                'vars' => []
+                'variables' => []
             ]);
             $this->mapper->save($this->model);
             setcookie('pfm_session_id', $this->model->id, null, '/');
@@ -58,8 +58,8 @@ class Session implements \common\interfaces\Extension {
         if(!$this->get_id()) {
             throw new ErrorException('Session was not start');
         }
-        return !empty($this->model->vars[$name]) ?
-            $this->model->vars[$name] : $default;
+        return !empty($this->model->variables[$name]) ?
+            $this->model->variables[$name] : $default;
     }
 
     /**
@@ -71,7 +71,7 @@ class Session implements \common\interfaces\Extension {
         if(!$this->get_id()) {
             throw new ErrorException('Session was not start');
         }
-        $this->model->vars[$name] = $value;
+        $this->model->variables[$name] = $value;
         $this->mapper->save($this->model);
     }
 
@@ -83,7 +83,7 @@ class Session implements \common\interfaces\Extension {
         if(!$this->get_id()) {
             throw new ErrorException('Session was not start');
         }
-        unset($this->model->vars[$name]);
+        unset($this->model->variables[$name]);
         $this->mapper->save($this->model);
     }
 

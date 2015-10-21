@@ -42,11 +42,10 @@ class TemplateViewTest extends PHPUnit_Framework_TestCase {
          * @var $system System
          */
         $system = Application::get_class(System::class);
-        $template_class = $system->get_template();
         /**
          * @var $template \common\interfaces\Template
          */
-        $template = Application::get_class($template_class);
+        $template = $system->template;
         self::assertEquals($this->view->get_lang_vars_base_dir(), $template->get_lang_path());
     }
 }

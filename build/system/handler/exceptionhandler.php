@@ -23,28 +23,24 @@ class ExceptionHandler {
 		$smarty = new \Smarty();
 		$smarty->setTemplateDir($system->get_path().DS.'templates');
 		$smarty->setCompileDir($system->get_path().DS.'templates_c');
-        if($system->get_configuration()['show_errors']) {
-            $error_class = $system->get_configuration()['error_block_class'];
-            $params = [
-                'class' => $error_class,
-                'message'   => $message
-            ];
-            $smarty->assign($params);
-            echo $smarty->getTemplate('message.tpl.html');
-        }
+
+        $error_class = 'error-block';
+        $params = [
+            'class' => $error_class,
+            'message'   => $message
+        ];
+        $smarty->assign($params);
+        echo $smarty->getTemplate('message.tpl.html');
     }
 }
 
-function peach_exception_handler($exception) {
-    /**
-     * @var $exception \Exception
-     */
+function peach_exception_handler(\Exception $exception) {
     $message = $exception->getMessage();
     Error::log($message);
 
     ExceptionHandler::show_error('an exception occurred');
 
-	return false;
+	return true;
 }
 
 function peach_error_handler($errno, $errstr, $errfile, $errline) {
@@ -54,7 +50,7 @@ function peach_error_handler($errno, $errstr, $errfile, $errline) {
 
     ExceptionHandler::show_error('an error occurred');
 
-	return false;
+	return true;
 }
 
 function peach_fatal_error_handler() {
@@ -66,5 +62,5 @@ function peach_fatal_error_handler() {
         file_put_contents(ROOT_PATH.$ds.'www'.$ds.'error.log', $msg, FILE_APPEND);
     }
 
-	return false;
+	return true;
 }

@@ -2,6 +2,7 @@
 
 namespace common\classes;
 
+use common\helpers\FileSystemHelper;
 use common\helpers\ReflectionHelper;
 use common\interfaces\Template;
 use Validator\LIVR;
@@ -64,7 +65,15 @@ class Application {
     }
 
 	public static function initialize() {
-		require_once ROOT_PATH.DS.'class'.DS.'autoloader.php';
+        if(defined('TESTS_ENV') || self::is_dev()) {
+            ini_set('display_errors', 'on');
+            error_reporting(E_ALL);
+        } else {
+            ini_set('display_errors', 'off');
+            error_reporting(0);
+        }
+
+		require_once ROOT_PATH.DS.'common'.DS.'classes'.DS.'autoloader.php';
 
         Autoloader::init_autoload();
 
@@ -73,14 +82,14 @@ class Application {
         /**
          * @var $system \System
          */
-		$system = static::get_class('System');
+		$system = static::get_class(\System::class);
 		$system->initialize();
 
         /**
-         * @var $lang_obj Language
+         * @var $configuration Configuration
          */
-		$lang_obj = static::get_class('Language');
-		$current_lang = $lang_obj->get_language();
+        $configuration = Application::get_class(Configuration::class);
+		$current_lang = $configuration->language;
 		define('CURRENT_LANG', $current_lang);
 	}
 
@@ -97,8 +106,7 @@ class Application {
             $tools = self::get_class('Tools');
             $tools->route();
 		} else {
-			$template = self::get_class($system->get_template());
-			self::start_template($template);
+			self::start_template($system->template);
 		}
 	}
 
@@ -113,7 +121,7 @@ class Application {
 		if(!array_key_exists('REMOTE_ADDR', $_SERVER) || !array_key_exists('HTTP_HOST', $_SERVER)) {
 			return true;
 		} else {
-			return $_SERVER['REMOTE_ADDR'] === '127.0.0.1' ||
+			return $_SERVER['REMOTE_ADDR'] == '127.0.0.1' ||
 			strpos($_SERVER['HTTP_HOST'], 'dev') !== false;
 		}
 	}
