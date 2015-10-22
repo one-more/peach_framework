@@ -1,11 +1,11 @@
 {
   "tools": {
     "styles": "<link href='/static/tools-a6f3f01868.css' media='all' rel='stylesheet' type='text/css'/>",
-    "scripts": "<script src='/static/tools-caaf60cfc0.js' type='text/javascript'></script>"
+    "scripts": "<script src='/static/tools-b53134c83d.js' type='text/javascript'></script>"
   },
   "starter": {
-    "styles": "<link href='/static/starter-c9b3c62826.css' media='all' rel='stylesheet' type='text/css'/>",
-    "scripts": "<script src='/static/starter-ba929866db.js' type='text/javascript'></script>"
+    "styles": "<link href='/static/starter-a6f3f01868.css' media='all' rel='stylesheet' type='text/css'/>",
+    "scripts": "<script src='/static/starter-8c0caeb933.js' type='text/javascript'></script>"
   },
   "vendor": {
     "styles": "<link href='/static/vendor-5998799ce6.css' media='all' rel='stylesheet' type='text/css'/>",

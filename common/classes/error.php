@@ -8,7 +8,7 @@ class Error {
         $log_file_path = WEB_ROOT.DS.'error.log';
         if(file_exists($log_file_path)) {
             if(filesize($log_file_path) > (1024*1024*3)) {
-                unlink($log_file_path);
+                file_put_contents($log_file_path, '');
             }
         } else {
             file_put_contents($log_file_path, '');

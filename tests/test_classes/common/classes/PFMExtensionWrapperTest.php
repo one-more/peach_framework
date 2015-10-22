@@ -28,6 +28,7 @@ class PFMExtensionWrapperTest extends PHPUnit_Framework_TestCase {
 
     /**
      * @covers common\classes\PFMExtensionWrapper::create_phar_data
+     * @expectedException \common\exceptions\NotExistedExtensionException
      */
     public function test_create_phar_data() {
         $wrapper = new PFMExtensionWrapper;
@@ -37,7 +38,10 @@ class PFMExtensionWrapperTest extends PHPUnit_Framework_TestCase {
         $method = new ReflectionMethod(PFMExtensionWrapper::class, 'create_phar_data');
         $method->setAccessible(true);
         $result = $method->invoke($wrapper);
-        self::assertInstanceOf('PharData', $result);
+        self::assertInstanceOf(PharData::class, $result);
+
+        $parse_path->invoke($wrapper, 'pfmextension://NotExistedExtension');
+        $method->invoke($wrapper);
     }
 
 	/**

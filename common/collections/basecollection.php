@@ -2,13 +2,14 @@
 
 namespace common\collections;
 
+use common\classes\Error;
 use common\interfaces\Collection;
 use common\interfaces\Model;
 
 class BaseCollection implements Collection {
 
     /**
-     * @var $model_class Model
+     * @var string $model_class
      */
     protected $model_class;
 
@@ -56,7 +57,11 @@ class BaseCollection implements Collection {
      */
     public function current() {
         if(is_array($this->models[$this->position])) {
-            $this->models[$this->position] = new $this->model_class($this->models[$this->position]);
+            $reflection = new \ReflectionClass($this->model_class);
+            $args = [
+                'fields' => $this->models[$this->position]
+            ];
+            $this->models[$this->position] = $reflection->newInstanceArgs($args);
         }
         return $this->models[$this->position];
     }
@@ -74,11 +79,10 @@ class BaseCollection implements Collection {
     }
 
     public function offsetSet($offset, $value) {
-        $model_obj = new $this->model_class;
-        if(!is_array($value) || !$value instanceof $model_obj) {
-            throw new \InvalidArgumentException('value must be an array or '.get_class($model_obj));
+        if(!is_array($value) && !is_a($value, $this->model_class)) {
+            throw new \InvalidArgumentException('value must be an array or '.$this->model_class);
         }
-        if (is_null($offset)) {
+        if(is_null($offset)) {
             $this->models[] = $value;
         } else {
             $this->models[$offset] = $value;

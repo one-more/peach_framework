@@ -60,9 +60,13 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase {
      * @covers common\classes\Configuration::load_language
      */
     public function test_load_language() {
+        $_COOKIE['language'] = 'EN';
         $configuration = $this->get_params('configuration');
         $method = new \ReflectionMethod($this->configuration, 'load_language');
         $method->setAccessible(true);
+        $method->invoke($this->configuration, $configuration);
+
+        unset($_COOKIE['language']);
         $method->invoke($this->configuration, $configuration);
     }
 }

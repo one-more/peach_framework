@@ -17,4 +17,11 @@ class StringHelperTest extends PHPUnit_Framework_TestCase {
         self::assertEquals(StringHelper::return_bytes('10pv'), null);
         self::assertEquals(StringHelper::return_bytes('fdspv'), null);
     }
+
+    /**
+     * @covers common\helpers\StringHelper::camelcase_to_dash
+     */
+    public function test_camelcase_to_dash() {
+        self::assertEquals('starter/admin_panel', StringHelper::camelcase_to_dash('Starter/AdminPanel'));
+    }
 }

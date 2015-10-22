@@ -7,6 +7,8 @@ use common\interfaces\Model;
 
 class BaseModel implements Model {
 
+    protected $fields = [];
+
     /**
      * @param null|array $fields
      */

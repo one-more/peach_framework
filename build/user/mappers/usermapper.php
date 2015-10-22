@@ -57,7 +57,6 @@ class UserMapper extends BaseMapper {
      * @return bool
      */
     private function validate(array $fields, $old_fields = null) {
-        Application::init_validator();
         $validator = new LIVR([
             'login' => ['required', 'unique_login'],
             'password' => 'hash_password',
@@ -136,12 +135,17 @@ class UserMapper extends BaseMapper {
      * @return UserModel
      */
     public function find_by_id($id) {
-        return new UserModel($this->adapter->select()->where([
-            'id' => ['=', $id],
-            'and' => [
-                'deleted' => ['=', 0]
-            ]
-        ])->execute()->get_array());
+        return new UserModel(
+            $this->adapter
+                ->select()
+                ->where([
+                    'id' => ['=', $id],
+                    'and' => [
+                        'deleted' => ['=', 0]
+                    ]
+                ])->execute()
+                ->get_array()
+        );
     }
 
     /**
@@ -165,7 +169,7 @@ class UserMapper extends BaseMapper {
         $collection = new BaseCollection(UserModel::class);
         $collection->load(
             $this->adapter->select()
-                ->where(array_merge($where_statement, [
+                ->where(array_merge_recursive($where_statement, [
                     'and' => [
                         'deleted' => ['=', 0]
                     ]

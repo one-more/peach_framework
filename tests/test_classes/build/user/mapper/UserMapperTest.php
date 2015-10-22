@@ -16,7 +16,7 @@ class UserMapperTest extends PHPUnit_Framework_TestCase {
         /**
          * @var $user User
          */
-        $user = Application::get_class('User');
+        $user = Application::get_class(User::class);
         $this->mapper = $user->get_mapper();
     }
 
@@ -30,7 +30,7 @@ class UserMapperTest extends PHPUnit_Framework_TestCase {
     /**
      * @covers User\mappers\UserMapper::get_adapter
      */
-    public function get_adapter() {
+    public function test_get_adapter() {
         $method = new ReflectionMethod($this->mapper, 'get_adapter');
         $method->setAccessible(true);
         self::assertTrue($method->invoke($this->mapper) instanceof \common\adapters\MysqlAdapter);
@@ -38,6 +38,7 @@ class UserMapperTest extends PHPUnit_Framework_TestCase {
 
     /**
      * @covers User\mappers\UserMapper::save
+     * @covers User\mappers\UserMapper::validate
      */
     public function test_save() {
         $model = new \User\models\UserModel();
@@ -82,8 +83,14 @@ class UserMapperTest extends PHPUnit_Framework_TestCase {
         $exited_model = $this->mapper->find_where([
             'credentials' => ['=', User::credentials_user]
         ])->one();
+        $old_fields = $model->to_array();
         $model->login = $exited_model->login;
+        self::assertFalse($method->invoke($this->mapper, $model->to_array()), $old_fields);
         self::assertFalse($method->invoke($this->mapper, $model->to_array()));
+
+        $old_fields = $exited_model->to_array();
+        $exited_model->password = uniqid('', true);
+        self::assertTrue((bool)$method->invoke($this->mapper, $exited_model->to_array(), $old_fields));
     }
 
     /**
@@ -125,7 +132,16 @@ class UserMapperTest extends PHPUnit_Framework_TestCase {
      * @covers User\mappers\UserMapper::find_by_id
      */
     public function test_find_by_id() {
-        self::assertTrue($this->mapper->find_by_id(1)->id > 0);
+        $adapter = new \common\adapters\MysqlAdapter('users');
+        $id = $adapter
+            ->select(['id'])
+            ->where([
+                'deleted' => ['=', 0]
+            ])
+            ->limit(1)
+            ->execute()
+            ->get_result();
+        self::assertTrue($this->mapper->find_by_id($id)->id > 0);
     }
 
     /**

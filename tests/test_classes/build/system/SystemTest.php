@@ -18,6 +18,7 @@ class SystemTest extends PHPUnit_Framework_TestCase {
      * @covers System::__construct
      */
     public function test_construct() {
+        stream_wrapper_unregister('pfmextension');
         new System();
     }
 

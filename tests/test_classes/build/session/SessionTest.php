@@ -33,7 +33,7 @@ class SessionTest extends PHPUnit_Framework_TestCase {
      * @covers Session::__construct
      */
 	public function test_construct() {
-        self::assertInternalType('object', new Session());
+        new Session();
     }
 
 	/**

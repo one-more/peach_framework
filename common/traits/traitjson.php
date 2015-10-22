@@ -6,7 +6,7 @@ use common\helpers\ArrayHelper;
 
 trait TraitJSON {
 
-	public function array_to_json_string($array, $tabs = "\t") {
+	public function array_to_json_string(array $array, $tabs = "\t") {
 		$json_str   = "{\n";
 		$json_chunks    = [];
 		foreach($array as $k=>$el) {
@@ -25,16 +25,22 @@ trait TraitJSON {
 							return "\"{$value}\"";
 						}
 					}, $el);
-					$json_chunks[]  = "{$tabs}\"{$k}\"\t: [".implode(',', $el).']';
+					$json_chunks[] = "{$tabs}\"{$k}\"\t: [".implode(',', $el).']';
 				} else {
-					$json_chunks[]   = "{$tabs}\"{$k}\"\t: ".$this->array_to_json_string($el, $tabs."\t");
+					$json_chunks[] = "{$tabs}\"{$k}\"\t: ".$this->array_to_json_string($el, $tabs."\t");
 				}
-			} else {
-				$json_chunks[]   = "{$tabs}\"{$k}\"\t: \"{$el}\"";
+			} elseif(is_callable($el)) {
+                continue;
+            } elseif(is_object($el)) {
+				$json_chunks[] = "{$tabs}\"{$k}\"\t: ".$this->array_to_json_string((array)$el, $tabs."\t");
+			} elseif(is_resource($el)) {
+                continue;
+            } else {
+				$json_chunks[] = "{$tabs}\"{$k}\"\t: \"{$el}\"";
 			}
 		}
-		$json_str   .= implode(",\n", $json_chunks);
-		$json_str   .= "\n".preg_replace("/\t/",'',$tabs,1).'}';
+		$json_str .= implode(",\n", $json_chunks);
+		$json_str .= "\n".preg_replace("/\t/",'',$tabs,1).'}';
 		return $json_str;
 	}
 }

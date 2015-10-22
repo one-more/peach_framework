@@ -79,6 +79,8 @@ class Application {
 
 		FileSystemHelper::init_dirs();
 
+        LIVR::defaultAutoTrim(true);
+
         /**
          * @var $system \System
          */
@@ -90,7 +92,7 @@ class Application {
          */
         $configuration = Application::get_class(Configuration::class);
 		$current_lang = $configuration->language;
-		define('CURRENT_LANG', $current_lang);
+		defined('CURRENT_LANG') or define('CURRENT_LANG', $current_lang);
 	}
 
 	public static function start() {
@@ -125,9 +127,4 @@ class Application {
 			strpos($_SERVER['HTTP_HOST'], 'dev') !== false;
 		}
 	}
-
-	public static function init_validator() {
-        require_once ROOT_PATH.DS.'lib'.DS.'Validator'.DS.'autoload.php';
-        LIVR::defaultAutoTrim(true);
-    }
 }

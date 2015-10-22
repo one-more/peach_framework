@@ -20,8 +20,12 @@ class AutoLoader {
         $extension_build_dir = ROOT_PATH.DS.'build'.DS.$name;
 
         if(file_exists($extension_build_dir)) {
-            if(self::is_extension_changed($name) || !self::is_extension_built($name)) {
-                self::build_extension($name);
+            $check_is_changed = Application::is_dev() || defined('TESTS_ENV');
+            if($check_is_changed) {
+                $is_extension_changed = self::is_extension_changed($name) || !self::is_extension_built($name);
+                if($is_extension_changed) {
+                    self::build_extension($name);
+                }
             }
         }
 

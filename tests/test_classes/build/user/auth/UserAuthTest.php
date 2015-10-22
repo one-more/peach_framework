@@ -50,6 +50,14 @@ class UserAuthTest extends PHPUnit_Framework_TestCase {
 
         $model->password = uniqid('password', true);
         self::assertFalse($this->auth->login($model->login, $model->password));
+
+        $model = $mapper->find_where([
+            'remember_hash' => ['=', '']
+        ])->one();
+        $model->remember_hash = '';
+        $model->password = '';
+        $mapper->save($model);
+        self::assertTrue($this->auth->login($model->login, $model->password));
     }
 
     /**

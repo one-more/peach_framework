@@ -4,6 +4,7 @@ namespace Starter\routers;
 
 use common\classes\AjaxResponse;
 use common\classes\Application;
+use common\classes\Error;
 use common\classes\LanguageFile;
 use common\classes\Request;
 use common\classes\Router;
@@ -13,7 +14,7 @@ use User\models\UserModel;
 /**
  * Class ActionRouter
  * @package Starter\routers
- * @annotate AnnotationsDecorator
+ * @decorate AnnotationsDecorator
  */
 class ActionRouter extends Router {
 
@@ -24,7 +25,7 @@ class ActionRouter extends Router {
             '/action/user/add' => [$this, 'site_add_user'],
             '/action/user/edit' => [$this, 'site_edit_user'],
             '/action/user/delete' => [$this, 'site_delete_user'],
-            '/action/admin_panel/login' => [$this, 'login'],
+            '/action/admin_panel/login' => [$this, 'admin_panel_login'],
             '/action/admin_panel/user/add' => [$this, 'admin_panel_add_user'],
             '/action/admin_panel/user/edit' => [$this, 'admin_panel_edit_user'],
             '/action/admin_panel/user/delete' => [$this, 'admin_panel_delete_user']
@@ -33,10 +34,20 @@ class ActionRouter extends Router {
     }
 
     /**
+     * @throws \InvalidArgumentException
+     * @throws \ErrorException
+     */
+    public function admin_panel_login() {
+        $this->login($is_admin_panel = true);
+    }
+
+    /**
+     * @param bool $is_admin_panel
      * @requestMethod Ajax
      * @throws \InvalidArgumentException
+     * @throws \ErrorException
      */
-    public function login() {
+    public function login($is_admin_panel = false) {
         /**
          * @var $ext \User
          */
@@ -51,14 +62,14 @@ class ActionRouter extends Router {
         /**
          * @var $lang_vars \ArrayAccess
          */
-        $lang_vars = new LanguageFile('router'.DS.'router.json', $template->get_lang_path());
+        $lang_vars = new LanguageFile('routers'.DS.'router.json', $template->get_lang_path());
 
         $login = Request::get_var('login', 'string');
         $password = Request::get_var('password', 'string');
         $remember = Request::get_var('remember');
         if($auth->login($login, $password, $remember)) {
-            $user = $ext->get_identity();
-            if(\Starter::$current_router === AdminPanelRouter::class) {
+            if($is_admin_panel) {
+                $user = $ext->get_identity();
                 if($user->is_admin()) {
                     $this->response->status = 'success';
                 } else {
@@ -125,7 +136,7 @@ class ActionRouter extends Router {
             /**
              * @var $lang_vars \ArrayAccess
              */
-            $lang_vars = new LanguageFile('router'.DS.'router.json', $template->get_lang_path());
+            $lang_vars = new LanguageFile('routers'.DS.'router.json', $template->get_lang_path());
             $this->response->status = 'error';
             $this->response->errors = [$lang_vars['errors']['edit_user_error']];
         }
@@ -160,7 +171,7 @@ class ActionRouter extends Router {
             /**
              * @var $lang_vars \ArrayAccess
              */
-            $lang_vars = new LanguageFile('router'.DS.'router.json', $template->get_lang_path());
+            $lang_vars = new LanguageFile('routers'.DS.'router.json', $template->get_lang_path());
             $this->response->status = 'error';
             $this->response->errors = [$lang_vars['errors']['delete_user_error']];
         }
@@ -190,7 +201,7 @@ class ActionRouter extends Router {
         /**
          * @var $lang_vars \ArrayAccess
          */
-        $lang_vars = new LanguageFile('router'.DS.'router.json', $template->get_lang_path());
+        $lang_vars = new LanguageFile('routers'.DS.'router.json', $template->get_lang_path());
         $this->response->message = $lang_vars['messages']['user_deleted'];
     }
 
@@ -214,7 +225,7 @@ class ActionRouter extends Router {
             /**
              * @var $lang_vars \ArrayAccess
              */
-            $lang_vars = new LanguageFile('router'.DS.'router.json', $template->get_lang_path());
+            $lang_vars = new LanguageFile('routers'.DS.'router.json', $template->get_lang_path());
             if(Request::get_var('id', 'int')) {
                 $this->response->message = $lang_vars['messages']['user_edited'];
             } else {

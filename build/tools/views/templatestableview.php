@@ -25,17 +25,19 @@ class TemplatesTableView extends ExtensionView {
 	}
 
 	public function render() {
-		/**
-		 * @var $mapper \Tools\mappers\TemplatesMapper
-		 */
-        $mapper = Application::get_class(TemplatesMapper::class);
-		$templates = $mapper->get_page();
-		$this->assign('templates_list', $templates);
+		$this->assign($this->get_data());
 		return $this->get_template($this->template_name);
 	}
 
 	public function get_data() {
-		return [];
+        /**
+         * @var $mapper \Tools\mappers\TemplatesMapper
+         */
+        $mapper = Application::get_class(TemplatesMapper::class);
+        $templates = $mapper->get_page();
+        return [
+			'templates_list' => $templates->to_array()
+		];
 	}
 
 	public function get_template_name() {

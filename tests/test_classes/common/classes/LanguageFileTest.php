@@ -22,9 +22,11 @@ class LanguageFileTest extends PHPUnit_Framework_TestCase {
 
     /**
      * @covers common\classes\LanguageFile::__construct
+     * @expectedException InvalidArgumentException
      */
     public function test_construct() {
         new LanguageFile($this->file, $this->base_path);
+        new LanguageFile('not_existed_file');
     }
 
     /**

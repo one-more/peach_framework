@@ -24,6 +24,15 @@ class UserTest extends PHPUnit_Framework_TestCase {
      * @covers User::get_identity
      */
     public function test_get_identity() {
+        if(!empty($_COOKIE['user'])) {
+            unset($_COOKIE['user']);
+        }
+        /**
+         * @var $session Session
+         */
+        $session = Application::get_class(Session::class);
+        $session->unset_var('user');
+
         $identity = $this->user->get_identity();
         self::assertTrue($identity->is_guest());
 

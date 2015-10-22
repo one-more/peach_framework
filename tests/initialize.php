@@ -11,7 +11,7 @@ require_once '../resource/defines.php';
 require_once ROOT_PATH.DS.'common'.DS.'classes'.DS.'application.php';
 require_once ROOT_PATH.DS.'common'.DS.'traits'.DS.'traitjson.php';
 require_once ROOT_PATH.DS.'lib'.DS.'Smarty'.DS.'Smarty.class.php';
-require_once ROOT_PATH.DS.'lib'.DS.'vendor'.DS.'autoload.php';
+require_once ROOT_PATH.DS.'lib'.DS.'Validator'.DS.'autoload.php';
 
 class JSON {
     use common\traits\TraitJSON;
@@ -80,10 +80,14 @@ class TestsEnv {
 
         $roles = [
             User::credentials_admin,
+            User::credentials_admin,
+            User::credentials_admin,
             User::credentials_user,
             User::credentials_user,
             User::credentials_user,
-            User::credentials_admin
+            User::credentials_super_admin,
+            User::credentials_super_admin,
+            User::credentials_super_admin,
         ];
 
         /**
@@ -91,7 +95,7 @@ class TestsEnv {
          */
         $user = Application::get_class(User::class);
         $mapper = $user->get_mapper();
-        for($i=0; $i<5; $i++) {
+        for($i=0; $i<9; $i++) {
             $mapper->save(new \User\models\UserModel([
                 'login' => uniqid('test', true),
                 'credentials' => $roles[$i]

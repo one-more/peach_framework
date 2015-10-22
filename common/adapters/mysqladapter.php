@@ -130,8 +130,10 @@ class MysqlAdapter {
         foreach($conditions as $col_name=>$condition) {
             $col_name = strtolower($col_name);
             if($col_name === 'or' || $col_name === 'and') {
-                $this->query .= ' '.$col_name;
-                $this->parse_conditions($condition);
+                foreach($condition as $sub_col_name => $sub_condition) {
+                    $this->query .= ' '.$col_name;
+                    $this->parse_conditions([$sub_col_name => $sub_condition]);
+                }
             } else {
                 $this->query .= ' '.$col_name.' '.$condition[0];
                 if(isset($condition[2]) && !$condition[2]) {

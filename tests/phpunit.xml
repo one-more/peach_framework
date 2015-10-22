@@ -4,7 +4,7 @@
             <directory>test_classes</directory>
         </testsuite>
         <testsuite name="classes">
-            <directory>test_classes/class</directory>
+            <directory>test_classes/common</directory>
         </testsuite>
 
         <testsuite name="SessionExtension">
@@ -41,6 +41,7 @@
                 <directory suffix=".php">../interface</directory>
                 <directory suffix=".php">../exception</directory>
                 <directory suffix=".php">../www</directory>
+                <directory suffix=".php">../templates/starter/templates_c</directory>
             </exclude>
         </whitelist>
     </filter>

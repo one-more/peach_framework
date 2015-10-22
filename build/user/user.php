@@ -39,14 +39,16 @@ class User implements \common\interfaces\Extension {
             $remember_hash = $session->get_var('user');
         }
 
-        /**
-         * @var $mapper \User\mappers\UserMapper
-         */
-        $mapper = Application::get_class(UserMapper::class);
-        $collection = $mapper->find_where([
-            'remember_hash' => ['=', $remember_hash]
-        ]);
-        if($collection->count()) {
+        if(trim($remember_hash)) {
+            /**
+             * @var $mapper \User\mappers\UserMapper
+             */
+            $mapper = Application::get_class(UserMapper::class);
+            $collection = $mapper->find_where([
+                'remember_hash' => ['=', $remember_hash]
+            ]);
+        }
+        if(!empty($collection) && $collection->count()) {
             return $collection->one();
         } else {
             return new \User\models\UserModel();

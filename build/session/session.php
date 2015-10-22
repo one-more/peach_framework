@@ -18,6 +18,9 @@ class Session implements \common\interfaces\Extension {
 	public function __construct() {
         $this->register_autoload();
         $this->mapper = \common\classes\Application::get_class(SessionMapper::class);
+        if($this->get_id()) {
+            $this->model = $this->mapper->find_by_id($this->get_id());
+        }
 	}
 
     /**
@@ -33,12 +36,8 @@ class Session implements \common\interfaces\Extension {
             $this->mapper->save($this->model);
             setcookie('pfm_session_id', $this->model->id, null, '/');
             return $_COOKIE['pfm_session_id'] = $this->model->id;
-        } else {
-            if(!$this->model) {
-                $this->model = $this->mapper->find_by_id($this->get_id());
-            }
-            return $this->get_id();
         }
+        return $this->get_id();
     }
 
     /**

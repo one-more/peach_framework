@@ -32,7 +32,7 @@ trait TraitExtension {
             $parts = array_map('strtolower', $parts);
             $file = 'pfmextension://'.implode(DS, $parts).DS.$class_name;
 
-            if(file_exists($file)) {
+            if(is_file($file)) {
                 require_once $file;
                 return true;
             } else {

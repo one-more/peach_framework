@@ -16,7 +16,9 @@ class AnnotationDecorated {}
  *
  * @dumbAnnotation
  */
-class NotDecorated {}
+class DumbDecorated {}
+
+class NotDecorated {};
 
 use common\classes\PFMExtensionWrapper;
 
@@ -62,6 +64,10 @@ class ApplicationTest extends PHPUnit_Framework_TestCase {
 		$obj = new NotDecorated();
         $annotations = ReflectionHelper::get_class_annotations($obj);
         self::assertTrue($method->invoke(null, $obj, $annotations) instanceof NotDecorated);
+
+        $obj = new DumbDecorated();
+        $annotations = ReflectionHelper::get_class_annotations($obj);
+        self::assertTrue($method->invoke(null, $obj, $annotations) instanceof DumbDecorated);
     }
 
 	/**
@@ -89,11 +95,4 @@ class ApplicationTest extends PHPUnit_Framework_TestCase {
 		$_SERVER['HTTP_HOST'] = 'dev.pfm.my';
 		self::assertTrue(Application::is_dev());
 	}
-
-    /**
-     * @covers common\classes\Application::init_validator
-     */
-    public function test_init_validator() {
-        Application::init_validator();
-    }
 }
