@@ -34,7 +34,7 @@ class Request {
 	public static function uri() {
 		$uri = empty($_SERVER['REQUEST_URI']) ? '' : $_SERVER['REQUEST_URI'];
 		$result = explode('?', $uri)[0];
-		if(substr($result, -1) === '/') {
+		if(substr($result, -1) === '/' && strlen($result) > 1) {
             $result = substr($result, 0, -1);
         }
         return $result;

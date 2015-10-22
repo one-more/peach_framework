@@ -38,4 +38,20 @@ class TopMenuViewTest extends PHPUnit_Framework_TestCase {
         $this->view->render();
         self::assertNull(error_get_last());
     }
+
+    /**
+     * @covers \Tools\views\TopMenuView::get_data
+     */
+    public function test_get_data() {
+        $this->view->get_data();
+        self::assertNull(error_get_last());
+    }
+
+    /**
+     * @covers \Tools\views\TopMenuView::get_template_name
+     */
+    public function test_get_template_name() {
+        $this->view->get_template_name();
+        self::assertNull(error_get_last());
+    }
 }

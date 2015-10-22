@@ -30,4 +30,11 @@ class TemplatesMapperTest extends PHPUnit_Framework_TestCase {
     public function test_get_page() {
         self::assertTrue($this->mapper->get_page()->count() > 0);
     }
+
+    /**
+     * @covers \Tools\mappers\TemplatesMapper::get_active
+     */
+    public function test_get_active() {
+        self::assertTrue($this->mapper->get_active() instanceof \Tools\models\TemplateModel);
+    }
 }

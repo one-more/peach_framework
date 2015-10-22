@@ -21,4 +21,11 @@ class ToolsTest extends \PHPUnit_Framework_TestCase {
     public function test_construct() {
         new Tools();
     }
+
+    /**
+     * @covers Tools::get_templates_mapper
+     */
+    public function test_get_templates_mapper() {
+        self::assertTrue($this->tools_obj->get_templates_mapper() instanceof \Tools\mappers\TemplatesMapper);
+    }
 }

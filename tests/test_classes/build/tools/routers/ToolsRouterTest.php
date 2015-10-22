@@ -37,4 +37,16 @@ class ToolsRouterTest extends PHPUnit_Framework_TestCase {
     public function test_index() {
         $this->router->index();
     }
+
+    /**
+     * @covers Tools\routers\ToolsRouter::show_result
+     */
+    public function test_show_result() {
+        $method = new ReflectionMethod($this->router, 'show_result');
+        $method->setAccessible(true);
+        ob_start();
+        $method->invoke($this->router);
+        ob_end_clean();
+        self::assertNull(error_get_last());
+    }
 }

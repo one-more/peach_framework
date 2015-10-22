@@ -96,6 +96,7 @@ class ActionRouterTest extends \PHPUnit_Framework_TestCase {
 
     /**
      * @covers Starter\routers\ActionRouter::site_add_user
+     * @covers Starter\routers\ActionRouter::save_user
      */
     public function test_site_add_user() {
         $this->router->site_add_user();
@@ -103,6 +104,7 @@ class ActionRouterTest extends \PHPUnit_Framework_TestCase {
 
     /**
      * @covers Starter\routers\ActionRouter::admin_panel_add_user
+     * @covers Starter\routers\ActionRouter::save_user
      */
     public function test_admin_panel_add_user() {
         /**
@@ -125,6 +127,7 @@ class ActionRouterTest extends \PHPUnit_Framework_TestCase {
 
     /**
      * @covers Starter\routers\ActionRouter::site_edit_user
+     * @covers Starter\routers\ActionRouter::save_user
      */
     public function test_site_edit_user() {
         /**
@@ -150,6 +153,7 @@ class ActionRouterTest extends \PHPUnit_Framework_TestCase {
 
     /**
      * @covers Starter\routers\ActionRouter::admin_panel_edit_user
+     * @covers Starter\routers\ActionRouter::save_user
      */
     public function test_admin_panel_edit_user() {
         /**
@@ -240,6 +244,22 @@ class ActionRouterTest extends \PHPUnit_Framework_TestCase {
 
         self::assertTrue($this->router->response->status == 'error');
 
+        $_REQUEST['login'] = uniqid('test', true);
+        $method->invoke($this->router);
+        self::assertTrue($this->router->response->status == 'success');
+
+        /**
+         * @var $user \User
+         */
+        $user = Application::get_class(\User::class);
+        $mapper = $user->get_mapper();
+        /**
+         * @var $model UserModel
+         */
+        $model = $mapper->find_where([
+            'remember_hash' => ['!=', '']
+        ])->one();
+        $_REQUEST['id'] = $model->id;
         $_REQUEST['login'] = uniqid('test', true);
         $method->invoke($this->router);
         self::assertTrue($this->router->response->status == 'success');

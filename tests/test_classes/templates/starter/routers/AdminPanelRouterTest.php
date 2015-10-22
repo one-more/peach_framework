@@ -27,10 +27,25 @@ class AdminPanelRouterTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
+     * @covers \Starter\routers\AdminPanelRouter::__construct
+     */
+    public function test_construct() {
+        new SilentAdminPanelRouter();
+    }
+
+    /**
      * @covers \Starter\routers\AdminPanelRouter::index
      */
     public function test_index() {
         $this->router->index();
+        self::assertNull(error_get_last());
+    }
+
+    /**
+     * @covers \Starter\routers\AdminPanelRouter::login
+     */
+    public function test_login() {
+        $this->router->login();
         self::assertNull(error_get_last());
     }
 

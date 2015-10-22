@@ -41,7 +41,7 @@ trait TraitStarterRouter {
 		if($callback !== false) {
 			$check = true;
 			if(count($callback) === 3) {
-				$check = (array_pop($callback) === 'check');
+				$check = (array_pop($callback) == 'check');
 			}
 			if($check && !Request::is_token_valid()) {
 			    throw new \InvalidTokenException('invalid token');
