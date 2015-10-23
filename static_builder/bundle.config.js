@@ -29,11 +29,8 @@ var vendor_js = [
     './src/vendor/jquery-2.1.3.js',
     './src/vendor/underscore.js',
     './src/vendor/backbone.js',
-    './src/vendor/modernizr.custom.js',
-    './src/vendor/classie.js',
     './src/vendor/bootstrap/bootstrap.js',
     './src/vendor/crypto/md5.js',
-    './src/vendor/es6-shim.js',
     './src/vendor/smart.core.min.js'
 ];
 
@@ -75,6 +72,9 @@ module.exports = {
         },
         "admin_panel": {
             scripts: [
+                './src/vendor/notification/modernizr-custom-3.1.0.js',
+                './src/vendor/notification/classie.js',
+                './src/vendor/notification/notificationFx.js',
                 './src/global/js/**/*.js',
                 './src/admin_panel/js/**/*.js'
             ],
