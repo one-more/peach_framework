@@ -197,17 +197,22 @@ class MysqlAdapter {
     }
 
     public function execute($sql = null) {
-        if($sql) {
-            $this->statement = $this->db->query($sql);
-        } else {
-            $sth = $this->db->prepare($this->query);
-            $i = 1;
-            foreach($this->bind_values as $value) {
-                $sth->bindValue($i++, $value);
+        try {
+            if($sql) {
+                $this->statement = $this->db->query($sql);
+            } else {
+                $sth = $this->db->prepare($this->query);
+                $i = 1;
+                foreach($this->bind_values as $value) {
+                    $sth->bindValue($i++, $value);
+                }
+                $sth->execute();
+                $this->statement = $sth;
+                $this->bind_values = [];
             }
-            $sth->execute();
-            $this->statement = $sth;
-            $this->bind_values = [];
+        } catch (\PDOException $e) {
+            Error::log($e->getMessage());
+            Error::log($this->query);
         }
         return $this;
     }
