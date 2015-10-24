@@ -51,7 +51,7 @@
     Object.defineProperty(App, 'register_events', {
         value: function () {
             $(document).on('click', 'a[href]:not(.link--external)', function(e) {
-                let href = this.href;
+                let href = this.getAttribute('href');
                 let navigate = href.indexOf('http') == -1
                     && href.indexOf('www') == -1
                     && href.indexOf('javascript') == -1;
