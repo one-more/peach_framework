@@ -8,7 +8,6 @@ use common\traits\TraitConfiguration;
 use common\classes\Configuration;
 
 class MysqlAdapter {
-    use TraitConfiguration;
 
     /**
      * @var $db \PDO
@@ -60,6 +59,15 @@ class MysqlAdapter {
         }
         $this->query = 'SELECT '.$fields.' FROM';
         $this->query .= ' '.$this->table_name;
+        return $this;
+    }
+
+    /**
+     * @param $alias
+     * @return $this
+     */
+    public function alias($alias) {
+        $this->query .= " AS {$alias}";
         return $this;
     }
 
