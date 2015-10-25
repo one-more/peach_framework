@@ -14,7 +14,8 @@ class UsersTableView extends TemplateView {
 		parent::__construct();
 
         $path = $this->template->get_path();
-		$this->setTemplateDir($path.DS.'templates'.DS.'admin_panel'.DS.'users_table');
+		$this->setTemplateDir($path.DS.'templates'.DS.'admin_panel'.DS.'users');
+		$this->addTemplateDir($path.DS.'templates'.DS.'admin_panel'.DS.'common');
         $this->page = $page;
 	}
 
@@ -32,22 +33,18 @@ class UsersTableView extends TemplateView {
         $mapper = $ext->get_mapper();
         $users = $mapper->get_page($this->page)->to_array();
         $is_super_admin = $user->is_super_admin();
+        $template_dir = $this->getTemplateDir(1);
 
         return [
             'users' => $users,
             'my_id' => $user->id,
             'is_super_admin' => $is_super_admin,
-            'paging_model' => $mapper->get_paging($this->page)->to_array()
+            'paging_model' => $mapper->get_paging($this->page)->to_array(),
+            'base_url' => '/admin_panel/users',
+            'inclusions' => [
+                'pagination.tpl.html' => file_get_contents($template_dir.DS.'pagination.tpl.html')
+            ]
         ];
-    }
-
-    public function get_template_model() {
-        $template_dir = $this->getTemplateDir(0);
-        $model = parent::get_template_model();
-        $model->data['inclusions'] = [
-            'pagination.tpl.html' => file_get_contents($template_dir.DS.'pagination.tpl.html')
-        ];
-        return $model;
     }
 
     public function get_template_name() {

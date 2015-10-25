@@ -15,7 +15,7 @@ class EditUserView extends TemplateView {
 		parent::__construct();
 
 		$path = $this->template->get_path();
-		$this->setTemplateDir($path.DS.'templates'.DS.'admin_panel'.DS.'edit_user');
+		$this->setTemplateDir($path.DS.'templates'.DS.'admin_panel'.DS.'users');
 	}
 
 	public function render() {
