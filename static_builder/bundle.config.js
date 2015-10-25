@@ -31,12 +31,14 @@ var vendor_js = [
     './src/vendor/backbone.js',
     './src/vendor/bootstrap/bootstrap.js',
     './src/vendor/crypto/md5.js',
+    './src/vendor/pace/pace.min.js',
     './src/vendor/smart.core.min.js'
 ];
 
 var vendor_css = [
     './src/vendor/bootstrap/bootstrap.css',
     './src/vendor/bootstrap/bootstrap-theme.css',
+    './src/vendor/pace/pace.css',
     './src/vendor/icomoon.css'
 ];
 
