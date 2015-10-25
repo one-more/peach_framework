@@ -4,6 +4,7 @@ namespace Starter\routers;
 
 use common\classes\Application;
 use common\classes\GetResponse;
+use common\classes\PageTitle;
 use common\classes\Request;
 use common\classes\Response;
 use common\interfaces\Template;
@@ -73,6 +74,7 @@ trait TraitStarterRouter {
         }
         $smarty->setCompileDir($template->get_path().DS.'templates_c');
         $smarty->assign($response->blocks);
+        $smarty->assign('title', new PageTitle());
         echo $smarty->getTemplate('index'.DS.'index.tpl.html');
 	}
 }
