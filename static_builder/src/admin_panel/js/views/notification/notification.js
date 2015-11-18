@@ -26,7 +26,7 @@
                 ns_box.remove();
             }
             new NotificationFx({
-                message : span.outerHTML+'<p>'+msg+'</p>',
+                message : `${span.outerHTML}<p>${msg}</p>`,
                 layout : 'bar',
                 effect : 'slidetop',
                 type : type

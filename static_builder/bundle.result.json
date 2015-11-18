@@ -5,7 +5,7 @@
   },
   "tools": {
     "styles": "<link href='/static/tools-a6f3f01868.css' media='all' rel='stylesheet' type='text/css'/>",
-    "scripts": "<script src='/static/tools-1cd7012ce6.js' type='text/javascript'></script>"
+    "scripts": "<script src='/static/tools-4fd3c4f583.js' type='text/javascript'></script>"
   },
   "vendor": {
     "styles": "<link href='/static/vendor-90f1c1b175.css' media='all' rel='stylesheet' type='text/css'/>",
@@ -13,6 +13,6 @@
   },
   "admin_panel": {
     "styles": "<link href='/static/admin_panel-a99b3d2d7a.css' media='all' rel='stylesheet' type='text/css'/>",
-    "scripts": "<script src='/static/admin_panel-5436c25d99.js' type='text/javascript'></script>"
+    "scripts": "<script src='/static/admin_panel-854620470c.js' type='text/javascript'></script>"
   }
 }

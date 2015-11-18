@@ -23,4 +23,14 @@ interface View {
     public function get_template_name();
 
     public function get_data();
+
+    public function set_compile_dir($path);
+
+    public function set_template_dir($path);
+
+    public function add_template_dir($path);
+
+    public function get_template_dir($index);
+
+    public function assign($name,  $val = null, $no_cache = false);
 }

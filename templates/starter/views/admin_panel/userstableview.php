@@ -2,7 +2,7 @@
 namespace Starter\views\AdminPanel;
 
 use common\classes\Application;
-use common\models\TemplateViewModel;
+use common\classes\Error;
 use common\views\TemplateView;
 
 class UsersTableView extends TemplateView {
@@ -14,8 +14,8 @@ class UsersTableView extends TemplateView {
 		parent::__construct();
 
         $path = $this->template->get_path();
-		$this->setTemplateDir($path.DS.'templates'.DS.'admin_panel'.DS.'users');
-		$this->addTemplateDir($path.DS.'templates'.DS.'admin_panel'.DS.'common');
+		$this->set_template_dir($path.DS.'templates'.DS.'admin_panel'.DS.'users');
+		$this->add_template_dir($path.DS.'templates'.DS.'admin_panel'.DS.'common');
         $this->page = $page;
 	}
 
@@ -33,7 +33,7 @@ class UsersTableView extends TemplateView {
         $mapper = $ext->get_mapper();
         $users = $mapper->get_page($this->page)->to_array();
         $is_super_admin = $user->is_super_admin();
-        $template_dir = $this->getTemplateDir(1);
+        $template_dir = $this->get_template_dir($index = 1);
 
         return [
             'users' => $users,

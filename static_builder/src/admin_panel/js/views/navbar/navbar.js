@@ -1,7 +1,7 @@
 _.defer(() => {
     'use strict';
 
-    window.NavbarView = Backbone.View.extend(BaseView.extend({
+    window.NavbarView = BaseView.extend({
         tagName: 'div',
 
         name: 'NavbarView',
@@ -16,5 +16,5 @@ _.defer(() => {
                     Router.go_to(target.data('redirect'));
                 });
         }
-    }));
+    });
 });

@@ -4,11 +4,8 @@ namespace common\views;
 
 use common\classes\Application;
 use common\interfaces\Template;
-use common\interfaces\View;
-use common\traits\TraitView;
 
-abstract class TemplateView extends \Smarty implements View {
-    use TraitView;
+abstract class TemplateView extends BaseView {
 
     /**
      * @var $template Template
@@ -16,21 +13,14 @@ abstract class TemplateView extends \Smarty implements View {
 	protected $template;
 
 	public function __construct() {
-		parent::__construct();
-
         /**
 		 * @var $system \System
 		 */
 		$system = Application::get_class(\System::class);
 		$template = $this->template = $system->template;
 		$compile_dir = $template->get_path().DS.'templates_c';
-		$this->setCompileDir($compile_dir);
+		$this->set_compile_dir($compile_dir);
 	}
-
-    /**
-     * @return string
-     */
-	abstract public function render();
 
     /**
      * @return null
