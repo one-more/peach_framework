@@ -1,14 +1,20 @@
 {
-	"error_block_class"	: "peach-framework-error",
-	"warning_block_class"	: "peach-framework-warning",
-	"info_block_class"	: "peach-framework-info",
-	"show_errors"	: "1",
-	"use_db"	: "1",
 	"db_params"	: {
-		"name"	: "peach_framework",
-		"login"	: "peach_framework",
-		"password"	: "1234"
+		"production"	: {
+			"db_name"	: "peach_framework",
+			"db_user"	: "peach_framework",
+			"db_password"	: "1234"
+		},
+		"development"	: {
+			"db_name"	: "peach_framework",
+			"db_user"	: "peach_framework",
+			"db_password"	: "1234"
+		},
+		"tests"	: {
+			"db_name"	: "peach_framework_tests",
+			"db_user"	: "peach_framework",
+			"db_password"	: "1234"
+		}
 	},
-	"template"	: "Starter",
 	"language"	: "RU"
 }

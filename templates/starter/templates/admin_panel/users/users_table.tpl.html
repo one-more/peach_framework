@@ -1,0 +1,41 @@
+<div class="users">
+    {if $is_super_admin}
+    <a class="btn btn-primary" href="/admin_panel/add_user">{$lang_vars.add_user}</a>
+    {/if}
+    <table class="table table-striped users__table">
+        <thead>
+        <tr>
+            <th>id</th>
+            <th>{$lang_vars.login}</th>
+            <th>{$lang_vars.credentials}</th>
+            <th></th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {foreach $users as $user}
+        <tr>
+            <td>{$user.id}</td>
+            <td>{$user.login}</td>
+            <td>{$lang_vars.credentials_labels[$user.credentials]}</td>
+            <td width="30">
+                {if $is_super_admin}
+                <a href="/admin_panel/edit_user/{$user.id}">{$lang_vars.edit}</a>
+                {/if}
+            </td>
+            <td width="15">
+                {if $is_super_admin}
+                <a data-param="{$user.id}"
+                   data-message="{$lang_vars.confirm_delete}"
+                   data-action="/action/admin_panel/user/delete"
+                   class="link link--pseudo users__delete">{$lang_vars.delete}</a>
+                {/if}
+            </td>
+        </tr>
+        {/foreach}
+        </tbody>
+    </table>
+    {if $paging_model.pages > 1}
+        {include file='pagination.tpl.html'}
+    {/if}
+</div>

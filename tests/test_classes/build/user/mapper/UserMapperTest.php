@@ -1,18 +1,14 @@
 <?php
-require_once ROOT_PATH.DS.'build'.DS.'user'.DS.'mapper'.DS.'usermapper.php';
 
+use common\classes\Application;
 /**
  * Class UserMapperTest
  *
- * @method bool assertTrue($condition)
- * @method bool assertFalse($condition)
- * @method bool assertNull($var)
- * @method bool assertCount($count, $array)
  */
 class UserMapperTest extends PHPUnit_Framework_TestCase {
 
     /**
-     * @var $mapper \User\Mapper\UserMapper
+     * @var $mapper \User\mappers\UserMapper
      */
     private $mapper;
 
@@ -20,97 +16,105 @@ class UserMapperTest extends PHPUnit_Framework_TestCase {
         /**
          * @var $user User
          */
-        $user = Application::get_class('User');
+        $user = Application::get_class(User::class);
         $this->mapper = $user->get_mapper();
     }
 
     /**
-     * @covers User\Mapper\UserMapper::__construct
+     * @covers User\mappers\UserMapper::__construct
      */
     public function test_construct() {
-        new \User\Mapper\UserMapper();
+        new \User\mappers\UserMapper();
     }
 
     /**
-     * @covers User\Mapper\UserMapper::get_adapter
+     * @covers User\mappers\UserMapper::get_adapter
      */
-    public function get_adapter() {
+    public function test_get_adapter() {
         $method = new ReflectionMethod($this->mapper, 'get_adapter');
         $method->setAccessible(true);
-        $this->assertTrue($method->invoke($this->mapper) instanceof MysqlAdapter);
+        self::assertTrue($method->invoke($this->mapper) instanceof \common\adapters\MysqlAdapter);
     }
 
     /**
-     * @covers User\Mapper\UserMapper::save
+     * @covers User\mappers\UserMapper::save
+     * @covers User\mappers\UserMapper::validate
      */
     public function test_save() {
-        $model = new \User\model\UserModel();
-        $this->assertFalse($this->mapper->save($model));
+        $model = new \User\models\UserModel();
+        self::assertFalse($this->mapper->save($model));
 
         $model->login = uniqid('test', true);
-        $this->assertTrue($this->mapper->save($model));
+        $model->password = str_pad('', 6, mt_rand(1, 300));
+        self::assertTrue($this->mapper->save($model));
 
         $model->login = uniqid('test', true);
-        $this->assertTrue($this->mapper->save($model));
+        self::assertTrue($this->mapper->save($model));
 
         /**
-         * @var $exited_model \User\model\UserModel
+         * @var $exited_model \User\models\UserModel
          */
         $exited_model = $this->mapper->find_where([
             'credentials' => ['=', User::credentials_user]
         ])->one();
         $model->login = $exited_model->login;
-        $this->assertFalse($this->mapper->save($model));
+        self::assertFalse($this->mapper->save($model));
     }
 
     /**
-     * @covers User\Mapper\UserMapper::validate
+     * @covers User\mappers\UserMapper::validate
      */
     public function test_validate() {
         $method = new  ReflectionMethod($this->mapper, 'validate');
         $method->setAccessible(true);
 
-        $model = new \User\model\UserModel();
-        $this->assertFalse($method->invoke($this->mapper, $model->to_array()));
+        $model = new \User\models\UserModel();
+        self::assertFalse($method->invoke($this->mapper, $model->to_array()));
 
         $model->login = uniqid('test', true);
-        $this->assertTrue((bool)$method->invoke($this->mapper, $model->to_array()));
+        self::assertTrue((bool)$method->invoke($this->mapper, $model->to_array()));
 
         $model->login = uniqid('test', true);
-        $this->assertTrue((bool)$method->invoke($this->mapper, $model->to_array()));
+        self::assertTrue((bool)$method->invoke($this->mapper, $model->to_array()));
 
         /**
-         * @var $exited_model \User\model\UserModel
+         * @var $exited_model \User\models\UserModel
          */
         $exited_model = $this->mapper->find_where([
             'credentials' => ['=', User::credentials_user]
         ])->one();
+        $old_fields = $model->to_array();
         $model->login = $exited_model->login;
-        $this->assertFalse($method->invoke($this->mapper, $model->to_array()));
+        self::assertFalse($method->invoke($this->mapper, $model->to_array()), $old_fields);
+        self::assertFalse($method->invoke($this->mapper, $model->to_array()));
+
+        $old_fields = $exited_model->to_array();
+        $exited_model->password = uniqid('', true);
+        self::assertTrue((bool)$method->invoke($this->mapper, $exited_model->to_array(), $old_fields));
     }
 
     /**
-     * @covers User\Mapper\UserMapper::insert
+     * @covers User\mappers\UserMapper::insert
      */
     public function test_insert() {
-        $model = new \User\model\UserModel();
+        $model = new \User\models\UserModel();
         $model->login = uniqid('test', true);
 
         $method = new ReflectionMethod($this->mapper, 'insert');
         $method->setAccessible(true);
         $method->invoke($this->mapper, $model->to_array());
 
-        $this->assertTrue($this->mapper->find_where([
+        self::assertTrue($this->mapper->find_where([
                 'login' => ['=', $model->login]
             ])->one()->get_id() > 0);
     }
 
     /**
-     * @covers User\Mapper\UserMapper::update
+     * @covers User\mappers\UserMapper::update
      */
     public function test_update() {
         /**
-         * @var $model \User\model\UserModel
+         * @var $model \User\models\UserModel
          */
         $model = $this->mapper->find_where([
             'credentials' => ['=', User::credentials_user]
@@ -121,50 +125,66 @@ class UserMapperTest extends PHPUnit_Framework_TestCase {
         $method->setAccessible(true);
         $method->invoke($this->mapper, $model->to_array(), $model->id);
 
-        $this->assertTrue($this->mapper->find_where(['login' => ['=', $model->login]])->one()->get_id() > 0);
+        self::assertTrue($this->mapper->find_where(['login' => ['=', $model->login]])->one()->get_id() > 0);
     }
 
     /**
-     * @covers User\Mapper\UserMapper::find_by_id
+     * @covers User\mappers\UserMapper::find_by_id
      */
     public function test_find_by_id() {
-        $this->assertTrue($this->mapper->find_by_id(1)->id > 0);
+        $adapter = new \common\adapters\MysqlAdapter('users');
+        $id = $adapter
+            ->select(['id'])
+            ->where([
+                'deleted' => ['=', 0]
+            ])
+            ->limit(1)
+            ->execute()
+            ->get_result();
+        self::assertTrue($this->mapper->find_by_id($id)->id > 0);
     }
 
     /**
-     * @covers User\Mapper\UserMapper::find_by_sql
+     * @covers User\mappers\UserMapper::find_by_sql
      */
     public function test_find_by_sql() {
         $sql = 'SELECT * FROM users WHERE deleted = 0 ORDER BY id DESC LIMIT 1';
-        $this->assertTrue($this->mapper->find_by_sql($sql)->one()->get_id() > 0);
+        self::assertTrue($this->mapper->find_by_sql($sql)->one()->get_id() > 0);
     }
 
     /**
-     * @covers User\Mapper\UserMapper::find_where
+     * @covers User\mappers\UserMapper::find_where
      */
     public function test_find_where() {
-        $this->assertTrue($this->mapper->find_where([
+        self::assertTrue($this->mapper->find_where([
                 'credentials' => ['=', User::credentials_user]
             ])->one()->get_id() > 0);
     }
 
     /**
-     * @covers User\Mapper\UserMapper::delete
+     * @covers User\mappers\UserMapper::delete
      */
     public function test_delete() {
         $sql = 'SELECT * FROM users WHERE deleted = 0 ORDER BY id DESC LIMIT 1';
         /**
-         * @var $model \User\model\UserModel
+         * @var $model \User\models\UserModel
          */
         $model = $this->mapper->find_by_sql($sql)->one();
         $this->mapper->delete($model);
-        $this->assertFalse($this->mapper->find_by_id($model->id)->id > 0);
+        self::assertFalse($this->mapper->find_by_id($model->id)->id > 0);
     }
 
     /**
-     * @covers User\Mapper\UserMapper::get_page
+     * @covers User\mappers\UserMapper::get_page
      */
     public function test_get_page() {
-        $this->assertCount(5, $this->mapper->get_page(1, 5));
+        self::assertCount(5, $this->mapper->get_page(1, 5));
+    }
+
+    /**
+     * @covers User\mappers\UserMapper::get_paging
+     */
+    public function test_get_paging() {
+        self::assertTrue($this->mapper->get_paging() instanceof \common\models\PagingModel);
     }
 }

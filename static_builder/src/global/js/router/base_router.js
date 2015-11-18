@@ -7,6 +7,8 @@
             this.init_views();
         },
 
+        init_views: () => {},
+
         current: function() {
             var Router = this,
                 fragment = location.pathname.slice(1),
@@ -59,7 +61,7 @@
         },
 
         extend: function (obj) {
-            return $.extend(true, this, obj);
+            return $.extend(true, {}, this, obj);
         },
 
         go_to: function(url, options = {trigger : true}) {

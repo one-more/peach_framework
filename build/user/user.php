@@ -1,12 +1,16 @@
 <?php
 
+use \common\classes\Application;
+use \User\mappers\UserMapper;
+use User\auth\UserAuth;
+
 /**
  * Class User
  *
- * @decorate AnnotationsDecorator
+ * @decorate \common\decorators\AnnotationsDecorator
  */
-class User implements Extension {
-    use TraitExtension;
+class User implements \common\interfaces\Extension {
+    use \common\traits\TraitExtension;
 
     const credentials_user = 'user';
 
@@ -19,8 +23,9 @@ class User implements Extension {
     }
 
     /**
-     * @return \User\model\UserModel
+     * @return \User\models\UserModel
      * @throws InvalidArgumentException
+     * @throws ErrorException
      */
     public function get_identity() {
         $remember_hash = null;
@@ -30,21 +35,23 @@ class User implements Extension {
             /**
              * @var $session Session
              */
-            $session = Application::get_class('Session');
+            $session = Application::get_class(Session::class);
             $remember_hash = $session->get_var('user');
         }
 
-        /**
-         * @var $mapper \User\Mapper\UserMapper
-         */
-        $mapper = Application::get_class('\User\Mapper\UserMapper');
-        $collection = $mapper->find_where([
-            'remember_hash' => ['=', $remember_hash]
-        ]);
-        if($collection->count()) {
+        if(trim($remember_hash)) {
+            /**
+             * @var $mapper \User\mappers\UserMapper
+             */
+            $mapper = Application::get_class(UserMapper::class);
+            $collection = $mapper->find_where([
+                'remember_hash' => ['=', $remember_hash]
+            ]);
+        }
+        if(!empty($collection) && $collection->count()) {
             return $collection->one();
         } else {
-            return new \User\model\UserModel();
+            return new \User\models\UserModel();
         }
     }
 
@@ -53,14 +60,14 @@ class User implements Extension {
      * @throws InvalidArgumentException
      */
     public function get_auth() {
-        return Application::get_class('\User\auth\UserAuth');
+        return Application::get_class(UserAuth::class);
     }
 
     /**
-     * @return \User\Mapper\UserMapper
+     * @return \User\mappers\UserMapper
      * @throws InvalidArgumentException
      */
     public function get_mapper() {
-        return Application::get_class('\User\Mapper\UserMapper');
+        return Application::get_class(UserMapper::class);
     }
 }

@@ -1,12 +1,12 @@
+{function is_templates_active uri=''}
+    {if $uri == '/'}
+        active
+    {/if}
+{/function}
 <div id="left-menu">
     <ul id="tools-menu" class="nav nav-stacked nav-pills">
-        {if $uri == '/'}
-            {$class = 'active'}
-        {else}
-            {$class = null}
-        {/if}
-        {$HTML->begin_tag('li', ['class' => $class])}
+        <li class="{is_templates_active uri=$uri}">
             <a href="/">{$lang_vars.templates}</a>
-        {$HTML->end_tag('li')}
+        </li>
     </ul>
 </div>

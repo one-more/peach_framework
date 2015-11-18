@@ -1,0 +1,39 @@
+
+<form action="/action/admin_panel/user/add" id="add-user-form">
+    <div class="row">
+        <div class="col-lg-5">
+            <div class="form-group">
+                <label for="login">{$lang_vars.login}</label>
+                <input id="login" name="login" class="form-control" type="text"/>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-5">
+            <div class="form-group">
+                <label for="password">{$lang_vars.password}</label>
+                <input class="form-control" id="password" name="password" type="text"/>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-5">
+            <div class="form-group">
+                <label for="credentials">{$lang_vars.credentials}</label>
+                <select name="credentials" id="credentials" class="form-control">
+                    {foreach $lang_vars.credentials_labels as $k=>$el}
+                        <option value="{$k}">{$el}</option>
+                    {/foreach}
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-5">
+            <div class="form-group">
+                <input class="btn btn-success" type="submit" value="{$lang_vars.add}"/>
+                <button class="btn btn-info">{$lang_vars.cancel}</button>
+            </div>
+        </div>
+    </div>
+</form>

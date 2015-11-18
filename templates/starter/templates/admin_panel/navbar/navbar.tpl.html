@@ -6,9 +6,16 @@
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <a class="link link_external" href="/">{$lang_vars.site}</a>
+                    <a class="link link--external" href="/">{$lang_vars.site}</a>
                 </li>
-                <li><a id="logout" class="cursor-pointer">{$lang_vars.logout}</a></li>
+                <li>
+                    <a id="logout"
+                       data-action="/action/logout"
+                       data-redirect="/admin_panel/login"
+                       class="cursor-pointer">
+                        {$lang_vars.logout}
+                    </a>
+                </li>
             </ul>
         </div>
     </div>

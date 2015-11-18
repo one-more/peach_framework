@@ -1,7 +1,7 @@
 <?php
 /**
  * Smarty Internal Plugin Data
- * This file contains the basic classes and methods for template and variable creation
+ * This file contains the basic common\classes and methods for template and variable creation
  *
  * @package    Smarty
  * @subpackage Template

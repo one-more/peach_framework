@@ -1,37 +1,31 @@
 <?php
-require_once ROOT_PATH.DS.'build'.DS.'user'.DS.'model'.DS.'usermodel.php';
 
+use common\classes\Application;
+use \User\models\UserModel;
 /**
  * Class UserModelTest
  *
- * @method bool assertTrue($cond)
- * @method bool assertFalse($cond)
- * @method bool assertNull($var)
- * @method bool assertCount($a,$b)
- * @method bool assertGreaterThan($a,$b)
- * @method bool assertEquals($a,$b)
  */
 class UserModelTest extends \PHPUnit_Framework_TestCase {
 
     /**
-     * @var $model \User\model\UserModel
+     * @var $model \User\models\UserModel
      */
     private $model;
 
     public function setUp() {
-        $this->model = Application::get_class('\User\model\UserModel');
+        $this->model = Application::get_class(UserModel::class);
     }
 
     /**
-     * @covers \User\model\UserModel::__construct
+     * @covers \User\models\UserModel::__construct
      */
     public function test_construct() {
-        new \User\model\UserModel;
+        new UserModel;
     }
 
     /**
-     * @covers \User\model\UserModel::is_guest
-     * @expectedException PHPUnit_Framework_Error
+     * @covers \User\models\UserModel::is_guest
      */
     public function test_is_guest() {
         /**
@@ -40,23 +34,23 @@ class UserModelTest extends \PHPUnit_Framework_TestCase {
         $user = Application::get_class('User');
         $mapper = $user->get_mapper();
         /**
-         * @var $model \User\model\UserModel
+         * @var $model \User\models\UserModel
          */
         $model = $mapper->find_where([
-            'credentials' => ['=', User::credentials_user]
+            'password' => ['=', '']
         ])->one();
-        $this->assertTrue($model->is_guest());
+        self::assertTrue($model->is_guest());
         $auth = $user->get_auth();
-        $this->assertTrue($auth->login($model->login, $model->password));
-        $this->assertFalse($model->is_guest());
+        self::assertTrue($auth->login($model->login, $model->password));
+        self::assertFalse($model->is_guest());
         $auth->log_out();
-        $this->assertTrue($auth->login($model->login, $model->password, true));
-        $this->assertFalse($model->is_guest());
+        self::assertTrue($auth->login($model->login, $model->password, true));
+        self::assertFalse($model->is_guest());
         $auth->log_out();
     }
 
     /**
-     * @covers \User\model\UserModel::is_admin
+     * @covers \User\models\UserModel::is_admin
      */
     public function test_is_admin() {
         /**
@@ -65,7 +59,7 @@ class UserModelTest extends \PHPUnit_Framework_TestCase {
         $user = Application::get_class('User');
         $mapper = $user->get_mapper();
         /**
-         * @var $model \User\model\UserModel
+         * @var $model \User\models\UserModel
          */
         $model = $mapper->find_where([
             'credentials' => ['=', User::credentials_admin]
@@ -75,11 +69,11 @@ class UserModelTest extends \PHPUnit_Framework_TestCase {
                 'credentials' => ['=', User::credentials_super_admin]
             ])->one();
         }
-        $this->assertTrue($model->is_admin());
+        self::assertTrue($model->is_admin());
     }
 
     /**
-     * @covers \User\model\UserModel::is_super_admin
+     * @covers \User\models\UserModel::is_super_admin
      */
     public function test_is_super_admin() {
         /**
@@ -88,11 +82,11 @@ class UserModelTest extends \PHPUnit_Framework_TestCase {
         $user = Application::get_class('User');
         $mapper = $user->get_mapper();
         /**
-         * @var $model \User\model\UserModel
+         * @var $model \User\models\UserModel
          */
         $model = $mapper->find_where([
             'credentials' => ['=', User::credentials_super_admin]
         ])->one();
-        $this->assertTrue($model->is_super_admin());
+        self::assertTrue($model->is_super_admin());
     }
 }

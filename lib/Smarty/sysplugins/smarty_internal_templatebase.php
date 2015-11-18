@@ -613,7 +613,7 @@ abstract class Smarty_Internal_TemplateBase extends Smarty_Internal_Data
     }
 
     /**
-     * Registers static classes to be used in templates
+     * Registers static common\classes to be used in templates
      *
      * @param         $class_name
      * @param  string $class_impl the referenced PHP class to register

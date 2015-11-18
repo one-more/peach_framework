@@ -1,0 +1,49 @@
+{if $user.id}
+    <form action="/action/admin_panel/user/edit" id="edit-user-form">
+        <input name="id" type="hidden" value="{$user.id}"/>
+        <div class="row">
+            <div class="col-lg-5">
+                <div class="form-group">
+                    <label for="login">{$lang_vars.login}</label>
+                    <input value="{$user.login}" id="login"
+                           name="login" class="form-control" type="text"/>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-5">
+                <div class="form-group">
+                    <label for="password">{$lang_vars.password}</label>
+                    <input value="{$user.password}" class="form-control"
+                           id="password" name="password" type="text"/>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-5">
+                <div class="form-group">
+                    <label for="credentials">{$lang_vars.credentials}</label>
+                    <select name="credentials" id="credentials" class="form-control">
+                        {foreach $lang_vars.credentials_labels as $k=>$el}
+                        {if $k == $user.credentials}
+                        <option selected value="{$k}">{$el}</option>
+                        {else}
+                        <option value="{$k}">{$el}</option>
+                        {/if}
+                        {/foreach}
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-5">
+                <div class="form-group">
+                    <input class="btn btn-success" type="submit" value="{$lang_vars.save}"/>
+                    <button class="btn btn-info">{$lang_vars.cancel}</button>
+                </div>
+            </div>
+        </div>
+    </form>
+{else}
+        <div class="alert alert-danger">{$lang_vars.user_not_exists}</div>
+{/if}

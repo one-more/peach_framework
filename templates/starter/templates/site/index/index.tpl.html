@@ -4,8 +4,21 @@
     {$bundle_result.vendor.styles}
     {$bundle_result.starter.styles}
 
+    <script>
+        if(!Object.assign) {
+            var script = document.createElement('script');
+            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/es6-shim/0.33.7/es6-shim.min.js';
+            document.head.appendChild(script);
+        }
+        if(!Object.defineProperty) {
+            script = document.createElement('script');
+            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.1.15/es5-shim.min.js';
+            document.head.appendChild(script);
+        }
+    </script>
+
     <link rel="shortcut icon" href="/images/favicon.ico"/>
-    <title>Starter Template</title>
+    <title>{$title}</title>
 </head>
 <body>
     <nav class="navbar navbar-inverse border-radius-none">

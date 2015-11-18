@@ -1,16 +1,14 @@
-{if $templates_list|@count}
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>{$lang_vars.name}</th>
-            </tr>
-        </thead>
-        {foreach $templates_list as $template}
-            <tr>
-                <td>
-                    {$template->name}
-                </td>
-            </tr>
-        {/foreach}
-    </table>
-{/if}
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>{$lang_vars.name}</th>
+    </tr>
+    </thead>
+    {foreach $templates_list as $template}
+    <tr>
+        <td>
+            {$template.name}
+        </td>
+    </tr>
+    {/foreach}
+</table>
