@@ -3,7 +3,9 @@
 namespace Starter\routers;
 use common\classes\Application;
 use common\classes\GetResponse;
-use common\classes\Router;
+use common\classes\Response;
+use common\models\PageModel;
+use common\routers\TemplateRouter;
 use Starter\views\AdminPanel\AddUserView;
 use Starter\views\AdminPanel\EditUserView;
 use Starter\views\AdminPanel\LeftMenuView;
@@ -17,18 +19,10 @@ use common\views\TemplateView;
  * @package Starter\routers
  * @decorate \common\decorators\AnnotationsDecorator
  */
-class AdminPanelRouter extends Router {
+class AdminPanelRouter extends TemplateRouter {
 	use TraitStarterRouter;
 
 	public function __construct() {
-		$this->routes = [
-			'/admin_panel' => [$this, 'index', 'no check'],
-			'/admin_panel/users' => [$this, 'index', 'no check'],
-			'/admin_panel/users/page:number' => [$this, 'index', 'no check'],
-			'/admin_panel/login' => [$this, 'login', 'no check'],
-			'/admin_panel/edit_user/:number' => [$this, 'edit_user_page', 'no check'],
-			'/admin_panel/add_user' => [$this, 'add_user_page', 'no check']
-		];
 
         $this->response = new GetResponse();
 		/**
@@ -42,7 +36,24 @@ class AdminPanelRouter extends Router {
         $this->response->blocks['main'] = '';
 	}
 
+    public function navigate(PageModel $page, $params) {
+        /**
+         * @var $user \User
+         */
+        $user = Application::get_class(\User::class);
+        $identity = $user->get_identity();
+        if($identity->is_guest() && $page->name != 'login') {
+            Response::redirect('/admin_panel/login');
+        } else {
+            parent::navigate($page, $params);
+        }
+    }
+
 	public function index($page = 1) {
+        $this->users($page);
+    }
+
+	public function users($page = 1) {
         /**
          * @var $view TemplateView
          */
@@ -60,7 +71,7 @@ class AdminPanelRouter extends Router {
         $this->response->blocks['main'] = $view->render();
     }
 
-	public function edit_user_page($id) {
+	public function edit_user($id) {
         /**
          * @var $view TemplateView
          */
@@ -68,7 +79,7 @@ class AdminPanelRouter extends Router {
         $this->response->blocks['main'] = $view->render();
 	}
 
-	public function add_user_page() {
+	public function add_user() {
         /**
          * @var $view TemplateView
          */

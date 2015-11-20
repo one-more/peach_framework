@@ -16,5 +16,87 @@
 			"db_password"	: "1234"
 		}
 	},
-	"language"	: "RU"
+	"language"	: "RU",
+	"pages": {
+        "admin_panel": {
+            "/admin_panel": {
+                "name": "index"
+            },
+            "/admin_panel/users": {
+                "name": "users"
+            },
+            "/admin_panel/users/page:number": {
+                "name": "users"
+            },
+            "/admin_panel/login": {
+                "name": "login"
+            },
+            "/admin_panel/edit_user/:number": {
+                "name": "edit_user"
+            },
+            "/admin_panel/add_user": {
+                "name": "add_user"
+            }
+        },
+        "site": {
+            "/": {
+                "name": "index"
+            }
+        },
+        "rest": {
+            "/rest/templates/admin_panel": {
+                "name": "index"
+            },
+            "/rest/templates/admin_panel/users": {
+                "name": "users"
+            },
+            "/rest/templates/admin_panel/users/page:number": {
+                "name": "users"
+            },
+            "/rest/templates/admin_panel/login": {
+                "name": "login"
+            },
+            "/rest/templates/admin_panel/add_user": {
+                "name": "add_user"
+            },
+            "/rest/templates/admin_panel/edit_user/:number": {
+                "name": "edit_user"
+            }
+        },
+        "action": {
+            "/action/login": {
+                "name": "login"
+            },
+            "/action/logout": {
+                "name": "logout"
+            },
+            "/action/user/add": {
+                "name": "add_user"
+            },
+            "/action/user/edit": {
+                "name": "edit_user"
+            },
+            "/action/user/delete": {
+                "name": "delete_user"
+            },
+            "/action/admin_panel/login": {
+                "name": "login"
+            },
+            "/action/admin_panel/user/add": {
+                "name": "add_user"
+            },
+            "/action/admin_panel/user/edit": {
+                "name": "edit_user"
+            },
+            "/action/admin_panel/user/delete": {
+                "name": "delete_user"
+            }
+        }
+    },
+    "routers": {
+        "admin_panel": "\\Starter\\routers\\AdminPanelRouter",
+        "site": "\\Starter\\routers\\SiteRouter",
+        "action": "\\Starter\\routers\\ActionRouter",
+        "rest": "\\Starter\\routers\\RestRouter"
+    }
 }
