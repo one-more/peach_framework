@@ -2,6 +2,7 @@
 
 namespace Starter\views\AdminPanel;
 
+use common\classes\Error;
 use common\classes\Request;
 use common\views\TemplateView;
 
@@ -13,7 +14,7 @@ class LeftMenuView extends TemplateView {
 		parent::__construct();
 
 		$path = $this->template->get_path();
-		$this->setTemplateDir($path.DS.'templates'.DS.'admin_panel'.DS.'left_menu');
+		$this->set_template_dir($path.DS.'templates'.DS.'admin_panel'.DS.'left_menu');
 	}
 
 	public function render() {

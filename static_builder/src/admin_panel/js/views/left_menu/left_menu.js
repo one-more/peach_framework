@@ -1,6 +1,6 @@
 _.defer(() => {
     'use strict';
-    window.LeftMenuView = Backbone.View.extend(BaseView.extend({
+    window.LeftMenuView = BaseView.extend({
         tagName: 'div',
 
         name: 'LeftMenuView',
@@ -19,5 +19,5 @@ _.defer(() => {
                 }
             });
         }
-    }));
+    });
 });

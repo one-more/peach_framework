@@ -4,7 +4,7 @@ namespace common\interfaces;
 
 interface Template {
 
-	public function route();
+	public function start();
 
 	public function get_path();
 

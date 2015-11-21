@@ -1,7 +1,7 @@
 (() => {
     "use strict";
 
-    window.BaseView = {
+    window.BaseView = Backbone.View.extend({
 
         render: function () {
             let template = templates.findWhere({
@@ -10,10 +10,6 @@
             let data = template.get('data');
             let tpl = new jSmart(template.get('html'));
             return this.$el.html(tpl.fetch(data));
-        },
-
-        extend: function (obj) {
-            return $.extend(true, {}, this, obj);
         }
-    }
+    })
 })();

@@ -15,28 +15,7 @@ class Starter implements \common\interfaces\Template {
      */
     public static $current_router;
 
-    public function __construct() {
+	public function start() {
         $this->register_autoload();
     }
-
-	public function route() {
-        switch(array_replace_recursive([''], Request::uri_parts())[0]) {
-            case 'admin_panel':
-                self::$current_router = Starter\routers\AdminPanelRouter::class;
-			    $router = Application::get_class(AdminPanelRouter::class);
-                break;
-            case 'rest':
-                self::$current_router = Starter\routers\RestRouter::class;
-			    $router = Application::get_class(RestRouter::class);
-                break;
-            case 'action':
-                self::$current_router = Starter\routers\ActionRouter::class;
-			    $router = Application::get_class(ActionRouter::class);
-                break;
-            default:
-                $router = Application::get_class(SiteRouter::class);
-                self::$current_router = Starter\routers\SiteRouter::class;
-        }
-        $router->route();
-	}
 }

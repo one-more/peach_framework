@@ -1,7 +1,7 @@
 _.defer(() => {
     "use strict";
 
-    window.UsersTableView = Backbone.View.extend(BaseView.extend({
+    window.UsersTableView = BaseView.extend({
 
         tagName: 'div',
 
@@ -20,5 +20,5 @@ _.defer(() => {
                 }, 'json');
             }
         }
-    }));
+    });
 });

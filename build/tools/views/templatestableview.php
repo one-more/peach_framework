@@ -21,7 +21,7 @@ class TemplatesTableView extends ExtensionView {
 		parent::__construct();
 
         $extension = $this->get_extension();
-		$this->setTemplateDir($extension->get_path().DS.'templates'.DS.'templates');
+		$this->set_template_dir($extension->get_path().DS.'templates'.DS.'templates');
 	}
 
 	public function render() {

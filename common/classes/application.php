@@ -6,6 +6,7 @@ use common\helpers\FileSystemHelper;
 use common\helpers\ReflectionHelper;
 use common\interfaces\Template;
 use Validator\LIVR;
+use common\routers\Router;
 
 class Application {
 
@@ -99,7 +100,7 @@ class Application {
         /**
          * @var $system \System
          */
-		$system = static::get_class('System');
+		$system = static::get_class(\System::class);
 		$port = $_SERVER['SERVER_PORT'];
 		if($port == 8080 && self::is_dev()) {
             /**
@@ -114,9 +115,16 @@ class Application {
 
     /**
      * @param Template $template
+     *
+     * @throws \InvalidArgumentException
      */
 	private static function start_template(Template $template) {
-		$template->route();
+		$template->start();
+        /**
+         * @var $router Router
+         */
+        $router = Application::get_class(Router::class);
+        $router->route();
 	}
 
 	public static function is_dev() {

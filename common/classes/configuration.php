@@ -8,14 +8,24 @@ class Configuration {
     use TraitConfiguration;
 
     /**
-     * @var array $db_params
+     * @var array
      */
     public $db_params;
 
     /**
-     * @var string $language
+     * @var string
      */
     public $language;
+
+    /**
+     * @var array
+     */
+    public $pages;
+
+    /**
+     * @var array
+     */
+    public $routers;
 
     public function __construct() {
         $this->load();
@@ -36,6 +46,8 @@ class Configuration {
         $configuration = $this->get_params('configuration');
         $this->load_db_params($configuration);
         $this->load_language($configuration);
+        $this->load_pages($configuration);
+        $this->load_routers($configuration);
     }
 
     private function load_db_params(array $configuration) {
@@ -54,5 +66,13 @@ class Configuration {
         } else {
             $this->language = $configuration['language'];
         }
+    }
+
+    private function load_pages(array $configuration) {
+        $this->pages = $configuration['pages'];
+    }
+
+    private function load_routers(array $configuration) {
+        $this->routers = $configuration['routers'];
     }
 }

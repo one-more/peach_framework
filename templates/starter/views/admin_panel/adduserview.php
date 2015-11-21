@@ -12,7 +12,7 @@ class AddUserView extends TemplateView {
 		parent::__construct();
 
         $path = $this->template->get_path();
-		$this->setTemplateDir($path.DS.'templates'.DS.'admin_panel'.DS.'users');
+		$this->set_template_dir($path.DS.'templates'.DS.'admin_panel'.DS.'users');
 	}
 
 	public function render() {

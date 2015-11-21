@@ -5,6 +5,11 @@ namespace test_classes\templates\starter\router;
 use common\classes\Application;
 use Starter\routers\RestRouter;
 
+class SilentRestRouter extends RestRouter {
+
+    public function __destruct() {}
+}
+
 class RestRouterTest extends \PHPUnit_Framework_TestCase {
 
     /**
@@ -13,14 +18,14 @@ class RestRouterTest extends \PHPUnit_Framework_TestCase {
     private $router;
 
     public function setUp() {
-        $this->router = Application::get_class(RestRouter::class);
+        $this->router = Application::get_class(SilentRestRouter::class);
     }
 
     /**
      * @covers Starter\routers\RestRouter::__construct
      */
     public function test_construct() {
-        new RestRouter();
+        new SilentRestRouter();
     }
 
     /**

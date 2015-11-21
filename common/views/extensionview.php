@@ -3,30 +3,20 @@
 namespace common\views;
 
 use common\interfaces\Extension;
-use common\interfaces\View;
-use common\traits\TraitView;
 
-abstract class ExtensionView extends \Smarty implements View {
-    use TraitView;
+abstract class ExtensionView extends BaseView {
 
     /**
      * @return Extension
      */
     public abstract function get_extension();
 
-    /**
-     * @return string
-     */
-    public abstract function render();
-
     public function __construct() {
-        parent::__construct();
-
         /**
          * @var $extension Extension
          */
         $extension = $this->get_extension();
-        $this->setCompileDir($extension->get_path().DS.'templates_c');
+        $this->set_compile_dir($extension->get_path().DS.'templates_c');
     }
 
     /**
