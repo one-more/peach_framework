@@ -4,6 +4,7 @@ namespace common\routers;
 
 use common\classes\Application;
 use common\classes\Configuration;
+use common\classes\Error;
 use common\classes\Request;
 use common\models\PageModel;
 
@@ -26,7 +27,17 @@ class Router {
                 $this->area_router = Application::get_class($area_routers['admin_panel']);
                 break;
             case 'rest':
-                $this->routes = $pages['rest'];
+                $routes = array_merge($pages['site'], $pages['admin_panel']);
+                /**
+                 * mix site and admin panel routes with other rest routes to not duplicate url's
+                 */
+                $routes = array_merge(array_combine(array_map(
+                    function($el) {
+                        return '/rest/templates'.$el;
+                    },
+                    array_keys($routes)
+                ), $routes), $pages['rest']);
+                $this->routes = $routes;
                 $this->area_router = Application::get_class($area_routers['rest']);
                 break;
             case 'action':
