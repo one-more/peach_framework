@@ -43,7 +43,20 @@
                 "name": "index"
             }
         },
-        "rest": {},
+        "rest": {
+            "/rest/admin_panel/templates": {
+                "name": "templates"
+            },
+            "/rest/admin_panel/lang_files/:string": {
+                "name": "lang_files"
+            },
+            "/rest/templates": {
+                "name": "templates"
+            },
+            "/rest/lang_files/:string": {
+                "name": "lang_files"
+            }
+        },
         "action": {
             "/action/login": {
                 "name": "login"

@@ -1,8 +1,9 @@
 <?php
 
-namespace Starter\routers;
+namespace Starter\routers\AdminPanel;
 
 use common\routers\TemplateRouter;
+use Starter\routers\traits\TraitActionRouter;
 
 /**
  * Class AdminPanelActionRouter
@@ -10,7 +11,7 @@ use common\routers\TemplateRouter;
  *
  * @decorate AnnotationsDecorator
  */
-class AdminPanelActionRouter extends TemplateRouter {
+class ActionRouter extends TemplateRouter {
     use TraitActionRouter;
 
     public function login() {

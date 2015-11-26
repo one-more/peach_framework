@@ -1,6 +1,6 @@
 <?php
 
-namespace Starter\routers;
+namespace Starter\routers\traits;
 
 use common\classes\AjaxResponse;
 use common\classes\PageTitle;

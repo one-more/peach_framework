@@ -46,12 +46,13 @@ class Configuration {
         $configuration = $this->get_params('configuration');
         $this->load_db_params($configuration);
         $this->load_language($configuration);
-        $this->load_pages($configuration);
-        $this->load_routers($configuration);
+
+        $this->pages = $configuration['pages'];
+        $this->routers = $configuration['routers'];
     }
 
     private function load_db_params(array $configuration) {
-        if(defined('TESTS_ENV')) {
+        if($this->is_test_env()) {
             $this->db_params = $configuration['db_params']['tests'];
         } elseif(Application::is_dev()) {
             $this->db_params = $configuration['db_params']['development'];
@@ -68,11 +69,7 @@ class Configuration {
         }
     }
 
-    private function load_pages(array $configuration) {
-        $this->pages = $configuration['pages'];
-    }
-
-    private function load_routers(array $configuration) {
-        $this->routers = $configuration['routers'];
+    private function is_test_env() {
+        return defined('TESTS_ENV') ? true : Application::is_dev() && Request::cookie('TEST_ENV');
     }
 }

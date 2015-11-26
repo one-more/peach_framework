@@ -37,7 +37,7 @@ class PageTitle {
         $router = Application::get_class(Router::class);
         $pageModel = $router->current_page();
         if($pageModel) {
-            $title = $this->titles[$pageModel->name];
+            $title = !empty($this->titles[$pageModel->name]) ? $this->titles[$pageModel->name] : null;
             if(is_array($title)) {
                 list($class, $method, $prefix) = array_pad($title, 3, '');
                 try {

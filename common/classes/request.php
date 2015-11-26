@@ -17,12 +17,28 @@ class Request {
         return strtolower($_SERVER['REQUEST_METHOD']) == 'get';
     }
 
-    public static function get_var($name, $filter = 'raw', $default = null) {
+    public static function get_var($name, $filter = null, $default = null) {
 		$request_vars = array_merge($_REQUEST, $_COOKIE);
-		if(empty($request_vars[$name])) {
+		return self::get_sanitized($request_vars, $name, $filter, $default);
+    }
+
+    public static function cookie($name, $filter = null, $default = null) {
+        return self::get_sanitized($_COOKIE, $name, $filter, $default);
+    }
+
+    public static function post($name, $filter = null, $default = null) {
+        return self::get_sanitized($_POST, $name, $filter, $default);
+    }
+
+    public static function get($name, $filter = null, $default = null) {
+        return self::get_sanitized($_GET, $name, $filter, $default);
+    }
+
+	private static function get_sanitized(array $vars, $name, $filter = 'raw', $default = null) {
+        if(empty($vars[$name])) {
             return $default;
         } else {
-			$var = $request_vars[$name];
+			$var = $vars[$name];
 			if(VarHandler::validate_var($var, $filter)) {
 				return VarHandler::sanitize_var($var, $filter, $default);
 			} else {

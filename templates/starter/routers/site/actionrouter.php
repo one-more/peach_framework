@@ -1,8 +1,13 @@
 <?php
 
-namespace Starter\routers;
+namespace Starter\routers\site;
 
+use common\classes\Application;
+use common\classes\LanguageFile;
+use common\classes\Request;
+use common\interfaces\Template;
 use common\routers\TemplateRouter;
+use Starter\routers\traits\TraitActionRouter;
 
 /**
  * Class SiteActionRouter
@@ -10,7 +15,7 @@ use common\routers\TemplateRouter;
  *
  * @decorate AnnotationsDecorator
  */
-class SiteActionRouter extends TemplateRouter {
+class ActionRouter extends TemplateRouter {
     use TraitActionRouter;
 
     public function login() {
@@ -55,14 +60,14 @@ class SiteActionRouter extends TemplateRouter {
      * @requestMethod Ajax
      * @throws \InvalidArgumentException
      */
-    public function action_delete_user() {
+    public function delete_user() {
         /**
          * @var $user \User
          */
         $user = Application::get_class(\User::class);
         $model = $user->get_identity();
         if(Request::get_var('id', 'int', 0) == $model->id) {
-            $this->delete_user();
+            $this->action_delete_user();
         } else {
             /**
              * @var $template Template

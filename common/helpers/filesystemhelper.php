@@ -47,4 +47,25 @@ class FileSystemHelper {
             }
         }
     }
+
+    public static function dir_files($path) {
+        $iterator = new \DirectoryIterator($path);
+        $result = [];
+        foreach($iterator as $file) {
+            if(!$file->isDot()) {
+                /**
+                 * @var $file \DirectoryIterator
+                 */
+                if($file->isDir()) {
+                    $key = basename($file->getBasename());
+                    $result[$key] = self::dir_files($file->getPathname());
+                } else {
+                    $pathname = $file->getPathname();
+                    $key = basename($pathname);
+                    $result[$key] = file_get_contents($pathname);
+                }
+            }
+        }
+        return $result;
+    }
 }

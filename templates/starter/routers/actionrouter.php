@@ -14,9 +14,9 @@ class ActionRouter extends TemplateRouter {
 
     public function navigate(PageModel $page, $params) {
         if(strpos(Request::uri(), 'admin_panel') !== false) {
-            (new AdminPanelActionRouter())->navigate($page, $params);
+            (new \Starter\routers\AdminPanel\ActionRouter())->navigate($page, $params);
         } else {
-            (new SiteActionRouter())->navigate($page, $params);
+            (new \Starter\routers\site\ActionRouter())->navigate($page, $params);
         }
     }
 }

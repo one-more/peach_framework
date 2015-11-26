@@ -1,12 +1,11 @@
 <?php
 
-namespace Starter\routers;
+namespace Starter\routers\traits;
 
 use common\classes\Application;
 use common\classes\GetResponse;
 use common\classes\PageTitle;
 use common\classes\Request;
-use common\classes\Response;
 use common\interfaces\Template;
 
 trait TraitStarterRouter {
