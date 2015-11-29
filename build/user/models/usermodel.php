@@ -49,4 +49,17 @@ class UserModel extends BaseModel {
     public function is_super_admin() {
         return $this->credentials === \User::credentials_super_admin;
     }
+
+    public function to_array() {
+        return [
+            'id' => $this->id,
+            'login' => $this->login,
+            'password' => $this->password,
+            'credentials' => $this->credentials,
+            'remember_hash' => $this->remember_hash,
+            'is_admin' => $this->is_admin(),
+            'is_super_admin' => $this->is_super_admin(),
+            'is_guest' => $this->is_guest()
+        ];
+    }
 }

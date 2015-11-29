@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS `users` (
   `id`        SERIAL PRIMARY KEY ,
-  `login`     VARCHAR (255) UNIQUE NOT NUll,
+  `login`     VARCHAR (255) NOT NUll,
   `password`  VARCHAR (255) NOT NULL,
   `credentials` ENUM('user', 'administrator', 'super_administrator') DEFAULT 'user',
   `remember_hash` VARCHAR(255) NOT NULL DEFAULT '',

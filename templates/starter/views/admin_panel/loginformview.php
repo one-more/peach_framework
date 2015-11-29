@@ -6,8 +6,6 @@ use common\views\TemplateView;
 
 class LoginFormView extends TemplateView {
 
-    private $template_name = 'login.tpl.html';
-
 	public function __construct() {
 		parent::__construct();
 
@@ -16,14 +14,6 @@ class LoginFormView extends TemplateView {
 	}
 
 	public function render() {
-		return $this->get_template($this->template_name);
+		return $this->get_template('login.tpl.html');
 	}
-
-	public function get_data() {
-        return [];
-    }
-
-    public function get_template_name() {
-        return $this->template_name;
-    }
 }

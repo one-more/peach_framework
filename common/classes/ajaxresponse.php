@@ -8,6 +8,7 @@ class AjaxResponse {
     public $errors;
     public $message;
     public $title;
+    public $result;
 
     public function __toString() {
         return json_encode((array)$this);

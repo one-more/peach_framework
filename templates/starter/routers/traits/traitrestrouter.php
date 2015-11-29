@@ -13,7 +13,6 @@ trait TraitRestRouter {
     }
 
     public function __destruct() {
-        $this->response->title = (string)new PageTitle();
         echo $this->response;
     }
 }

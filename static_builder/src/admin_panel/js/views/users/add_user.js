@@ -1,8 +1,12 @@
 _.defer(function() {
     'use strict';
     window.AddUserView = UserFormView.extend({
-        tagName: 'div',
+        el: '#add-user-form',
 
-        name: 'AddUserView'
+        render() {
+            let lang_vars = JSON.parse(FileSystem.get_file('lang/views/admin_panel/adduserview.json'));
+            let data = {lang_vars};
+            return this.get_template('add_user.tpl.html', data);
+        }
     });
 });

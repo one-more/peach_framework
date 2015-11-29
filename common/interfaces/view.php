@@ -18,12 +18,6 @@ interface View {
 
     public function get_template();
 
-    public function get_template_model();
-
-    public function get_template_name();
-
-    public function get_data();
-
     public function set_compile_dir($path);
 
     public function set_template_dir($path);

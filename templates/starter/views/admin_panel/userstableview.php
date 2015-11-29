@@ -6,8 +6,6 @@ use common\classes\Error;
 use common\views\TemplateView;
 
 class UsersTableView extends TemplateView {
-
-    private $template_name = 'users_table.tpl.html';
     private $page;
 
 	public function __construct($page = 1) {
@@ -20,11 +18,6 @@ class UsersTableView extends TemplateView {
 	}
 
 	public function render() {
-        $this->assign($this->get_data());
-		return $this->get_template($this->template_name);
-	}
-
-	public function get_data() {
         /**
          * @var $ext \User
          */
@@ -33,21 +26,13 @@ class UsersTableView extends TemplateView {
         $mapper = $ext->get_mapper();
         $users = $mapper->get_page($this->page)->to_array();
         $is_super_admin = $user->is_super_admin();
-        $template_dir = $this->get_template_dir($index = 1);
-
-        return [
+        $this->assign([
             'users' => $users,
             'my_id' => $user->id,
             'is_super_admin' => $is_super_admin,
             'paging_model' => $mapper->get_paging($this->page)->to_array(),
-            'base_url' => '/admin_panel/users',
-            'inclusions' => [
-                'pagination.tpl.html' => file_get_contents($template_dir.DS.'pagination.tpl.html')
-            ]
-        ];
-    }
-
-    public function get_template_name() {
-        return $this->template_name;
-    }
+            'base_url' => '/admin_panel/users'
+        ]);
+		return $this->get_template('users_table.tpl.html');
+	}
 }

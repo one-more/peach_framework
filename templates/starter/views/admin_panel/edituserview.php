@@ -6,8 +6,6 @@ use common\classes\Application;
 use common\views\TemplateView;
 
 class EditUserView extends TemplateView {
-
-    private $template_name = 'edit_user.tpl.html';
     private $id;
 
 	public function __construct($id) {
@@ -19,23 +17,15 @@ class EditUserView extends TemplateView {
 	}
 
 	public function render() {
-        $this->assign($this->get_data());
-		return $this->get_template($this->template_name);
-	}
-
-    public function get_data() {
         /**
          * @var $user \User
          */
         $user = Application::get_class(\User::class);
         $mapper = $user->get_mapper();
         $identity = $mapper->find_by_id($this->id);
-        return [
+        $this->assign([
             'user' => $identity->to_array()
-        ];
-    }
-
-	public function get_template_name() {
-        return $this->template_name;
-    }
+        ]);
+		return $this->get_template('edit_user.tpl.html');
+	}
 }

@@ -7,22 +7,18 @@
             'click button': 'cancel'
         },
 
-        save: function (event) {
-            var table = event.target;
-            $.post(table.action, $(table).serializeArray(), function(json) {
-                if(json.status == 'success') {
-                    Router.go_to('/admin_panel/users');
-                    NotificationView.display(json.message, json.status);
-                } else {
-                    json.message = '';
-                    NotificationView.display(_.values(json['errors']).join('\n'), json.status);
-                }
-            }, 'json');
+        initialize() {
+            this.set_template_dir('templates/users');
         },
 
-        cancel: function (event) {
-            event.preventDefault();
-            Router.go_to('/admin_panel/users');
+        save(event) {
+            var table = event.target;
+
+            UserFormController.save(table.action, $(table).serializeArray());
+        },
+
+        cancel(event) {
+            UserFormController.cancel(event)
         }
     });
 })();

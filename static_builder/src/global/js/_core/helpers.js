@@ -2,7 +2,7 @@
     'use strict';
 
     window.Helpers = {
-        object_loaded: function(name) {
+        object_loaded(name) {
             return new Promise((resolve, reject) => {
                 if(window[name]) {
                     resolve();
@@ -19,7 +19,7 @@
             })
         },
 
-        objects_loaded: function(objects = []) {
+        objects_loaded(objects = []) {
             var promise = new Promise(resolve => resolve());
             return objects.reduce((promise, name) => promise.then(() => this.object_loaded(name)), promise)
         }

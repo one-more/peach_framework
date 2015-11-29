@@ -2,14 +2,14 @@
     'use strict';
 
     window.Cookie = {
-        get_cookie : function(name) {
+        get_cookie(name) {
             var matches = document.cookie.match(new RegExp(
                 "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
             ));
             return matches ? decodeURIComponent(matches[1]) : undefined;
         },
 
-        set_cookie : function(name, value, options) {
+        set_cookie(name, value, options) {
             options = options || {};
 
             var expires = options.expires;
@@ -38,7 +38,7 @@
             document.cookie = updatedCookie;
         },
 
-        delete_cookie : function(name) {
+        delete_cookie(name) {
             this.set_cookie(name, "", { expires: -1 })
         }
     };

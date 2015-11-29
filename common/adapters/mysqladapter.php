@@ -143,12 +143,17 @@ class MysqlAdapter {
                     $this->parse_conditions([$sub_col_name => $sub_condition]);
                 }
             } else {
-                $this->query .= ' '.$col_name.' '.$condition[0];
-                if(isset($condition[2]) && !$condition[2]) {
-                    $this->query .= ' '.$condition[1];
+                if(is_array($condition)) {
+                    $this->query .= ' '.$col_name.' '.$condition[0];
+                    if(isset($condition[2]) && !$condition[2]) {
+                        $this->query .= ' '.$condition[1];
+                    } else {
+                        $this->query .= ' ?';
+                        $this->bind_values[] = $condition[1];
+                    }
                 } else {
-                    $this->query .= ' ?';
-                    $this->bind_values[] = $condition[1];
+                    $this->query .= ' '.$col_name.' = ?';
+                    $this->bind_values[] = $condition;
                 }
             }
         }

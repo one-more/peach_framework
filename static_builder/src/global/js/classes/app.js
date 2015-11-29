@@ -1,14 +1,19 @@
 (function(window) {
     'use strict';
 
-    window.App = {};
+    window.App = _.extend({
+        start() {
 
-    _.extend(App, Backbone.Events);
+            this.set_ajax_params();
+            this.set_smarty_params();
+            this.add_current_user();
 
-    Object.defineProperty(App, 'start', {
-        value: function () {
             this.register_events();
 
+            Backbone.history.start({pushState: true, silent: true});
+        },
+
+        set_ajax_params() {
             $.ajaxSetup({
                 beforeSend  : function() {
                     this.url += (this.url.indexOf('?') > -1 ? '&' : '?') + 'ajax=1';
@@ -19,20 +24,20 @@
                 },
                 error : function(xhr,status, error) {
                     NotificationView.display('Request completed with an error', 'error');
+                    console.log(xhr, status, error);
                 }
             });
+        },
 
+        set_smarty_params() {
             jSmart.prototype.registerPlugin(
                 'function',
                 'include',
                 function(params, data) {
-                    var file = params.__get('file',null,0);
-                    if(!data['inclusions']) {
-                        throw new Error('data must contain inclusions section');
-                    }
-                    let template = data['inclusions'][file] || '';
-                    let tpl = new jSmart(template);
-                    return tpl.fetch(data);
+                    let view = BaseView.extend({
+                        template_dirs: data.template_dirs
+                    });
+                    return (new view).get_template(params.file, data).html();
                 }
             );
 
@@ -43,14 +48,22 @@
                     str.indexOf(needle)
                 }
             );
+        },
 
-            Backbone.history.start({pushState: true, silent: true});
-        }
-    });
+        add_current_user() {
+            Helpers.object_loaded('UserModel').then(() => {
+                let user = new UserModel();
+                user.on('sync', () => {
+                    window.User = user;
+                });
+                user.fetch({url: '/rest/users/current'});
+                this.on('User:login', () => user.fetch({url: '/rest/users/current'}));
+                this.on('User:logout', () => user.clear())
+            });
+        },
 
-    Object.defineProperty(App, 'register_events', {
-        value: function () {
-            $(document).on('click', 'a[href]:not(.link--external)', function(e) {
+        register_events() {
+            $(document).on('click', 'a[href]:not(.link_external)', function(e) {
                 let href = this.getAttribute('href');
                 let navigate = href.indexOf('http') == -1
                     && href.indexOf('www') == -1
@@ -64,20 +77,16 @@
             $(document).on('submit', 'form', function(e) {
                 e.preventDefault();
             });
-        }
-    });
+        },
 
-    Object.defineProperty(App, 'get_token', {
-        value: function(get_params, post_params) {
+        get_token(get_params, post_params) {
             var str_to_hash = (Cookie.get_cookie('user') || '') +
                 (Cookie.get_cookie('pfm_session_id') || '')
                 + JSON.stringify($.extend(get_params, post_params));
             return CryptoJS.MD5(str_to_hash).toString();
-        }
-    });
+        },
 
-    Object.defineProperty(App, 'parse_url_params', {
-        value: function (url) {
+        parse_url_params(url) {
             // http://stackoverflow.com/a/23946023/2407309
             if (typeof url == 'undefined') {
                 url = window.location.search
@@ -101,7 +110,8 @@
             }
             return urlParams
         }
-    });
+
+    }, Backbone.Events);
 
     App.start();
 })(window);

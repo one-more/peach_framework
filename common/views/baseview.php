@@ -105,20 +105,6 @@ abstract class BaseView implements View {
     }
 
     /**
-     * @return TemplateViewModel
-     */
-    public function get_template_model() {
-        $template_dir = $this->get_template_dir(0);
-        return new TemplateViewModel([
-            'name' => basename(str_replace('\\', '/', get_class($this))),
-            'data' => array_merge([
-                'lang_vars' => $this->get_lang_vars_array()
-            ], $this->get_data()),
-            'html' => file_get_contents($template_dir.DS.$this->get_template_name())
-        ]);
-    }
-
-    /**
      * @return string
      */
     abstract public function render();

@@ -3,6 +3,7 @@
 namespace Starter\routers;
 use common\classes\GetResponse;
 use common\routers\TemplateRouter;
+use Starter\routers\traits\TraitStarterRouter;
 
 /**
  * Class SiteRouter

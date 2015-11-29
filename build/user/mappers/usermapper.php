@@ -79,7 +79,10 @@ class UserMapper extends BaseMapper {
             $validator->registerRules(['unique_login' => function() {
                 return function ($value) {
                     $user = $this->adapter->select()->where([
-                        'login' => ['=', $value]
+                        'login' => ['=', $value],
+                        'and' => [
+                            'deleted' => 0
+                        ]
                     ])->execute()->get_result();
                     if($user) {
                         return 'LOGIN_EXISTS';

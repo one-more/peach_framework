@@ -1,4 +1,4 @@
-<div class="users">
+<div data-view="UsersTableView" class="users" id="users">
     {if $is_super_admin}
     <a class="btn btn-primary" href="/admin_panel/add_user">{$lang_vars.add_user}</a>
     {/if}
@@ -28,7 +28,7 @@
                 <a data-param="{$user.id}"
                    data-message="{$lang_vars.confirm_delete}"
                    data-action="/action/admin_panel/user/delete"
-                   class="link link--pseudo users__delete">{$lang_vars.delete}</a>
+                   class="link link_pseudo users__delete">{$lang_vars.delete}</a>
                 {/if}
             </td>
         </tr>

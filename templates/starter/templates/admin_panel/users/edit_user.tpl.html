@@ -1,5 +1,5 @@
 {if $user.id}
-    <form action="/action/admin_panel/user/edit" id="edit-user-form">
+    <form data-view="EditUserView" action="/action/admin_panel/user/edit" id="edit-user-form">
         <input name="id" type="hidden" value="{$user.id}"/>
         <div class="row">
             <div class="col-lg-5">

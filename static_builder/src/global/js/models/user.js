@@ -5,10 +5,13 @@
         defaults: {
             id: null,
             login: null,
-            password: null,
-            credentials: null,
-            remember_hash: null,
-            deleted: null
+            is_admin: null,
+            is_super_admin: null,
+            is_guest: null
+        },
+
+        parse(response) {
+            return response.result ? response.result : response
         }
     })
 })();

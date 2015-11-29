@@ -6,6 +6,7 @@ use common\classes\GetResponse;
 use common\classes\Response;
 use common\models\PageModel;
 use common\routers\TemplateRouter;
+use Starter\routers\traits\TraitStarterRouter;
 use Starter\views\AdminPanel\AddUserView;
 use Starter\views\AdminPanel\EditUserView;
 use Starter\views\AdminPanel\LeftMenuView;

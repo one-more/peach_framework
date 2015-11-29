@@ -47,14 +47,26 @@
             "/rest/admin_panel/templates": {
                 "name": "templates"
             },
-            "/rest/admin_panel/lang_files/:string": {
+            "/rest/admin_panel/lang_files": {
                 "name": "lang_files"
             },
             "/rest/templates": {
                 "name": "templates"
             },
-            "/rest/lang_files/:string": {
+            "/rest/lang_files": {
                 "name": "lang_files"
+            },
+            "/rest/users": {
+                "name": "users"
+            },
+            "/rest/users/:number": {
+                "name": "user"
+            },
+            "/rest/users/current": {
+                "name": "current_user"
+            },
+            "/rest/meta": {
+                "name": "meta"
             }
         },
         "action": {

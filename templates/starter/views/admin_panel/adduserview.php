@@ -6,8 +6,6 @@ use common\views\TemplateView;
 
 class AddUserView extends TemplateView {
 
-    private $template_name = 'add_user.tpl.html';
-
 	public function __construct() {
 		parent::__construct();
 
@@ -16,14 +14,6 @@ class AddUserView extends TemplateView {
 	}
 
 	public function render() {
-		return $this->get_template($this->template_name);
+		return $this->get_template('add_user.tpl.html');
 	}
-
-	public function get_data() {
-        return [];
-    }
-
-    public function get_template_name() {
-        return $this->template_name;
-    }
 }

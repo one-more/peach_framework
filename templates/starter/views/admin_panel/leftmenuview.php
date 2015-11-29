@@ -8,8 +8,6 @@ use common\views\TemplateView;
 
 class LeftMenuView extends TemplateView {
 
-    private $template_name = 'left_menu.tpl.html';
-
 	public function __construct() {
 		parent::__construct();
 
@@ -18,17 +16,9 @@ class LeftMenuView extends TemplateView {
 	}
 
 	public function render() {
-		$this->assign($this->get_data());
-		return $this->get_template($this->template_name);
+		$this->assign([
+			'url' => Request::uri()
+		]);
+		return $this->get_template('left_menu.tpl.html');
 	}
-
-    public function get_data() {
-        return [
-            'url' => Request::uri()
-        ];
-    }
-
-	public function get_template_name() {
-        return $this->template_name;
-    }
 }
