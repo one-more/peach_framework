@@ -4,3 +4,4 @@
 4. система обновлений
 5. JS: babel -> traceur
 6. JS: window scope -> to the modules
+7. andWhere method to the mysql adapter
