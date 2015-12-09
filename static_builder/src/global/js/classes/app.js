@@ -1,5 +1,7 @@
-(function(window) {
+(window => {
     'use strict';
+
+    let preload_objects = ['UserModel', 'Meta'];
 
     window.App = _.extend({
         start() {
@@ -51,15 +53,13 @@
         },
 
         add_current_user() {
-            Helpers.object_loaded('UserModel').then(() => {
-                let user = new UserModel();
-                user.on('sync', () => {
-                    window.User = user;
-                });
-                user.fetch({url: '/rest/users/current'});
-                this.on('User:login', () => user.fetch({url: '/rest/users/current'}));
-                this.on('User:logout', () => user.clear())
+            let user = new UserModel();
+            user.on('sync', () => {
+                window.User = user;
             });
+            user.fetch({url: '/rest/users/current'});
+            this.on('User:login', () => user.fetch({url: '/rest/users/current'}));
+            this.on('User:logout', () => user.clear())
         },
 
         register_events() {
@@ -113,5 +113,5 @@
 
     }, Backbone.Events);
 
-    App.start();
+    Helpers.objects_loaded(preload_objects).then(() => App.start());
 })(window);

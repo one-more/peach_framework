@@ -1,4 +1,4 @@
-_.defer(() => {
+Helpers.object_loaded('BaseView').then(() => {
     'use strict';
 
     window.LoginFormView = BaseView.extend({

@@ -1,4 +1,4 @@
-_.defer(() => {
+Helpers.object_loaded('UserModel').then(() => {
     "use strict";
 
     window.UsersCollection = Backbone.Collection.extend({

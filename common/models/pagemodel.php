@@ -7,10 +7,12 @@ namespace common\models;
  * @package common\models
  *
  * @property string name
+ * @property array params
  */
 class PageModel extends BaseModel {
 
     public $fields = [
-        'name' => null
+        'name' => null,
+        'params' => null
     ];
 }

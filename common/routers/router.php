@@ -10,10 +10,23 @@ use common\models\PageModel;
 
 class Router {
 	private $routes = [];
-	private $route_params = [];
     private $area_router;
 
-    public function __construct() {
+    public function route() {
+        $page = $this->get_route();
+        $area_router = Application::get_class($this->area_router);
+        $this->navigate($area_router, $page, (array)$page->params);
+    }
+
+    /**
+     * @param null $url
+     * @return PageModel
+     */
+    public function get_page_model($url = null) {
+        return $this->get_route($url);
+    }
+
+    private function init($request_uri) {
         /**
          * @var $configuration Configuration
          */
@@ -21,53 +34,42 @@ class Router {
         $pages = $configuration->pages;
         $area_routers = $configuration->routers;
 
-        switch(array_replace_recursive([''], Request::uri_parts())[0]) {
+        $uri_parts = array_values(array_filter(explode('/', $request_uri)));
+        switch(reset($uri_parts)) {
             case 'admin_panel':
                 $this->routes = $pages['admin_panel'];
-                $this->area_router = Application::get_class($area_routers['admin_panel']);
+                $this->area_router = $area_routers['admin_panel'];
                 break;
             case 'rest':
                 $this->routes = $pages['rest'];
-                $this->area_router = Application::get_class($area_routers['rest']);
+                $this->area_router = $area_routers['rest'];
                 break;
             case 'action':
                 $this->routes = $pages['action'];
-                $this->area_router = Application::get_class($area_routers['action']);
+                $this->area_router = $area_routers['action'];
                 break;
             default:
                 $this->routes = $pages['site'];
-                $this->area_router = Application::get_class($area_routers['site']);
+                $this->area_router = $area_routers['site'];
         }
-    }
-
-	public function route() {
-		$page = $this->get_route();
-        $this->navigate($this->area_router, new PageModel((array)$page), $this->route_params);
-	}
-
-    /**
-     * @return PageModel|null
-     */
-    public function current_page() {
-        $page = $this->get_route();
-        return new PageModel((array)$page);
-    }
-
-    /**
-     * @return array
-     */
-    public function get_route_params() {
-        return $this->route_params;
     }
 
     private function navigate(TemplateRouter $router, PageModel $page, array $params) {
         $router->navigate($page, $params);
     }
 
-	private function get_route() {
-		$request_uri = Request::uri();
+    /**
+     * @param null|string $request_uri
+     * @return PageModel
+     */
+	private function get_route($request_uri = null) {
+        $request_uri = $request_uri ?: Request::uri();
+        $this->init($request_uri);
 		if(isset($this->routes[$request_uri])) {
-			return $this->routes[$request_uri];
+			$fields = $this->routes[$request_uri];
+            return new PageModel(array_merge($fields, [
+                'params' => []
+            ]));
 		} else {
 			$keys = array_keys($this->routes);
 			foreach($keys as $key) {
@@ -93,17 +95,22 @@ class Router {
 					$parts = implode('\/', $parts);
 					preg_match_all("/^$parts$/iU", $request_uri, $result, PREG_SET_ORDER);
 					if(!empty($result[0]) && count($result)) {
-						$this->route_params = array_slice($result[0], 1);
-						return $this->routes[$key];
+						$route_params = array_slice($result[0], 1);
+						$fields = $this->routes[$key];
+                        return new PageModel(array_merge($fields, [
+                            'params' => $route_params
+                        ]));
 					}
 				}
 			}
 			foreach($keys as $key) {
 				if(strpos($key, '*') !== false) {
-					return $this->routes[$key];
+					return new PageModel(array_merge($this->routes[$key], [
+                        'params' => []
+                    ]));
 				}
 			}
-			return null;
+			return new PageModel();
 		}
 	}
 } 

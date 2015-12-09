@@ -93,8 +93,6 @@ class RestRouter extends TemplateRouter {
     }
 
     public function meta() {
-        $this->response->result = [
-            'title' => new PageTitle()
-        ];
+        $this->response->title = (string)new PageTitle(Request::get_var('url'));
     }
 }

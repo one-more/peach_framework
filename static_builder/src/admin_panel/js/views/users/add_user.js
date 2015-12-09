@@ -1,4 +1,4 @@
-_.defer(function() {
+Helpers.object_loaded('UserFormView').then(() => {
     'use strict';
     window.AddUserView = UserFormView.extend({
         el: '#add-user-form',

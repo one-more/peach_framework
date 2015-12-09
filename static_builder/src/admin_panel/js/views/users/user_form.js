@@ -1,4 +1,4 @@
-(function () {
+Helpers.object_loaded('BaseView').then(() => {
     'use strict';
 
     window.UserFormView = BaseView.extend({
@@ -21,4 +21,4 @@
             UserFormController.cancel(event)
         }
     });
-})();
+});

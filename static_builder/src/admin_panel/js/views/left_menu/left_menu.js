@@ -1,7 +1,7 @@
-_.defer(() => {
+Helpers.object_loaded('BaseView').then(() => {
     'use strict';
     window.LeftMenuView = BaseView.extend({
-        el: 'left-menu',
+        el: '#left-menu',
 
         initialize: function() {
             this.set_template_dir('templates/left_menu');

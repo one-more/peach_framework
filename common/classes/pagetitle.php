@@ -15,35 +15,37 @@ class PageTitle {
      * @var string current
      */
     private $current = '';
+    
+    private $url;
 
-    public function __construct() {
+    public function __construct($url = null) {
+        $this->url = $url ?: Request::uri();
         $this->load_data();
-        $this->set_title();
     }
 
     private function load_data() {
         $file = ROOT_PATH.DS.'resource'.DS.CURRENT_LANG.'_titles.json';
-        $area = strpos(Request::uri(), 'admin_panel') === false ? 'site' : 'admin_panel';
+        $area = strpos($this->url, 'admin_panel') === false ? 'site' : 'admin_panel';
         $this->titles = json_decode(file_get_contents($file), true)[$area];
     }
 
     /**
      * @throws \InvalidArgumentException
      */
-    private function set_title() {
+    private function set_current() {
         /**
          * @var $router Router
          */
         $router = Application::get_class(Router::class);
-        $pageModel = $router->current_page();
-        if($pageModel) {
-            $title = !empty($this->titles[$pageModel->name]) ? $this->titles[$pageModel->name] : null;
+        $page_model = $router->get_page_model($this->url);
+
+        if($page_model) {
+            $title = !empty($this->titles[$page_model->name]) ? $this->titles[$page_model->name] : null;
             if(is_array($title)) {
                 list($class, $method, $prefix) = array_pad($title, 3, '');
                 try {
                     $reflection_method = new \ReflectionMethod($class, $method);
-                    $params = $router->get_route_params();
-                    $params[] = $prefix;
+                    $params = array_merge([$prefix], $page_model->params);
                     if($reflection_method->isStatic()) {
                         $this->current = call_user_func_array([$class, $method], $params);
                     } else {
@@ -62,6 +64,11 @@ class PageTitle {
     }
 
     public function __toString() {
-        return (string)$this->current;
+        try {
+            $this->set_current();
+            return (string)$this->current;
+        } catch(\Exception $e) {
+            return '';
+        }
     }
 }
