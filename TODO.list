@@ -7,3 +7,6 @@
 7. andWhere method to the mysql adapter
 8. lazy load connection etc
 9. hide execute method
+10. сделать lang файл необязательным для view
+11. обрабатывать если роута нет
+12. разобраться с ошибкой phar tools
