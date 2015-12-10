@@ -46,7 +46,7 @@ trait TraitActionRouter {
                 if($user->is_admin()) {
                     $this->response->status = 'success';
                 } else {
-                    $this->response->errors = $lang_vars['errors']['credentials_error'];
+                    $this->response->errors = [$lang_vars['errors']['credentials_error']];
                     $this->response->status = 'error';
                 }
             } else {
