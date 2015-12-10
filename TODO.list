@@ -12,3 +12,4 @@
 12. разобраться с ошибкой phar tools
 13. in Helpers.objectLoaded add check if object have ready method
 14. add User.ready and FileSystem.ready 
+15. move get templates/lang_files methods into TraitRestRouter
