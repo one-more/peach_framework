@@ -10,3 +10,4 @@
 10. сделать lang файл необязательным для view
 11. обрабатывать если роута нет
 12. разобраться с ошибкой phar tools
+13. in Helpers.objectLoaded add check if object have ready method
