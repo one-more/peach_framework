@@ -13,3 +13,6 @@
 13. in Helpers.objectLoaded add check if object have ready method
 14. add User.ready and FileSystem.ready 
 15. move get templates/lang_files methods into TraitRestRouter
+16. return NotificationView to the global
+17. Create router in app.start
+18. App.start when objects loaded
